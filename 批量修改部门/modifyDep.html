@@ -1,0 +1,57 @@
+<!doctype html>
+
+<html>
+<head>
+  <meta charset="utf-8">
+  <link href="modifyDep.css" rel="stylesheet">
+</head>
+
+<body>
+  <form>
+    <div id="header">
+      <span>批量修改部门</span>
+    </div>
+
+    <div id="content">
+
+      <div id="otherDep">
+        <header>
+          其他部门
+        </header>
+        <table id="otherDepTable">
+        </table>
+        <footer>
+          <label>
+                <input type="checkbox" value="allSelected"> 全选
+          </label>
+        </footer>
+      </div>
+
+      <div id="buttons">
+        <input id="addButton" type="button" value="添加"/>
+        <input id="delButton" type="button" value="取消"/>
+      </div>
+
+      <div id="belongDep">
+        <header>
+          所属部门
+        </header>
+        <table id="belongDepTable">
+        </table>
+        <footer>
+          <label>
+                <input type="checkbox" value="allSelected"> 全选
+          </label>
+        </footer>
+      </div>
+    </div>
+
+    <div id="footer">
+      <input type="button" value="提交"/>
+      <input type="button" value="取消"/>
+    </div>
+
+  </form>
+  <script type="text/javascript" src="modifyDep.js"></script>
+</body>
+</html>

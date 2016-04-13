@@ -1,0 +1,42 @@
+/*
+1.了解css3的新选择器nth-child(n)
+2.总结css table属性
+border-collapse:collapse/seperate;边框合并或者分开
+border-spacing：指定相邻单元格边框之间的距离
+caption-side
+empty-cells：show/hide;空单元格是否展示,show表示在空单元格周围绘制边框。（默认为show）。
+table-layout:fixed/auto;表格布局算法，表格和列的宽度通过表格的宽度来设置，
+某一列的宽度仅由该列首行的单元格决定。在当前列中，该单元格所在行之后的行并不会影响整个列宽。
+ps：使用 “fixed” 布局方式时，整个表格可以在其首行被下载后就被解析和渲染。这样对于 “automatic” 自动布局方式来说可以加速渲染，但是其后的单元格内容并不会自适应当前列宽。
+任何一个包含溢出内容的单元格可以使用 overflow  属性控制是否允许内容溢出。
+*/
+table{
+  width: 70%;
+  font-size: 14px;
+  font-family: SimHei;
+  /*设计表格要习惯的加如下声明*/
+  border-collapse: collapse;
+  empty-cells: show;
+  table-layout: fixed;
+  border: 1px solid #cad9ea;
+}
+
+th{
+  height: 30px;
+}
+td{
+  height: 25px;
+}
+
+th,td{
+  border: 1px solid #cad9ea;
+  padding: 2px;
+}
+/*浅色颜色舒服*/
+tr:nth-child(even) {
+  background-color: #f5fafe;
+}
+
+tr:hover {
+  background-color: #99ccff;
+}
