@@ -1,0 +1,93 @@
+*{
+  margin: 0px;
+  font-family: SimHei;
+  border-radius: 5px;
+}
+body{
+  margin: 0px;
+  background-color: Gainsboro;
+}
+form{
+  background-color: white;
+  width: 80%;
+  margin: 0 10% 0 10%;
+  overflow: hidden;
+}
+#header,
+#footer,
+#otherDep table tr:nth-child(even),
+#belongDep table tr:nth-child(even){
+  background-color: #2189bf;
+}
+#header{
+  width: 100%;
+  height: 30px;
+  font-size: 16px;
+  padding: 8px;
+  border: 1px solid #2189bf;
+}
+#content{
+  display: flex;
+  flex-direction: row;
+}
+#otherDep,
+#belongDep{
+  border: 3px solid #2189bf;
+  flex-grow: 2;
+  height: 600px;
+  position: relative;
+  box-shadow: 5px 5px 5px #2189bf;
+}
+#belongDep{
+  left: 10px;
+  margin-right: 15px;
+}
+#otherDep header,
+#belongDep header,
+#otherDep footer,
+#belongDep footer{
+  height: 5%;
+  position: absolute;
+  width: 100%;
+  box-shadow: 5px 5px 5px #2189bf;
+}
+#otherDep header,
+#belongDep header{
+  top: 0px;
+}
+#otherDep table,
+#belongDep table{
+  line-height: 40px;
+  width: 100%;
+  position: absolute;
+  top: 5%;
+  text-align: center;
+}
+
+#otherDep footer,
+#belongDep footer{
+  bottom: 0px;
+}
+#buttons{
+  flex-grow: 1;
+  height: 600px;
+}
+#buttons input{
+  margin: 30px auto 30px auto;
+  display: block;
+  width: 80px;
+  height: 40px;
+  position: relative;
+  top: 230px;
+}
+
+#footer{
+  height: 50px;
+}
+#footer input{
+  width: 80px;
+  height: 40px;
+  position: relative;
+  margin: 5px;
+  left: calc(100% - 200px);
+}
