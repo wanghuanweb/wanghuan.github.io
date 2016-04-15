@@ -16,7 +16,7 @@ function init() {
   addButton.addEventListener("click",function() {
     depModify.otherDepDel();
     depModify.targetNode.style.height = "30px";
-    if(depModify.belongDep.children.length % 2 == 0) {
+    if (depModify.belongDep.children.length % 2 === 0) {
       depModify.targetNode.style.background = "#ffffff";
     }else {
       depModify.targetNode.style.background = "#2189bf";
@@ -27,7 +27,7 @@ function init() {
   delButton.addEventListener("click",function() {
     depModify.belongDepDel();
     depModify.targetNode2.style.height = "30px";
-    if(depModify.otherDep.children.length % 2 == 0) {
+    if(depModify.otherDep.children.length % 2 === 0) {
       depModify.targetNode2.style.background = "#ffffff";
     }else {
       depModify.targetNode2.style.background = "#2189bf";
@@ -62,7 +62,7 @@ DepModify.prototype.otherDepDel = function() {
   }else{
     this.targetNode.parentNode.removeChild(this.targetNode);
   }
-}
+};
 
 DepModify.prototype.belongDepDel = function() {
   if(this.targetNode2 && this.targetNode2 == this.belongDep) {
@@ -70,7 +70,4 @@ DepModify.prototype.belongDepDel = function() {
   }else{
     this.targetNode2.parentNode.removeChild(this.targetNode2);
   }
-}
-// DepModify.prototype.updateDeps = function() {
-//
-// }
+};
