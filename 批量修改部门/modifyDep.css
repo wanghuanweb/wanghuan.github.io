@@ -1,30 +1,38 @@
-*{
-  margin: 0px;
-  font-family: SimHei;
-  border-radius: 5px;
+#modDep{
+    background: white; /* fallback for older/unsupporting browsers */
+    background: -moz-linear-gradient(top, #dedede, white 8%);
+    background: -webkit-gradient(linear, 0 0, 0 8%, from(#dedede), to(white));
+    border-top: 1px solid white;
+
+    padding: 0 10px;
+    text-align: left;
+    min-height: 650px;
+    border: 1px solid #CCCCCC;
 }
-body{
-  margin: 0px;
-  background-color: Gainsboro;
+.inner-page-title {
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 30px;
+    margin-bottom: 10px;
 }
-form{
-  background-color: white;
-  width: 80%;
-  margin: 0 10% 0 10%;
-  overflow: hidden;
+.arrow-down {
+    display: inline-block;
+    width:0;
+    height:0;
+    border: 5px solid transparent;
+    border-top-color: black;
+    margin-right: 10px;
 }
-#header,
+form {
+    padding: 10px;
+    border: 1px solid #CCCCCC;
+    height: 700px;
+    overflow-y: auto;
+}
 #footer,
 #otherDep table tr:nth-child(even),
 #belongDep table tr:nth-child(even){
   background-color: #2189bf;
-}
-#header{
-  width: 100%;
-  height: 30px;
-  font-size: 16px;
-  padding: 8px;
-  border: 1px solid #2189bf;
 }
 #content{
   display: flex;
@@ -37,6 +45,7 @@ form{
   height: 600px;
   position: relative;
   box-shadow: 5px 5px 5px #2189bf;
+  overflow: auto;
 }
 #belongDep{
   left: 10px;
@@ -46,6 +55,7 @@ form{
 #belongDep header,
 #otherDep footer,
 #belongDep footer{
+  font-weight: bold;
   height: 5%;
   position: absolute;
   width: 100%;
@@ -57,16 +67,17 @@ form{
 }
 #otherDep table,
 #belongDep table{
-  line-height: 40px;
+  line-height: 32px;
   width: 100%;
   position: absolute;
   top: 5%;
   text-align: center;
+
 }
 
 #otherDep footer,
 #belongDep footer{
-  bottom: 0px;
+ bottom: 0px;
 }
 #buttons{
   flex-grow: 1;
@@ -80,8 +91,8 @@ form{
   position: relative;
   top: 230px;
 }
-
 #footer{
+  margin-top: 15px;
   height: 50px;
 }
 #footer input{

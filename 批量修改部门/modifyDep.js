@@ -48,7 +48,7 @@ function init() {
 }
 
 function DepModify() {
-  this.deps = ["研发部","产品部","客服部","市场部","售后部","销售部","交互部"];
+  this.deps = ["研发部","产品部","客服部","市场部","售后部","销售部","交互部","研发部","产品部","客服部","市场部","售后部","销售部","交互部","研发部","产品部","客服部","市场部","售后部","销售部","交互部"];
   this.belongDeps = [];
   this.otherDep =  document.getElementById('otherDepTable');
   this.belongDep =  document.getElementById('belongDepTable');
