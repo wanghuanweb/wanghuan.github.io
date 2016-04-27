@@ -1,0 +1,11 @@
+div{
+    border: 1px solid black;
+    width: 300px;
+}
+p{
+    width: 100%;
+    margin: auto;
+}
+p:first-child{
+    background: red;
+}
