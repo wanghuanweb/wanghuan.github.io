@@ -1,0 +1,24 @@
+div{
+    border: 1px solid black;
+    width: 300px;
+}
+p{
+    width: 100%;
+    margin: auto;
+}
+p:first-child{
+    background: red;
+}
+#div5,
+#div6,
+#div7,
+#div8,
+#div9,
+#div10,
+#div11{
+    width: 400px;
+    height: 100px;
+    border: 1px solid #0050D0;
+    background: #96e555;
+    position: relative;
+}
