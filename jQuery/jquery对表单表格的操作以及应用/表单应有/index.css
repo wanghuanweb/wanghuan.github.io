@@ -1,0 +1,16 @@
+*{
+    margin: 5px;
+}
+fieldset{
+    width: 500px;
+}
+.focus{
+    border: 1px solid #f00;
+    background: #ccc;
+}
+select{
+    width: 100px;
+}
+div{
+    display: inline-block;
+}
