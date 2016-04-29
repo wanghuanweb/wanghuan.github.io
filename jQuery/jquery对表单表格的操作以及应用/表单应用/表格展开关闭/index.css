@@ -1,0 +1,20 @@
+table{
+    margin: 20px;
+    font-family: SimHei;
+    width: 500px;
+    empty-cells: show;
+    border-collapse: collapse;
+}
+tr{
+    height: 25px;
+    border: 1px solid black;
+}
+th,td{
+    border: 1px solid black;
+}
+.parent{
+    background-color: #B2E0FF;
+}
+.select{
+    background-color: grey;
+}

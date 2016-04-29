@@ -38,7 +38,7 @@ $(function(){
         }
     });
     // 重要
-    // 将全选checkAllNo和几个球类sports2多选框绑定
+    // 将全选checkAllNo和几个sports2多选框绑定
     $("[name='sports2']:checkbox").click(function(){
         var flag = true;
         $("[name='sports2']:checkbox").each(function(){
