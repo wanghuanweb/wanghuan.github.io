@@ -27,18 +27,19 @@ transform属性的值，是变形函数列表，函数如下
     height: 150px;
     background-color: black;
     /*定义动画的过程*/
-    -webkit-transition:-webkit-transform 5s linear;
-    -moz-transition:-moz-transform 5s linear;
-    -o-transition:-o-transform 5s linear;
-    -transition:-transform 5s linear;
+    -webkit-transition: -webkit-transform 5s linear;
+    -moz-transition: -moz-transform 5s linear;
+    -o-transition: -o-transform 5s linear;
+    transition: -transform 5s linear;
 }
 /*定义动画的状态*/
 #div1:hover{
     /*scale(1,2)表示宽度不变，高度变成二倍*/
     -webkit-transform: rotate(90deg) scale(2);
     -moz-transform: rotate(90deg) scale(2);
+    -ms-transform: rotate(90deg) scale(2);
     -o-transform: rotate(90deg) scale(2);
-    -transform: rotate(90deg) scale(2);
+    transform: rotate(90deg) scale(2);
 }
 /*动画二*/
 #div2{

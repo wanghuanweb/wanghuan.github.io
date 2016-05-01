@@ -1,0 +1,25 @@
+*{
+    color: black;
+}
+ul{
+    width: 80%;
+    overflow: auto;
+    margin: auto;
+}
+.showMore{
+    width: 100px;
+    margin: auto;
+}
+li{
+    width: 25%;
+    float: left;
+    list-style: none;
+    font-size: 20px;
+    font-family: SimHei;
+}
+a{
+    text-decoration: none;
+}
+.highLight{
+    color: red;
+}
