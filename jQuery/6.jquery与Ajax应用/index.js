@@ -1,64 +1,97 @@
 /**
- * 表单应有
- * 单行文本框获取和失去焦点
- * textarea
- * 复选框应有--复选框的全选，反选，全不选等
- * select应用
-*/
+ * 首先在nodejs中，执行npm install -g http-server，安装server
+ *  在工程目录下运行http-server -p 80
+ *  在浏览器中访问127.0.0.1
+ */
+/**
+ * jQuery对Ajax进行了封装
+ * 在jQuery中$.ajax()方法属于最底层的方法
+ * 第二层是load()、$.get()、$.post()
+ * 第三层是$.getScript()、$.getJSON()
+ */
+/**
+ * load(url [.data] [.callback])方法：jquery最常用的Ajax方法，可以载入远程HTML代码并插入到DOM中
+ * @param url(String)-请求HTML页面的url地址
+ * @param data(Object)-可选，发送到服务器的key/value数据
+ * @param callback(Function)-请求完成时的回调函数，无论请求成功或失败
+ */
 $(function(){
-    // :input选择器，选择了所有的input、textarea、button、select元素
-    // 单行文本框获取和失去焦点
-    $(":input").focus(function() {
-        $(this).addClass('focus');
-    }).blur(function() {
-        $(this).removeClass('focus');
+    $("#send").click(function() {
+        $("#resText").load("test.html");
     });
-    // 这里之前用attr，点击只有一次的反应，用prop才可以
-    // 因为引用的jquery是最新版本的，最新版本的jquery中有prop，且了解下两者区别
-    $("#checkAll").click(function() {
-        $("[name='sports']:checkbox").prop("checked",true);
+// 返回的数据格式是html片段
+    $("#send").click(function(){
+        $.get("get1.php",{
+            username: $("#username").val();
+            content: $("#content").val();
+        },function(data,textStatus){
+            $("#resText").html(data);
+        });
+    });
+// 返回的数据格式是xml片段
+    $("#send").click(function(){
+        $.get("get2.php",{
+            username: $("#username").val();
+            content: $("#content").val();
+        },function(data,textStatus){
+            var username = $(data).find("comment").attr("username");
+            var content = $(data).find("comment content").text();
+            var txtHtml = "<div class="comment"><h6>"+username+"</h6><p class="para">"+content+"</p></div>";
+            $("#resText").html(txtHtml);
+        });
+    });
+// 返回的数据格式是json片段
+    $("#send").click(function(){
+        $.get("get3.php",{
+            username: $("#username").val();
+            content: $("#content").val();
+        },function(data,textStatus){
+            var username = data.username;
+            var content = data.content;
+            var txtHtml = "<div class="comment"><h6>"+username+"</h6><p class="para">"
+                            +content+"</p></div>";
+            $("#resText").html(txtHtml);
+        },"json");
     });
 
-    $("#checkNo").click(function() {
-        $("[name='sports']:checkbox").prop("checked",false);
+    $(function(){
+        $.getScript("jquery.color.js",function(){
+            $("#go").animate({backgroundColor:'pink'},1000)
+                    .animate({backgroundColor: 'blue'}, 1000);
+        })
     });
+// 虽然加载JSON文件，但是没有告诉js对返回的数据如何处理，所以网页上看不到任何效果
+    $(function(){
+        $("#send").click(function() {
+            $.getJSON("text.json");
+        });
+    })
+// 处理返回的数据
+    $(function(){
+        $("#send").click(function() {
+            $.getJSON("text.json",function(data){
+                // 返回数据成功后，首先清空id为‘resText’的元素的内容，以便构造新的HTML，然后通过$.each()循环函数依次遍历每个项
+                // 并将遍历出来的内容构造成html代码拼接出来
+                // 最后将构建好得HTML添加的id为"resText"的元素中
+                $("resText").empty();
+                var html = "";
+                $.each(data,function(commentIndex,comment) {
+                    html += '<div class="comment"<h6>'
+                         + comment['username']+':</h6><p class="para">'
+                         + comment['content'] + '</p></div>';
+                });
+                $('resText').html(html);
+            });
+        });
+    })
 
-    $("#checkOppo").click(function() {
-        $("[name='sports']:checkbox").each(function(){
-            $(this).prop("checked",!$(this).prop("checked"));
+    $("#send").click(function() {
+        $.get("get1.php",$("#form1".serialize(),function(data,textStatus){
+            $("resText").html(data);
         });
     });
 
-    $("#checkAllNo").click(function() {
-        // 注意this和$(this)的区别
-        if(this.checked) {
-            $("[name='sports2']:checkbox").prop("checked",true);
-        } else{
-            $("[name='sports2']:checkbox").prop("checked",false);
-        }
-    });
-    // 重要
-    // 将全选checkAllNo和几个sports2多选框绑定
-    $("[name='sports2']:checkbox").click(function(){
-        var flag = true;
-        $("[name='sports2']:checkbox").each(function(){
-            if(!this.checked){
-                flag = false;
-            }
-        });
-        $("#checkAllNo").prop('checked',flag);
-    });
+});
 
-    $("#add").click(function(){
-        var $options = $("#select1 option:selected");
-        var $remove = $options.remove();
-        $remove.appendTo('#select2');
-    });
-
-    $("#cancel").click(function(){
-        var $options = $("#select2 option:selected");
-        var $remove = $options.remove();
-        $remove.appendTo('#select1');
-    });
 
 });

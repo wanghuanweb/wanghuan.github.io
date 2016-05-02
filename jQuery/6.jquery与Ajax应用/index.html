@@ -1,63 +1,14 @@
 <html>
     <head>
         <meta charset="utf-8">
-        <title>DOM操作</title>
-        <link rel="stylesheet" href="index.css">
+        <title>jQUery与Ajax应用</title>
         <script src="http://code.jquery.com/jquery-latest.js"></script>
         <script src="index.js"></script>
     </head>
 
     <body>
-        <form>
-            <fieldset>
-                <legend>个人基本信息</legend>
-                <div>
-                    <label for="userName">名称：</label>
-                    <input id="userName"/>
-                </div>
-                <div>
-                    <label for="psd">密码：</label>
-                    <input id="psd"/>
-                </div>
-                <div>
-                    <label for="msg">详细信息：</label>
-                    <textarea id="msg"></textarea>
-                </div>
-                <p>你的爱好是什么？</p>
-                <input type="checkbox" name="sports" value="足球"/>足球
-                <input type="checkbox" name="sports" value="篮球"/>篮球
-                <input type="checkbox" name="sports" value="排球"/>排球
-                <input type="checkbox" name="sports" value="乒乓球"/>乒乓球</br>
-
-                <input id="checkAll" type="button" value="全选"/>
-                <input id="checkNo" type="button" value="全不选"/>
-                <input id="checkOppo" type="button" value="反选"/></br>
-
-                <input type="checkbox" name="sports2" value="足球"/>足球
-                <input type="checkbox" name="sports2" value="篮球"/>篮球
-                <input type="checkbox" name="sports2" value="排球"/>排球
-                <input type="checkbox" name="sports2" value="乒乓球"/>乒乓球</br>
-
-                <input type="checkbox" id="checkAllNo" value="全选"/>全选</br>
-                <div>
-                    <select multiple id="select1">
-                        <option>1</option>
-                        <option>2</option>
-                        <option>3</option>
-                        <option>4</option>
-                    </select>
-                </div>
-
-                <div>
-                    <input id="add" type="button" value="添加"/>
-                    <input id="cancel" type="button" value="取消"/>
-                </div>
-
-                <div>
-                    <select multiple id="select2">
-                    </select>
-                </div>
-            </fieldset>
-        </form>
+        <input type="button" id="send" value="Ajax获取"/>
+        <div class="comment">已有评论</div>
+        <div id="resText"></div>
     </body>
 </html>
