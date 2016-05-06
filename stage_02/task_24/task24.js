@@ -1,18 +1,125 @@
+/*
+ *	构造函数Tree
+ *	nodes:存储所有的节点
+ *	move:控制遍历，以免在遍历时点击其他按钮混乱
+ */
+function Tree() {
+	console.log("new tree1");
+	this.nodes = [];
+	this.move = false;
+	this.root1 = document.getElementsByClassName("root")[0];
+	this.targetNode = this.root1;
+}
+
+/*
+ *	先序遍历Tree
+ *	node；遍历的节点
+ */
+Tree.prototype.preOrder = function(node) {
+	console.log("new tree prototype preOrder");
+	this.nodes.push(node);
+	for(var i = 0;i< node.children.length;i++) {
+		this.preOrder(node.children[i]);
+	}
+};
+
+/*
+ *	后序遍历Tree
+ *	node；遍历的节点
+ */
+Tree.prototype.postOrder = function(node) {
+	console.log("new tree prototype postOrder");
+	for(var i = 0;i< node.children.length;i++) {
+		this.postOrder(node.children[i]);
+	}
+	this.nodes.push(node);
+};
+
+/*
+ *	动画显示树的遍历过程
+ */
+Tree.prototype.animation = function() {
+	console.log("new tree prototype animation");
+	var nodes = this.nodes,
+			i = 0,
+			len = this.nodes.length,
+			self = this,
+			second = 500;
+
+	self.nodes = [];
+
+	// move为false时，才执行动画，以免重复点击混乱
+	if(!self.move) {
+		self.move = true;
+		nodes[i].style.background = "red";
+
+		// 设置计时器
+		var timer = setInterval(function(){
+			// 当动画到最后一个节点时背景重新变白，move重置，清除计时器
+			if(i == len-1) {
+				nodes[i].style.background = "white";
+				self.move = false;
+				clearInterval(timer);
+			} else {
+				// node的逐个显示
+				++i;
+				nodes[i-1].style.background = "white";
+				nodes[i].style.background = "red";
+			}
+		},second);
+	}
+
+};
+
+/*
+ *	删除选中的节点
+ */
+Tree.prototype.deleteNode = function() {
+	if(this.targetNode && this.targetNode != this.root1) {
+		this.targetNode.parentNode.removeChild(this.targetNode);
+	} else {
+		alert("we can not remove rootNode");
+		this.targetNode.style.border = "1px solid black";
+	}
+};
+
+/*
+ *	增加节点
+ */
+Tree.prototype.addNode = function() {
+	var addText = document.getElementById('text3').value.trim();
+	if(addText === "") {
+		alert("please input the value");
+	}else if(this.targetNode) {
+		var newNode = document.createElement("div");
+		newNode.innerHTML = addText;
+		newNode.style.border = "1px solid black";
+		this.targetNode.appendChild(newNode);
+		this.targetNode.style.border = "1px solid black";
+	}
+};
+
 defButton();
 function defButton() {
+	console.log("new tree");
 	var tree = new Tree(),
-			root = document.getElementsByClassName("root")[0],
-			preButton = document.getElementById('before'),
-			postButton = document.getElementById('behind'),
-			preSearchButton = document.getElementById('befSearch'),
-			postSearchButton = document.getElementById('behSearch'),
-			delButton = document.getElementById('delete'),
-			addButton = document.getElementById('add'),
-			targetArray = [];
+		root = document.getElementsByClassName("root")[0],
+		preButton = document.getElementById('before'),
+		postButton = document.getElementById('behind'),
+		preSearchButton = document.getElementById('befSearch'),
+		postSearchButton = document.getElementById('behSearch'),
+		delButton = document.getElementById('delete'),
+		addButton = document.getElementById('add'),
+		targetArray = [];
 
 	// 先序遍历
+	console.log(typeof tree.preOrder);
+	console.log(typeof tree);
 	preButton.addEventListener("click",function(){
+		console.log("prototype before");
+
 		tree.preOrder(root);
+		console.log("tree **");
 		tree.animation();
 	});
 
@@ -99,100 +206,3 @@ function defButton() {
 		tree.targetNode.style.border = "1px solid red";
 	});
 }
-
-/*
- *	构造函数Tree
- *	nodes:存储所有的节点
- *	move:控制遍历，以免在遍历时点击其他按钮混乱
- */
-function Tree() {
-	this.nodes = [];
-	this.move = false;
-	this.root1 = document.getElementsByClassName("root")[0];
-	this.targetNode = this.root1;
-}
-
-/*
- *	先序遍历Tree
- *	node；遍历的节点
- */
-Tree.prototype.preOrder = function(node) {
-	this.nodes.push(node);
-	for(var i = 0;i< node.children.length;i++) {
-		this.preOrder(node.children[i]);
-	}
-};
-
-/*
- *	后序遍历Tree
- *	node；遍历的节点
- */
-Tree.prototype.postOrder = function(node) {
-	for(var i = 0;i< node.children.length;i++) {
-		this.postOrder(node.children[i]);
-	}
-	this.nodes.push(node);
-};
-
-/*
- *	动画显示树的遍历过程
- */
-Tree.prototype.animation = function() {
-	var nodes = this.nodes,
-			i = 0,
-			len = this.nodes.length,
-			self = this,
-			second = 500;
-
-	self.nodes = [];
-
-	// move为false时，才执行动画，以免重复点击混乱
-	if(!self.move) {
-		self.move = true;
-		nodes[i].style.background = "red";
-
-		// 设置计时器
-		var timer = setInterval(function(){
-			// 当动画到最后一个节点时背景重新变白，move重置，清除计时器
-			if(i == len-1) {
-				nodes[i].style.background = "white";
-				self.move = false;
-				clearInterval(timer);
-			} else {
-				// node的逐个显示
-				++i;
-				nodes[i-1].style.background = "white";
-				nodes[i].style.background = "red";
-			}
-		},second);
-	}
-
-};
-
-/*
- *	删除选中的节点
- */
-Tree.prototype.deleteNode = function() {
-	if(this.targetNode && this.targetNode != this.root1) {
-		this.targetNode.parentNode.removeChild(this.targetNode);
-	} else {
-		alert("we can not remove rootNode");
-		this.targetNode.style.border = "1px solid black";
-	}
-};
-
-/*
- *	增加节点
- */
-Tree.prototype.addNode = function() {
-	var addText = document.getElementById('text3').value.trim();
-	if(addText === "") {
-		alert("please input the value");
-	}else if(this.targetNode) {
-		var newNode = document.createElement("div");
-		newNode.innerHTML = addText;
-		newNode.style.border = "1px solid black";
-		this.targetNode.appendChild(newNode);
-		this.targetNode.style.border = "1px solid black";
-	}
-};
