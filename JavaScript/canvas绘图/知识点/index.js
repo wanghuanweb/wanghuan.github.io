@@ -144,8 +144,11 @@ function init(){
         var gradient = context4.createLinearGradient(30,30,70,70);
         gradient.addColorStop(0,"white");
         gradient.addColorStop(1,"black");
-
         context4.fillStyle = gradient;
+
         context4.fillRect(30,30,50,50);
+
+        // context4.strokeStyle = gradient;
+        // context4.strokeRect(30,30,50,50);
     }
 }
