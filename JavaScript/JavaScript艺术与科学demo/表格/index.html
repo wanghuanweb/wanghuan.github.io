@@ -1,90 +1,52 @@
-<!DOCTYPE>
+<!DOCTYPE html>
 <html>
   <head>
     <meta charset="utf-8">
-    <title>优雅的数据表格</title>
-    <link href="index.css" rel="stylesheet">
+    <title>task38</title>
+    <link rel="stylesheet" href="index.css" media="screen" title="no title" charset="utf-8">
   </head>
-
   <body>
-
-    <table id="tableScores">
-      <caption>优雅的数据表格</caption>
-      <thead>
-        <th>排名</th>
-        <th>校名</th>
-        <th>总得分</th>
-        <th>人才培养得分</th>
-        <th>研究生培养得分</th>
-        <th>本科生培养得分</th>
-      </thead>
-
-      <tbody>
-        <tr>
-          <td></td>
-          <td>北京邮电大学</td>
-          <td></td>
-          <td>97</td>
-          <td>87</td>
-          <td>98</td>
+    <div id="table">
+      <table border="2px">
+        <tr id="thead">
+          <th>姓名</th>
+          <th>
+            <div class="title">语文</div>
+            <div id="Chinese" class="sort">
+              <div class="asc"></div>
+              <div class="middle"></div>
+              <div class="des"></div>
+            </div>
+          </th>
+          <th>
+            <div class="title">数学</div>
+            <div id="Math" class="sort">
+              <div class="asc"></div>
+              <div class="middle"></div>
+              <div class="des"></div>
+            </div>
+          </th>
+          <th>
+            <div class="title">英语</div>
+            <div id="English" class="sort">
+              <div class="asc"></div>
+              <div class="middle"></div>
+              <div class="des"></div>
+            </div>
+          </th>
+          <th>
+            <div class="title">总分</div>
+            <div id="Total" class="sort">
+              <div class="asc"></div>
+              <div class="middle"></div>
+              <div class="des"></div>
+            </div>
+          </th>
         </tr>
+      </table>
+    </div>
+    <script type="text/javascript" src="index.js">
 
-        <tr>
-          <td></td>
-          <td>北京师范大学</td>
-          <td></td>
-          <td>89</td>
-          <td>94</td>
-          <td>67</td>
-        </tr>
-
-        <tr>
-          <td></td>
-          <td>清华大学</td>
-          <td></td>
-          <td>94</td>
-          <td>90</td>
-          <td>98</td>
-        </tr>
-
-        <tr>
-          <td></td>
-          <td>北京大学</td>
-          <td></td>
-          <td>97</td>
-          <td>94</td>
-          <td>85</td>
-        </tr>
-
-        <tr>
-          <td></td>
-          <td>武汉大学</td>
-          <td></td>
-          <td>85</td>
-          <td>95</td>
-          <td>90</td>
-        </tr>
-
-        <tr>
-          <td></td>
-          <td>海军工程大学</td>
-          <td></td>
-          <td>94</td>
-          <td>93</td>
-          <td>90</td>
-        </tr>
-
-        <tr>
-          <td></td>
-          <td>复旦大学</td>
-          <td></td>
-          <td>83</td>
-          <td>95</td>
-          <td>98</td>
-        </tr>
-      </tbody>
-    </table>
-    
-    <script src="index.js"></script>
+    </script>
   </body>
 </html>

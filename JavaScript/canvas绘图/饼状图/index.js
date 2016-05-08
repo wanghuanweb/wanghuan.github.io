@@ -20,7 +20,7 @@ PieChart.prototype.draw = function(){
             blue = Math.round(this.startColor[2] - ((this.startColor[2] - this.endColor[2])/(len - 1))*i);
 
         this.context.fillStyle = "rgb(" + red + "," + green + "," + blue + ")";
-
+        // 绘制饼状图每个部分
         this.context.beginPath();
         this.context.moveTo(x,y);
         this.context.arc(x,y,this.radius,arraySubTotal / arrayTotal * Math.PI * 2,
@@ -32,6 +32,7 @@ PieChart.prototype.draw = function(){
         this.context.moveTo(x,y);
         this.context.arc(x,y,this.radius,arraySubTotal / arrayTotal * Math.PI * 2,
                                          (arraySubTotal+this.array[i]) / arrayTotal * Math.PI * 2,false);
+        // 绘制片段时，从中心直接跳到绘制片段的外边弧，则自动连接第一点和弧的起点，所以只需要对最后一个片段的最后一条边使用closePath即可
         if(i == len - 1) {
             this.context.closePath();
         }
@@ -39,6 +40,15 @@ PieChart.prototype.draw = function(){
 
         arraySubTotal += this.array[i];
     }
+    // 给饼状图添加阴影部分
+    this.context.beginPath();
+    this.context.moveTo(x+this.shadowOffset,y+this.shadowOffset);
+    this.context.arc(x+this.shadowOffset,y+this.shadowOffset,this.radius,0,Math.PI*2,false);
+    this.context.closePath();
+    // 在填充形状之前，改变了图形组合的方式，则此属性是新绘制图形在已有图形下面（ps：默认是source-over是默认新绘制图形在上面）
+    this.context.globalCompositeOperation = "destination-over";
+    this.context.fillStyle = "rgba(0,0,0,0.25)";
+    this.context.fill();
 };
 function PieChart(array,radius){
     this.array = array;
@@ -51,12 +61,13 @@ function PieChart(array,radius){
 
     if(this.canvas.getContext) {
         this.context = this.canvas.getContext("2d");
+        this.shadowOffset = 7;
         this.draw();
     }
 }
 
 init();
 function init(){
-    var a = [2,4,1,5,6,8,10],
+    var a = [Math.random(),Math.random(),Math.random(),Math.random(),Math.random(),Math.random(),Math.random(),Math.random()],
         pieChart = new PieChart(a,100);
 }
