@@ -1,0 +1,79 @@
+<!doctype>
+<html>
+    <head>
+        <meta charset="utf-8">
+    </head>
+
+    <body>
+        <div id="main">
+            <div id="head">
+                this is header,height is 100px
+            </div>
+
+            <div id="content">
+                <div id="contentLeft">
+                    this is left content
+                    this is left content
+                    this is left content
+                    this is left content
+                    
+                </div>
+                <div id="contentRight">
+                    this is right content
+                    this is right content
+                    this is right content
+                </div>
+            </div>
+
+            <div id="foot">
+                this is footer,height is 100px
+                this is footer,height is 100px
+            </div>
+
+        </div>
+
+        <style type="text/css">
+            /*其他样式代码*/
+            *{
+                margin: 0px;
+                font-size: 80px;
+                color: white;
+                font-family: SimHei;
+                text-align: center;
+            }
+            #head,
+            #foot{
+                background-color: #7E7E7E;
+            }
+            #content #contentLeft{
+                background-color: #FF8686;
+            }
+            #content #contentRight{
+                background-color: #AFD9FD;
+            }
+
+            /**
+             * 布局核心代码
+             */
+            #head,
+            #foot{
+                height: 100px;
+            }
+            #content{
+                /*或者使用注释掉的那行代码，两种方法均可*/
+                overflow: hidden;
+            }
+            #content #contentLeft{
+                width:300px;
+                float: left;
+            }
+            #content #contentRight{
+                overflow: hidden;
+            }
+            #foot{
+                /*clear: both;*/
+            }
+
+        </style>
+    </body>
+</html>
