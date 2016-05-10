@@ -17,6 +17,27 @@
                 <div id="contentRight">
                     this is right content
                 </div>
+                <div id="contentMiddle">
+                    this is center content<br/>
+                    和上面底部两栏自适应几乎一样，不过这一次分为左边栏和右边栏<br/>
+                    但是需要注意一下，把两个侧边栏写在前面，后面写main区，否则会出现main区直接把右边栏挤开的情况<br/>
+                    this is center content<br/>
+                    this is center content<br/>
+                    this is center content<br/>
+                    this is center content<br/>
+                    this is center content<br/>
+                    this is center content<br/>
+                    this is center content<br/>
+                    this is center content<br/>
+                    this is center content<br/>
+                    this is center content<br/>
+                    this is center content<br/>
+                    this is center content<br/>
+                    this is center content<br/>
+                    this is center content<br/>
+                    this is center content<br/>
+                    this is center content<br/>
+                </div>
             </div>
 
             <div id="foot">
@@ -68,8 +89,11 @@
             #content #contentLeft{
                 background-color: #FF8686;
             }
-            #content #contentRight{
+            #content #contentMiddle{
                 background-color: #AFD9FD;
+            }
+            #content #contentRight{
+                background-color: #FF8686;
             }
 
             /**
@@ -79,6 +103,7 @@
             /*实现内容不足一页时，foot固定在底部*/
             /*首先需要设定html的高度为一个页面以方便将一个div（g-ctn）设定为最小大小为浏览器窗口大小*/
              html,body{
+                 width: 100%;
                  height: 100%;
              }
              #main{
@@ -103,14 +128,15 @@
             #content #contentLeft{
                 float: left;
                 width: 300px;
-                height: 500px;
+                height: 1000px;
             }
             #content #contentRight{
-                height: 600px;
-                /*添加原因：BFC规则3：每个元素的margin box的左边， 与包含块border box的左边相接触(对于从左往右的格式化，否则相反)。即使存在浮动也是如此。
-                 * 则虽然存在浮动的元素contentLeft，但contentRight的左边依然会与包含块的左边相接触。
-                 * 方法：BFC规则4：需要overflow: hidden，触发contentRight生成BFC
-                 * 结果：BFC的区域不会与float的元素区域重叠*/
+                min-height: 300px;
+                width: 300px;
+                height: 300px;
+                float: right;
+            }
+            #content #contentMiddle{
                 overflow: hidden;
             }
 

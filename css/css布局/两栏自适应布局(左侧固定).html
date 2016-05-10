@@ -12,16 +12,12 @@
 
             <div id="content">
                 <div id="contentLeft">
-                    this is left content
-                    this is left content
-                    this is left content
-                    this is left content
-                    
+                    this is left content，width is 300px,float left
                 </div>
                 <div id="contentRight">
-                    this is right content
-                    this is right content
-                    this is right content
+                    this is right content,overflow is hidden;<br/>
+                    为了触发BFC，防止与包含块border box的左边相接触<br/>
+                    同时整个content的overflow is hidden，为了触发BFC，使得浮动子元素也参与计算，也就是所谓的清除浮动
                 </div>
             </div>
 
@@ -36,7 +32,7 @@
             /*其他样式代码*/
             *{
                 margin: 0px;
-                font-size: 80px;
+                font-size: 25px;
                 color: white;
                 font-family: SimHei;
                 text-align: center;
@@ -66,9 +62,11 @@
             #content #contentLeft{
                 width:300px;
                 float: left;
+                height: 500px;
             }
             #content #contentRight{
                 overflow: hidden;
+                height: 400px;
             }
             #foot{
                 /*clear: both;*/

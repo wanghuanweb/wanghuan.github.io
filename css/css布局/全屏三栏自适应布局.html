@@ -1,0 +1,146 @@
+<!doctype>
+<html>
+    <head>
+        <meta charset="utf-8">
+    </head>
+
+    <body>
+        <div id="main">
+            <div id="head">
+                this is header
+                这种布局一般用于应用类的页面，所有区块全部在一个屏幕中固定显示position，内容溢出时使用滚动条浏览overflow。
+            </div>
+
+            <div id="content">
+                <div id="contentLeft">
+                    this is left content<br/>
+                </div>
+                <div id="contentMiddle">
+                    this is center content<br/>
+                    this is center content<br/>
+                    this is center content<br/>
+                    this is center content<br/>
+                    this is center content<br/>
+                    this is center content<br/>
+                    this is center content<br/>
+                    this is center content<br/>
+                    this is center content<br/>
+                    this is center content<br/>
+                    this is center content<br/>
+                    this is center content<br/>
+                    this is center content<br/>
+                    this is center content<br/>
+                    this is center content<br/>
+                    this is center content<br/>
+                    this is center content<br/>
+                    this is center content<br/>
+                    this is center content<br/>
+                    this is center content<br/>
+                    this is center content<br/>
+                    this is center content<br/>
+                </div>
+                <div id="contentRight">
+                    this is right content<br/>
+                    this is right content<br/>
+                    this is right content<br/>
+                    this is right content<br/>
+                    this is right content<br/>
+                    this is right content<br/>
+                    this is right content<br/>
+                    this is right content<br/>
+                    this is right content<br/>
+                    this is right content<br/>
+                    this is right content<br/>
+                    this is right content<br/>
+                    this is right content<br/>
+                    this is right content<br/>
+                    this is right content<br/>
+                    this is right content<br/>
+                    this is right content<br/>
+                    this is right content<br/>
+                    this is right content<br/>
+                    this is right content<br/>
+                    this is right content<br/>
+                    this is right content<br/>
+                    this is right content<br/>
+                    this is right content<br/>
+                    this is right content<br/>
+                    this is right content<br/>
+                    this is right content<br/>
+                </div>
+            </div>
+
+            <div id="foot">
+                this is footer,height is 100px
+            </div>
+
+        </div>
+
+        <style type="text/css">
+            /*其他样式代码*/
+            *{
+                margin: 0px;
+                font-size: 25px;
+                color: white;
+                font-family: SimHei;
+                text-align: center;
+            }
+            /*设定整个页面的大小为浏览器窗口大小*/
+            html, body {
+                width: 100%;
+                height: 100%;
+            }
+            #head,
+            #foot{
+                background-color: #7E7E7E;
+            }
+            #content #contentLeft{
+                background-color: #FF8686;
+            }
+            #content #contentMiddle{
+                background-color: #AFD9FD;
+            }
+            #content #contentRight{
+                background-color: #FF8686;
+            }
+
+            /**
+             * 布局核心代码
+             */
+            #head,
+            #foot{
+                height: 100px;
+                position: fixed;
+                width: 100%;
+            }
+            #head{
+                top: 0px;
+            }
+            #foot{
+                bottom: 0px;
+            }
+            #content{
+                overflow: hidden;
+            }
+            #content #contentLeft,
+            #content #contentMiddle,
+            #content #contentRight{
+                position: absolute;
+                top: 100px;
+                bottom: 100px;
+                overflow: auto;
+            }
+            #content #contentLeft,
+            #content #contentRight{
+                width: 300px;
+            }
+            #content #contentMiddle{
+                left: 300px;
+                right: 300px;
+            }
+            #content #contentRight{
+                right: 0px;
+            }
+        </style>
+    </body>
+</html>
