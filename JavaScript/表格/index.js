@@ -185,6 +185,7 @@ function asc(id) {//升序排序
 }
 
 function init() {//初始化，绑定click事件
+
     document.getElementsByClassName("asc")[0].onclick=function(){asc("Chinese")};
     document.getElementsByClassName("des")[0].onclick=function(){des("Chinese")};
     document.getElementsByClassName("asc")[1].onclick=function(){asc("Math")};

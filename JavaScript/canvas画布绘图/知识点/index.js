@@ -147,6 +147,8 @@ function init(){
         context4.fillStyle = gradient;
 
         context4.fillRect(30,30,50,50);
+        console.log(null instanceof Object);
+        console.log(null instanceof Null);
 
         // context4.strokeStyle = gradient;
         // context4.strokeRect(30,30,50,50);
