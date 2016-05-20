@@ -37,3 +37,36 @@ var getHint = function(secret, guess) {
     return string;
 
 };
+//或者
+/**
+ * @param {string} secret
+ * @param {string} guess
+ * @return {string}
+ */
+var getHint = function(secret, guess) {
+
+    var len = secret.length,
+        numBulls = 0,
+        numCows = 0,
+        mark = [0,0,0,0,0,0,0,0,0,0],
+        string,
+        i;
+
+    for(i = 0; i < len; i++) {
+        if(secret.charAt(i) === guess.charAt(i)) {
+            numBulls++;
+        } else {
+            if(mark[secret.charCodeAt(i) - '0'.charCodeAt(0)]++ < 0) {
+                numCows++;
+            }
+            if(mark[guess.charCodeAt(i) - '0'.charCodeAt(0)]-- > 0) {
+                numCows++;
+            }
+        }
+    }
+
+    string = numBulls + "A" + numCows + "B";
+
+    return string;
+
+};
