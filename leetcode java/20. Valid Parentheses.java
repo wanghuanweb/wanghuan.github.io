@@ -1,23 +1,35 @@
 /*
-刚开始理解错题意了，哭。。下次要仔细看题
+给一个字符串，判断括号是否匹配成功。
+正确思路：
+本题用栈实现
+读到一个字符串时判断，如果栈顶和当前这个字符满足左右括号匹配，则弹出，否则压栈。
+若最后栈顶为空，则说明匹配成功。
  */
  public class Solution {
      public boolean isValid(String s) {
-         HashMap<Character,Integer> map = new HashMap<Character,Integer>();
+         Stack<Character> stack = new Stack<Character>();
+         stack.push(s.charAt(0));
+
          int len = s.length(),
-             i = 0;
+             i = 1;
 
          for(;i < len;i++) {
-             char ch = s.charAt(i);
-
-             if(!map.containsKey(ch)) {
-                 map.put(ch,1);
-             }else {
-                 int count = map.get(ch);
-                 count++;
+             if(!stack.empty() && isMatch(stack.peek(),s.charAt(i))) {
+                 stack.pop();
+             } else {
+                 stack.push(s.charAt(i));
              }
          }
-         if(map.get('[') == map.get(']') && map.get('(') == map.get(')') && map.get('{') == map.get('}')) {
+
+         if(stack.empty()) {
+             return true;
+         } else {
+             return false;
+         }
+     }
+
+     public boolean isMatch(char a,char b) {
+         if((a == '(' && b == ')') || (a == '[' && b == ']') || (a == '{' && b == '}')) {
              return true;
          } else {
              return false;
