@@ -6,7 +6,7 @@
 
 转换（transition）：
 transition: property duration timing-function delay;
-1.transition-property 规定设置过渡效果的 CSS 属性的名称。
+1.transition-property 规定设置过渡效果的 CSS 属性的名称。若是all，则是所有属性设置此动画效果
 2.transition-duration 规定完成过渡效果需要多少秒或毫秒。
 3.transition-timing-function 规定速度效果的速度曲线。(linear,ease-in,ease,ease-out,ease-in-out)
 4.transition-delay 定义过渡效果何时开始。默认为0

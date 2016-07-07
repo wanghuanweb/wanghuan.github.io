@@ -1,0 +1,54 @@
+div.opa,
+div.visi,
+div.dis{
+    width: 200px;
+    height: 200px;
+    margin: 1%;
+    background-color: pink;
+    color: black;
+    font-family: SimHei;
+    font-weight: bolder;
+    text-align: center;
+    float: left;
+    cursor: pointer;
+}
+div.hidden{
+    opacity: 0;
+    transition:opacity ease 2s;
+}
+div.hidden:hover{
+    opacity: 1;
+}
+
+
+div.hidden2{
+    visibility:hidden;
+    transition:all ease 2s;
+}
+div.hidden2:hover{
+    visibility: visible;
+}
+
+
+div.hidden3{
+    visibility:hidden;
+    transition:all ease 2s;
+}
+div.hidden3:hover{
+    visibility: visible;
+}
+div p{
+    visibility: visible;
+}
+
+
+div.hidden4{
+    display: none;
+    transition:all ease 2s;
+}
+div.hidden4:hover{
+    display: block;
+}
+div p{
+    display: block;
+}
