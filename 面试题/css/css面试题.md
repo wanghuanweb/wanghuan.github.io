@@ -243,7 +243,31 @@ html > body div [id=”totals”] ul li > p {color:red;}--Specificity值为 0,0,
 http://blog.csdn.net/github_34514750/article/details/51122212
 
 ##### 7.如何居中div？如何居中一个浮动元素？如何让绝对定位的div居中？
+居中div
 
+    div{
+        width:100px;
+        height:100px;
+        margin:0 auto;
+    }
+
+居中一个浮动元素：
+
+    div{
+        width:500px;
+        height:300px;
+        position:relative;
+        top:50%;
+        left:50%;
+        margin:-150px 0 0 -250px;
+    }
+
+
+让绝对定位的div居中：
+
+    div{
+
+    }
 
 ##### 8.display有哪些值？说明他们的作用。
 
@@ -257,7 +281,7 @@ http://blog.csdn.net/github_34514750/article/details/51122212
 
 **inline-block**
 
-像行内元素一样显示，但其内容象块类型元素一样显示
+像行内元素一样显示，但其内容像块类型元素一样显示
 
 **table**
 
@@ -308,51 +332,348 @@ http://blog.csdn.net/github_34514750/article/details/51122212
 
 ##### 10.CSS3有哪些新特性？
 
+**1.增加了border-raduis特性**
+
+**2.新增了选择器和伪类**
+
+新增的选择器：
+
+[attribute^="value"]匹配字串的开头
+
+[attribute$="value"]匹配字串的结尾
+
+[attribute*="value"]匹配字串
+
+新增的伪类：
+
+:only-child/:nth-child()/:nth-last-child()/:last-child
+
+:nth-of-type()/:nth-last-of-child()/:first-of-type/:only-of-type/:last-of-type
+
+:root/:empty
+
+http://blog.csdn.net/github_34514750/article/details/51122212
+
+
+**3.新增了很多动画效果**
+
+perspective
+
+translate-style
+
+translate:scale/skew/translate/rotate
+
+animate
+
+transition
+
+gradient线性渐变
+
+**4.文字特效**
+
+文字特效      （text-shadow、）
+文字渲染      （Text-decoration）
+
+**5.阴影和反射**
+
+阴影和反射        （Shadow\Reflect）
+
+**6.多列布局**
+
+多列布局        （multi-column layout）
+
 ##### 11.请解释一下CSS3的Flexbox（弹性盒布局模型）,以及适用场景？
+见css布局中的flex布局
+##### 12.用纯CSS创建一个三角形的原理是什么？
+基于盒子模型，不给content的宽高，设置border，将上、左、右三条边隐藏掉
 
-##### 10.用纯CSS创建一个三角形的原理是什么？
+    {
+        width:0;
+        height:0;
+        border-width:20px;
+        border-style:solid;
+        border-color:transparent transparent red transparent;
+    }
+##### 13.一个满屏 品 字布局 如何设计?
+1.上边一个div，下边两个div
 
-##### 11.一个满屏 品 字布局 如何设计?
+2.上边一个div高：50%，宽100%
 
-##### 12.经常遇到的浏览器的兼容性有哪些？原因，解决方法是什么，常用hack的技巧 ？
+3.下边两个div，高：50%，宽50%，一个是float:left;一个float:right;
+或者是设置下边两个div的display:inline-block;注意不能用inline因为这样是行内元素，宽高设置会无效
 
-##### 13.li与li之间有看不见的空白间隔是什么原因引起的？有什么解决办法？
 
-##### 14.为什么要初始化CSS样式?
+    <!DOCTYPE html>
+    <html>
+        <head>
+            <meta charset="utf-8">
+            <link href="index.css" rel="stylesheet"
+            <style>
+                *{
+                    margin: 0;
+                    padding: 0;
+                }
+                html,body{
+                    height: 100%;
+                }
+                .top{
+                    width: 100%;
+                    height: 50%;
+                    border: 1px solid black;
+                }
+                .bottom{
+                    width: calc(50% - 2px);
+                    height: 50%;
+                    border: 1px solid black;
 
-##### 15.absolute的containing block计算方式跟正常流有什么不同？
+                }
+                .bottom1{
+                    float: left;
+                }
+                .bottom2{
+                    float: right;
+                }
+            </style>
+        </head>
 
-##### 16.CSS里的visibility属性有个collapse属性值是干嘛用的？在不同浏览器下以后什么区别？
+        <body>
+            <div class="top"></div>
+            <div class="bottom bottom1"></div>
+            <div class="bottom bottom2"></div>
+        </body>
+    </html>
 
-##### 17.position跟display、margin collapse、overflow、float这些特性相互叠加后会怎么样？
 
-##### 18.对BFC规范(块级格式化上下文：block formatting context)的理解？
+    <!DOCTYPE html>
+    <html>
+        <head>
+            <meta charset="utf-8">
+            <link href="index.css" rel="stylesheet">
+            <style>
+                *{
+                    margin: 0;
+                    padding: 0;
+                }
+                html,body{
+                    height: 100%;
+                }
+                .top{
+                    width: 100%;
+                    height: 50%;
+                    border: 1px solid black;
+                }
+                .bottom{
+                    width: calc(50% - 4px);
+                    height: 50%;
+                    border: 1px solid black;
+                    display: inline-block;
+                }
+            </style>
+        </head>
 
-##### 19.CSS权重优先级是如何计算的？
+        <body>
+            <div class="top"></div>
+            <div class="bottom bottom1">2</div>
+            <div class="bottom bottom2">3</div>
+        </body>
+    </html>
 
-##### 20.请解释一下为什么会出现浮动和什么时候需要清除浮动？清除浮动的方式
 
-##### 21.移动端的布局用过媒体查询吗？
+##### 14.经常遇到的浏览器的兼容性有哪些？原因，解决方法是什么，常用hack的技巧 ？
 
-##### 22.使用 CSS 预处理器吗？喜欢那个？
+1.浏览器默认的margin和padding不同，解决方法是使用如下代码统一
 
-##### 23.CSS优化、提高性能的方法有哪些？
+    *{
+        margin:0;
+        padding:0;
+    }
 
-##### 24.浏览器是怎样解析CSS选择器的？
+2.
 
-##### 25.在网页中的应该使用奇数还是偶数的字体？为什么呢？
+##### 15.li与li之间有看不见的空白间隔是什么原因引起的？有什么解决办法？
 
-##### 26.margin和padding分别适合什么场景使用？
+##### 16.为什么要初始化CSS样式?
 
-##### 27.抽离样式模块怎么写，说出思路，有无实践经验？[阿里航旅的面试题]
+##### 17.absolute的containing block计算方式跟正常流有什么不同？
 
-##### 28.元素竖向的百分比设定是相对于容器的高度吗？
+**正常流的包含块：**
 
-##### 29.全屏滚动的原理是什么？用到了CSS的那些属性？
+包含块由最近的块级祖先框，表单元格或行内块祖先框的内容边界构成。
 
-##### 30.什么是响应式设计？响应式设计的基本原理是什么？如何兼容低版本的IE？
+**浮动元素的包含块：**
 
-##### 31.视差滚动效果，如何给每页做不同的动画？（回到顶部，向下滑动要再次出现，和只出现一次分别怎么做？）
+最近的块级祖先元素，浮动元素尽管是行内元素也会生成一个块级框
+
+**定位的包含块**
+
+根元素：
+
+用户代理（比如浏览器）选择根元素（有的浏览器是html，有的是body）作为 containing block
+
+非根元素：
+
+1.position是relative或者static，包含块是最近的块级祖先框，表单元格或行内块祖先框的内容边界构成。
+
+2.position是absolute，包含块由最近的position值不是static的块元素。
+
+    如果祖先是块级元素，containing block 由祖先的 padding edge 形成。
+
+    如果祖先是内联元素，containing block 取决于祖先的 direction 属性。
+
+        1.如果 direction 是 ltr（左到右），祖先产生的第一个盒子的上、左内容边界是 containing block 的上方和左方，祖先的最后一个盒子的下、右内容边界是 containing block 的下方和右方。
+
+        2.如果 direction 是 rtl（右到左），祖先产生的第一个盒子的上、右内容边界是 containing block 的上方和右方，祖先的最后一个盒子的下、左内容边界是 containing block 的下方和左方。
+
+    如果没有祖先，根元素盒子的内容边界确定为 containing block。
+
+##### 18.CSS里的visibility属性有个collapse属性值是干嘛用的？在不同浏览器下以后什么区别？
+
+    visibility:hidden/visible/inherit/collapse
+
+visibility:collapse 当在表格中使用的时候，此值可以删除一行或者一列。值被应用于其他元素时，则呈现为hidden
+
+**html代码：**
+
+    <table cellspacing="0" class="table">
+        <tr>
+            <th>Fruits</th>
+            <th>Vegetables</th>
+            <th>Rocks</th>
+        </tr>
+        <tr>
+            <td>Apple</td>
+            <td>Celery</td>
+            <td>Granite</td>
+        </tr>
+        <tr>
+            <td>Orange</td>
+            <td>Cabbage</td>
+            <td>Flint</td>
+        </tr>
+    </table>
+
+    <p><button>collapse行1</button></p>
+
+    <p><button>hide行1</button></p>
+
+    <p><button>重置</button></p>
+
+**css代码：**
+
+    body {
+      text-align: center;
+      padding-top: 20px;
+      font-family: Arial, sans-serif;
+    }
+
+    table {
+      border-collapse: separate;
+      border-spacing: 5px;
+      border: solid 1px black;
+      width: 500px;
+      margin: 0 auto;
+    }
+
+    th, td {
+      text-align: center;
+      border: solid 1px black;
+      padding: 10px;
+    }
+
+    .vc {
+      visibility: collapse;
+    }
+
+    .vh {
+      visibility: hidden;
+    }
+
+    button {
+      margin-top: 5px;
+    }
+
+**js代码：**
+
+    var btns = document.getElementsByTagName('button'),
+    rows = document.getElementsByTagName('tr');
+
+    btns[0].addEventListener('click', function () {
+    rows[1].className = 'vc';
+    }, false);
+
+    btns[1].addEventListener('click', function () {
+    rows[1].className = 'vh';
+    }, false);
+
+    btns[2].addEventListener('click', function () {
+    rows[1].className = '';
+    }, false);
+
+http://www.webhek.com/visibility-collapse
+
+##### 19.position跟display、margin collapse、overflow、float这些特性相互叠加后会怎么样？
+
+
+
+##### 20.对BFC规范(块级格式化上下文：block formatting context)的理解？
+
+它是一个独立容器，决定了元素如何对其内容进行定位,以及与其他元素的关系和相互作用。
+
+一个页面是由很多个 Box 组成的,元素的类型和 display 属性,决定了这个 Box 的类型。
+
+ 不同类型的 Box,会参与不同的 Formatting Context（决定如何渲染文档的容器）,因此Box内的元素会以不同的方式渲染,也就是说BFC内部的元素和外部的元素不会互相影响。
+
+http://blog.csdn.net/github_34514750/article/details/51364202
+
+##### 21.CSS权重优先级是如何计算的？
+
+以下是权重的规则：标签的权重为1，class的权重为10，id的权重为100，以下例子是演示各种定义的权重值：
+
+    /*权重为1*/
+    div{
+    }
+    /*权重为10*/
+    .class1{
+    }
+    /*权重为100*/
+    #id1{
+    }
+    /*权重为100+1=101*/
+    #id1 div{
+    }
+    /*权重为10+1=11*/
+    .class1 div{
+    }
+    /*权重为10+10+1=21*/
+    .class1 .class2 div{
+    }
+
+如果权重相同，则最后定义的样式会起作用，但是应该避免这种情况出现
+
+
+##### 22.请解释一下为什么会出现浮动和什么时候需要清除浮动？清除浮动的方式
+
+##### 23.移动端的布局用过媒体查询吗？
+
+##### 24.使用 CSS 预处理器吗？喜欢那个？
+
+##### 25.CSS优化、提高性能的方法有哪些？
+
+##### 26.浏览器是怎样解析CSS选择器的？
+
+##### 27.在网页中的应该使用奇数还是偶数的字体？为什么呢？
+
+##### 28.margin和padding分别适合什么场景使用？
+
+##### 29.抽离样式模块怎么写，说出思路，有无实践经验？[阿里航旅的面试题]
+
+##### 30.元素竖向的百分比设定是相对于容器的高度吗？
+
+##### 31.全屏滚动的原理是什么？用到了CSS的那些属性？
+
+##### 32.什么是响应式设计？响应式设计的基本原理是什么？如何兼容低版本的IE？
+
+##### 33.视差滚动效果，如何给每页做不同的动画？（回到顶部，向下滑动要再次出现，和只出现一次分别怎么做？）
 
 ##### 32.::before 和 :after中双冒号和单冒号 有什么区别？解释一下这2个伪元素的作用。
 

@@ -90,7 +90,11 @@
                  bottom: 0px;
                  width: 100%;
              }
-
+            /**********很重要
+                需要注意的是：
+                head直接给出height为100px就可以了，不用设置width:100%,因为默认了是在文档流中，则width默认是100%占满
+                footer则要放在页面底部，使用绝对定位，脱离了文档流，所以不仅仅要设置height还是设置width才能将div撑开
+             */
             #head,
             #foot{
                 height: 100px;
