@@ -1,4 +1,8 @@
 /*
+You are climbing a stair case. It takes n steps to reach to the top.
+
+Each time you can either climb 1 or 2 steps. In how many distinct ways can you climb to the top?
+
 思路：
 其实可以用f(n) = f(n-1) + f(n-2);但是递归效率不高
 本题用for循环替代递归
