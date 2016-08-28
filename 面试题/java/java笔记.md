@@ -1203,3 +1203,134 @@ public class SortArray {
     int x=96;  在c和c++中是合法的，但在java中不合法
   }
 }
+
+##### 26.静态和非静态的区别
+
+###### 1.静态类和非静态类
+
+**静态类：**
+静态内部类可以有静态成员(方法，属性)
+
+静态内部类只能够访问外部类的静态成员
+
+静态类不能实例化，静态类中不能创建非静态的方法，即静态方法中只能创建静态方法，但在非静态类中可以调用静态方法。
+
+实例化一个静态内部类的方法：
+
+```
+a.不依赖于外部类的实例,直接实例化内部类对象
+OutClassTest.InnerStaticClass inner = new OutClassTest.InnerStaticClass();
+b.调用内部静态类的方法或静态变量,通过类名直接调用
+OutClassTest.InnerStaticClass.static_value
+OutClassTest.InnerStaticClass.getMessage()
+```
+
+eg：Collections和Arrays
+
+**非静态类：**
+
+非静态内部类则不能有静态成员(方法，属性)
+
+非静态内部类则可以访问外部类的所有成员(方法，属性)
+
+```
+实例化一个非静态的内部类的方法：
+a.先生成一个外部类对象实例
+OutClassTest oc1 = new OutClassTest();
+b.通过外部类的对象实例生成内部类对象
+OutClassTest.InnerClass no_static_inner = oc1.new InnerClass();
+```
+
+###### 2.静态属性和非静态属性
+
+**静态属性：**
+
+静态的属性属于类的，不依赖于某个对象，也可以称为类属性。不同的对象都可以访问到类的属性。带参数的构造方法中不能包含静态的属性。
+
+**非静态属性：**
+
+非静态属性只能属于某个对象，其它的对象不能访问它的属性。随着对象的消亡而消亡
+
+###### 3.静态方法和非静态方法
+
+**静态方法：**
+
+在外部调用静态方法时，可以使用"类名.方法名"的方式，也可以使用"对象名.方法名"的方式。而实例方法只有后面这种方式。也就是说，调用静态方法可以无需创建对象。
+
+静态方法在访问本类的成员时，只允许访问静态成员（即静态成员变量和静态方法），而不允许访问实例成员变量和实例方法；实例方法则无此限制。
+
+之所以不允许静态方法访问实例成员变量，是因为实例成员变量是属于某个对象的，而静态方法在执行时，并不一定存在对象。同样，因为实例方法可以访问实例成员变量，如果允许静态方法调用实例方法，将间接地允许它使用实例成员变量，所以它也不能调用实例方法。基于同样的道理，静态方法中也不能使用关键字this。
+
+main()方法是一个典型的静态方法，它同样遵循一般静态方法的规则，所以它可以由系统在创建对象之前就调用。
+
+**非静态方法：**
+
+静态方法只能访问静态成员，实例方法可以访问静态和实例成员。
+
+###### 4.静态对象和非静态对象
+
+|静态对象|非静态对象|
+|:------------- |:-------------:|
+| 是类共同拥有的| 是类独立拥有的|
+| 内存空间上是固定的  | 空间在各个附属类里面分配|
+| 先分配静态对象的空间 |继而再对非静态对象分配空间,也就是初始化顺序是先静态再非静态|
+
+```
+package com.etc;
+ public  class A//父类
+ {
+     public static String str = "静态属性";
+     public String name = "非静态属性";
+     public static void sing()
+     {
+         System.out.println("静态方法");
+     }
+
+     public void run()
+     {
+         System.out.println("非静态方法");
+     }
+ }
+ package com.etc;
+ public class B extends A //子类B
+ {
+     public static String str = "B该改写后的静态属性";
+     public String name ="B改写后的非静态属性";
+     public static void sing()
+     {
+         System.out.println("B改写后的静态方法");
+     }
+ }
+ package com.etc;
+ public class C extends A //子类C继承A中的所有属性和方法
+ {
+ }
+ package com.etc;
+ public class Test//测试类
+ {
+     public static void main(String[] args)
+     {
+         C c = new C();
+         System.out.println(c.name);
+         System.out.println(c.str);
+         c.sing();//输出的结果都是父类中的非静态属性、静态属性和静态方法,推出静态属性和静态方法可以被继承
+
+         A c1 = new C();
+         System.out.println(c1.name);
+         System.out.println(c1.str);
+         c1.sing();//结果同上，输出的结果都是父类中的非静态属性、静态属性和静态方法,推出静态属性和静态方法可以被继承
+
+         B b = new B();
+         System.out.println(b.name);
+         System.out.println(b.str);
+         b.sing();//结果都是子类的非静态属性，静态属性和静态方法，这里和非静态属性和非静态类的继承相同
+
+
+         A b1 = new B();
+         System.out.println(b1.str);//结果是父类的静态属性，说明静态属性不可以被重写，不能实现多态
+         System.out.println(b1.name);//结果是父类的非静态属性，说明非静态属性不可以被重写，不能实现多态
+         b1.sing();//结果都是父类的静态方法，说明静态方法不可以被重写，不能实现多态
+     }
+ }
+
+```
