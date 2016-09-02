@@ -1,0 +1,144 @@
+.enterpriseContent{
+    width: 1124px;
+    margin: 0 auto 0 auto;
+    /*border: 1px solid black;*/
+}
+.enterprise-social{
+    /*width: 1124px;
+    margin: 0 auto 0 auto;*/
+    /*border: 1px solid black;*/
+    width: 100%；
+}
+.h1{
+    font-size: 48px;
+    font-family: '微软雅黑';
+
+    color:#333333;
+
+    margin-top: 60px;
+    text-align: center;
+}
+.h2{
+    font-size: 30px;
+    font-family: '微软雅黑';
+    font-weight: lighter;
+
+    color:#333333;
+
+    margin-top: 40px;
+    margin-bottom: 50px;
+    text-align: center;
+}
+.values{
+    margin-bottom: 40px;
+}
+.values,
+.peoples{
+    display: -webkit-flex; /* Safari */
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+.peoples{
+    justify-content: space-between;
+    border: 1px solid black;
+}
+.peoples img{
+    float: left;
+}
+.content{
+    border: 1px solid black;
+    float: right;
+}
+.content-detail{
+    display: inline-block;
+}
+.dot{
+    width: 6px;
+    height: 6px;
+    border-radius: 3px;
+    float: left;
+}
+.bossDot{
+    background-color: #17aafd;
+}
+.staffDot{
+    background-color: #59eaa4;
+}
+.ITDot{
+    background-color: #fef25d;
+}
+.explan{
+    font-size: 14px;
+    font-family: '微软雅黑';
+
+    float: right;
+}
+.h3{
+    font-size: 24px;
+    font-family: '微软雅黑';
+    font-weight: lighter;
+
+    color:#333333;
+
+    margin-top: 12px;
+    text-align: center;
+}
+
+.system-function{
+    width: 100%;
+    background: url('../image/enterprise-social/systemFunction/background.jpg');
+}
+.system-function-father{
+    background: white;
+    margin-top: 40px;
+    margin-left:auto;
+    margin-right: auto;
+    border: 1px solid black;
+    width: 700px;
+}
+.system-function-father2{
+    width: 100%;
+    display: flex;
+    flex-flow: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+.system-function-child{
+    height: 169px;
+    width: 90px;
+    /*border: 1px solid black;*/
+
+    position: relative;
+}
+.system-function-child img{
+
+}
+.system-function-child p{
+    font-size: 16px;
+    font-family: '微软雅黑';
+
+    position: absolute;
+    top: 60px;
+    left: 13px;
+}
+.system-function-child .except{
+    left: 8px;
+}
+
+.application-scene{
+    background: url('../image/enterprise-social/applicationScene/background.jpg');
+}
+#h1{
+    color:#ffffff;
+}
+.h4{
+    font-size: 14px;
+    font-family: '微软雅黑';
+
+    color:#ffffff;
+
+    margin-top: 10px;
+    margin-bottom: 10px;
+    text-align: center;
+}
