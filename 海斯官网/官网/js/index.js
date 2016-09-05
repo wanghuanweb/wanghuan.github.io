@@ -23,32 +23,43 @@ $(document).ready(function() {
 
     // product-features animation
     $(".contentModule1").hover(function(){
-        $("#contentModule1-2").attr("src","image/product-features/1-2choosen.png");
         $("#contentModule1-1").attr("src","image/product-features/1-choosen.png");
+        $("#contentModule1-2").attr("src","image/product-features/1-2choosen.png");
+        $("#contentModule1-2").addClass("contentModule-active");
     },function(){
         $("#contentModule1-1").attr("src","image/product-features/1.png");
         $("#contentModule1-2").attr("src","image/product-features/1-2.png");
+        $("#contentModule1-2").removeClass("contentModule-active");
     });
+
     $(".contentModule2").hover(function(){
-        $("#contentModule2-2").attr("src","image/product-features/1-2choosen.png");
         $("#contentModule2-1").attr("src","image/product-features/2-choosen.png");
+        $("#contentModule2-2").attr("src","image/product-features/1-2choosen.png");
+        $("#contentModule2-2").addClass("contentModule-active");
     },function(){
         $("#contentModule2-1").attr("src","image/product-features/2.png");
         $("#contentModule2-2").attr("src","image/product-features/1-2.png");
+        $("#contentModule2-2").removeClass("contentModule-active");
     });
+
     $(".contentModule3").hover(function(){
-        $("#contentModule3-2").attr("src","image/product-features/1-2choosen.png");
         $("#contentModule3-1").attr("src","image/product-features/3-choosen.png");
+        $("#contentModule3-2").attr("src","image/product-features/1-2choosen.png");
+        $("#contentModule3-2").addClass("contentModule-active");
     },function(){
         $("#contentModule3-1").attr("src","image/product-features/3.png");
         $("#contentModule3-2").attr("src","image/product-features/1-2.png");
+        $("#contentModule3-2").removeClass("contentModule-active");
     });
+
     $(".contentModule4").hover(function(){
-        $("#contentModule4-2").attr("src","image/product-features/1-2choosen.png");
         $("#contentModule4-1").attr("src","image/product-features/4-choosen.png");
+        $("#contentModule4-2").attr("src","image/product-features/1-2choosen.png");
+        $("#contentModule4-2").addClass("contentModule-active");
     },function(){
         $("#contentModule4-1").attr("src","image/product-features/4.png");
         $("#contentModule4-2").attr("src","image/product-features/1-2.png");
+        $("#contentModule4-2").removeClass("contentModule-active");
     });
 
     autoPlay();

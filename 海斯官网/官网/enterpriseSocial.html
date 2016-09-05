@@ -13,6 +13,7 @@
         <!-- <script src="http://code.jquery.com/jquery-latest.js" type="text/javascript"></script> -->
         <script src="js/jquery.min.js" type="text/javascript"></script>
         <script src="js/jquery.fullPage.js" type="text/javascript"></script>
+        <script src="js/enterpriseSocial.js" type="text/javascript"></script>
     </head>
 
     <body>
@@ -20,12 +21,12 @@
             <div class="header-content">
                 <img  id="logo" src="image/logo.png"/>
 
-                <ul class="header-ul">
-                    <li><a>首页</a></li>
-                    <li><a>产品功能</a></li>
-                    <li><a>标准内容</a></li>
-                    <li><a>服务介绍</a></li>
-                    <li><a>联系我们</a></li>
+                <ul class="header-ul" id="myMenu">
+                    <li data-menuanchor = "firstPage"><a href="index.html">首页</a></li>
+                    <li data-menuanchor = "secondPage"><a href="index.html">产品功能</a></li>
+                    <li data-menuanchor = "thirdPage"><a href="index.html">标准内容</a></li>
+                    <li data-menuanchor = "fourthPage"><a href="index.html">服务介绍</a></li>
+                    <li data-menuanchor = "fifthPage"><a href="index.html">联系我们</a></li>
                 </ul>
 
                 <div class="buttons">
@@ -37,7 +38,7 @@
         </header>
 
         <div class="enterpriseContent" id="fullpage">
-            <div class="section active enterprise-social">
+            <div class="enterprise-social">
                 <p class="h1">企业社交化管理系统</p>
                 <p class="h2">系统价值</p>
                 <div class="values">
@@ -117,7 +118,7 @@
 
             </div>
 
-            <div class="section system-function">
+            <div class="system-function">
                 <p class="h1">系统功能</p>
                 <p class="h3">SYSTEM FUNCTION</p>
 
@@ -201,38 +202,58 @@
 
             </div>
 
-            <div class="section application-scene">
+            <div class="application-scene">
                 <p class="h1" id="h1">应用场景</p>
                 <p class="h4">APPLICATION SCENARIOS</p>
 
-                <div class="line">
+
+                <div class="application-scene-content">
+                    <div class="application-scene-line">
+                    </div>
+
+                    <p class="explain">某某企业是某国外酒店设备品牌的国内总代理，其业务是销售设计及为全国的该品牌设备同行提供售后服务。</p>
+
+                    <div class="contentRect">
+                        <div class="smallestRect smallestRect1"><p>客户需求</p></div>
+                        <div class="smallRect smallRect1"><p><b>CRM需求</b>：销售人员较多，管理层无法及时掌握项目进展情况，造成测试设备和工程师的资源浪费。</p></div>
+                        <div class="smallRect smallRect1"><p><b>售后服务管理</b>：流程既要满足国外品牌的要求，又要兼顾自身企业的管理要求，个性化需求较多。</p></div>
+                    </div>
+
+                    <div class="contentRect">
+                        <div class="smallestRect smallestRect2"><p>过程及结论</p></div>
+                        <div class="bigRect bigRect1"><p><b>选型过程</b>：经过几轮寻找，并没找到两个业务需求同事满足的产品，而个性化开发成本巨大。
+                            最终客户选择了海斯云SaaS管理系统，销售阶段的管理需求通过商机管理中的销售漏斗实现。售后服务需求通过在海斯云售后服务标准功能基础上个性化配置的方法实现</p></div>
+                        <div class="bigRect bigRect2"><p><b>使用效果</b>：最终客户的销售管理需求及个性化售后服务需求都同时得到了满足。管理人员能够清晰
+                        掌握销售阶段并合理的安排资源的支持;售后服务模块较多个性化的功能经过海斯云强大的灵活配置功能实现后,得到客户的高度认可。</p></div>
+                    </div>
+
                 </div>
+
 
             </div>
 
-            <div class="footer section">
-                <div class="line line1">
 
-                </div>
-                <p>内容需要重新被确认</p>
+            <div class="footer">
+                <div id="footer-text">
+                    <div class="line line1">
 
-                <div>
-                </div>
+                    </div>
 
-                <div class="footer-content">
-                    <p>客服QQ:800111004  客服邮箱:800111004@b.qq.com</p>
-                    <p class="cor">合作单位</p>
-                    <input type="button" value="  南京理工科技园股份有限公司  "/>
-                    <input type="button" value="  中南大学国家大学科技园  "/>
-                    <input type="button" value="  中国矿业大学国家大学科技园  "/>
-                    <input type="button" value="  江苏浩云联德信息科技有限公司  "/>
-                    <input type="button" value="  南京浩云汇创网络科技有限公司  "/>
-                </div>
+                    <div class="footer-content">
+                        <p>客服QQ:800111004  客服邮箱:800111004@b.qq.com</p>
+                        <p class="cor">合作单位</p>
+                        <input type="button" value="  南京理工科技园股份有限公司  "/>
+                        <input type="button" value="  中南大学国家大学科技园  "/>
+                        <input type="button" value="  中国矿业大学国家大学科技园  "/>
+                        <input type="button" value="  江苏浩云联德信息科技有限公司  "/>
+                        <input type="button" value="  南京浩云汇创网络科技有限公司  "/>
+                    </div>
 
-                <div class="line line2">
-                    <span class="f_ti">
-                        Copyright @ 南京理工云之端信息技术有限公司 ICP证：苏B2-20140071 All Rights Reserved
-                    </span>
+                    <div class="line line2">
+                        <span class="f_ti">
+                            Copyright @ 南京理工云之端信息技术有限公司 ICP证：苏B2-20140071 All Rights Reserved
+                        </span>
+                    </div>
                 </div>
             </div>
 

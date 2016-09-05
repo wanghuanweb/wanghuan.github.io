@@ -1,0 +1,122 @@
+.parkManagementContent{
+    width: 1200px;
+    margin: 0 auto 0 auto;
+}
+.parkManagementContent .one,
+.parkManagementContent .two{
+    width: 100%;
+    height: 440px;
+    /*border: 1px solid black;*/
+    margin-bottom: 90px;
+}
+.parkManagementContent .three{
+    width: 100%;
+    height: 440px;
+    /*border: 1px solid black;*/
+}
+.left{
+    width:300px;
+    margin-left: 100px;
+    /*border: 1px solid black;*/
+    float: left;
+}
+.left-one{
+    margin-top: 120px;
+}
+.left-three{
+    width: 230px;
+}
+.right{
+    float: right;
+    /*border: 1px solid black;*/
+}
+.right-one{
+    margin-top: 90px;
+}
+p{
+    font-family: '微软雅黑';
+}
+.parkManagementContent .p1 {
+    font-size: 36px;
+    font-weight: lighter;
+    margin-bottom: 15px;
+}
+.parkManagementContent .p1-one{
+    color: #0ea9ff;
+}
+.right-two{
+    width: 230px;
+    margin-right: 200px;
+}
+.parkManagementContent .p2{
+    margin-top: 20px;
+    margin-bottom: 10px;
+
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 28px;
+    color: #333333;
+}
+
+.parkManagementContent .p1-two{
+    color: #ff9700;
+}
+.parkManagementContent .p1-three{
+    color: #8d66de;
+}
+.systemCase{
+    width: 100%;
+    background: url('../image/lib-management/page_bg.jpg');
+}
+.systemCase .h1{
+    text-align: center;
+    color: white;
+    font-size: 30px;
+    padding-top: 26px;
+    /*border: 1px solid black;*/
+}
+.systemCase .h2{
+    padding-top: 10px;
+    padding-bottom: 30px;
+    text-align: center;
+    color: white;
+    font-size: 14px;
+    /*border: 1px solid black;*/
+}
+.cases{
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: center;
+}
+.case{
+    width: 500px;
+    height: 130px;
+    /*margin-right: 20px;*/
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.case1{
+    background: url('../image/lib-management/1.png');
+    margin-right: 20px;
+}
+.case2{
+    background: url('../image/lib-management/2.png');
+}
+.case3{
+    background: url('../image/lib-management/3.png');
+    margin-right: 20px;
+}
+.case4{
+    background: url('../image/lib-management/4.png');
+}
+.casePs{
+    font-size: 16px;
+    color: #333333;
+    /*border: 1px solid black;*/
+    position: absolute;
+    top: 50%;
+    left: 150px;
+    margin-top: -16px;
+}

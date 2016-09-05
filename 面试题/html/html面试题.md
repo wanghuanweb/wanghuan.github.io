@@ -31,6 +31,12 @@
 | 对应的相关display属性 | block       |   inline |无|
 | 切换 | display:inline变成行内元素        |    display:block变成块级元素 |无 |
 
+##### 5.实现div的跳转
+```
+<div onclick="window.open('http://www.mygaytrip.com');>跳转页面，在新建窗口打开网页</div>  
+<div onclick="window.location.href='http://www.mygaytrip.com';">跳转页面，在当前窗口打开网页</div>  
+<div onclick="window.open('enterpriseSocial.html','_self')" >跳转页面，在当前窗口打开网页</div>
+```
 ##### 5.页面导入样式时，使用link和@import有什么区别？
 
 ##### 6.介绍一下你对浏览器内核的理解？

@@ -16,6 +16,16 @@ For example,
  */
  public class Solution {
      public List<List<Integer>> subsets(int[] nums) {
+        List<List<Integer>> result = new ArrayList<List<Integer>>();
 
+        int len = nums.length,
+            total = len * len;
+
+        for(int i = 0;i < total;i++) {
+            List<Integer> list = new ArrayList<Integer>();
+
+            
+            result.add(list);
+        }
      }
  }
