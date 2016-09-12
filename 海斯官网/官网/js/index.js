@@ -82,10 +82,10 @@ $(document).ready(function() {
         'loopBottom':true,
         'menu':'myMenu',
         // 'autoscrolling':false,
-        anchors: ['firstPage', 'secondPage', 'thirdPage', 'fourthPage','fifthPage'],
+        'anchors': ['firstPage', 'secondPage', 'thirdPage', 'fourthPage','fifthPage'],
         'navigation': true,
         'navigationPosition': 'right',
-        'navigationTooltips': ['focus and speciality', 'Product features', 'Standard features', 'service content','contact us']
+        'navigationTooltips': ['Focus and speciality', 'Product features', 'Standard features', 'Service content','Contact us']
     });
 
 

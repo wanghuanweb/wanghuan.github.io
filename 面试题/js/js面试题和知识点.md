@@ -276,6 +276,48 @@ alert(res); //false
 
 ```
 
+**String的一些操作方法**
+
+**字符方法**
+
+charAt()字符,charCodeAt()字符编码,或者stringValue[]
+
+**字符串操作方法**
+
+concat(),slice(),substring(),substr()都不修改字符串本身的值
+
+slice(),substring(),substr()三者区别：
+
+slice():
+
+参数：接收一个或者两个参数，第一个参数指定字符串的开始位置；第二个参数表示子字符串到最后一个字符后面的位置
+
+```
+var stringValue = "hello world";
+stringValue.slice(3);//"lo world"
+stringValue.slice(3,7);//"lo w"
+```
+
+substring():
+
+参数：和slice()相同
+
+substr():
+
+参数：接收一个或者两个参数，第一个参数指定字符串的开始位置；第二个参数表示返回子字符串的长度
+
+**字符串位置方法**
+
+indexOf(),lastIndexOf()
+
+**trim()**
+
+创建一个字符串副本，删除前缀和后缀所有空格
+
+**字符串大小写转换方法**
+
+**字符串的模式匹配方法**
+
 ##### 7.js数组合并的方法？
 
 http://blog.csdn.net/github_34514750/article/details/51320982

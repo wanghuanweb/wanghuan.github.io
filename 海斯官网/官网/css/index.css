@@ -17,6 +17,7 @@ body{
     font-weight: bold;
     /*border: 1px solid black;*/
     background-color: #ffffff;
+    /*color: black;*/
 
 }
 .header .header-content{
@@ -49,6 +50,7 @@ body{
     letter-spacing: 2px;
     cursor: pointer;
     text-decoration: none;
+    color: black;
 }
 .header .header-content .buttons{
     position: absolute;
@@ -56,20 +58,27 @@ body{
     /*top: 15px;*/
     top: 20px;
 }
-.header .header-content .buttons input{
+.header .header-content .buttons a{
+    font-size: 14px;
+    letter-spacing: 2px;
+    /*line-height: 20px;*/
+    font-family: 微软雅黑;
+    font-weight: normal;
+
+    background-color:#ffffff;
+	color:#0ea7ff;
+
+    border: 1px solid #0ea7ff;
+
     width: 70px;
     height: 30px;
-    font-size: 14px;
-	background-color:#ffffff;
-	color:#0ea7ff;
-	border: 1px solid #0ea7ff;
-	padding: 5px 12px;
-	line-height: 20px;
+    padding: 5px 12px 5px 16px;
+
 	border-radius: 4px;
 	cursor: pointer;
-    font-family: 微软雅黑;
+    text-decoration: none;
 }
-.header .header-content .buttons input:hover{
+.header .header-content .buttons a:hover{
     color: #ffffff;
     background-color: #0ea7ff;
 }
@@ -77,14 +86,13 @@ body{
 
 .content .banner{
     width: 100%;
-    /*height: 700px;*/
     position: relative;
     overflow: hidden;
+    /*border: 1px solid black;*/
 }
 .content .banner .banner-list{
     position: absolute;
     width: 100%;
-    /*height: 100%;*/
     /*top: 0;*/
     /*left: 0;*/
 }
@@ -122,11 +130,10 @@ body{
     /*height: 700px;*/
     /*border: 1px solid black;*/
 }
-.content #functionContent{
+/*.content #functionContent{
     background:url('../image/background3.jpg');
     width: 100%;
-    /*border: 1px solid black;*/
-}
+}*/
 .content .product-features .product-features-header,
 .content .standard-function .standard-function-header,
 .content .service-content .service-content-header {
@@ -244,12 +251,6 @@ body{
     box-shadow: 0 10px 10px 0 rgba(72, 86, 127, 0.2);
 }
 
-.content .service-content{
-    /*margin-top: 325px;*/
-    overflow:hidden;
-    background:url('../image/background5.jpg');
-    /*border: 1px solid black;*/
-}
 .content .service-content .service-content-content{
     margin: 50px auto auto auto;
     padding-left: 290px;
