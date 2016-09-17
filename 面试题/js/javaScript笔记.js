@@ -1,42 +1,4 @@
 
-5.5 Function类型
-    ECMAScript最有意思的就是函数了，因为在ECMAScript中函数也是对象。每个函数都是Function类型的实例，并且都与其他引用类型一样具有属性和方法。
-    函数定义方法：
-    1. 函数声明语法定义
-      function sum(num1,num2){
-        return num1 + num2;
-      }
-    2. 定义变量sum让其初始化成一个函数
-      var sum = function(num1,num2) {
-        return num1 + num2;
-      };//注意有分号，因为这是相当于一个变量的定义
-    3. 使用Function构造函数定义函数//不推荐使用
-      var sum = new Function("num1","num2","return num1+num2");
-    此时，深入理解一下js函数没有重载的原因：
-        Java：通过方法签名来唯一确定一个方法。所谓方法签名包括：方法名、参数类型和参数顺序、参数个数这几个要素。
-        所以，如果两个方法名称相同，但是只要其他要素(例如参数类型、参数个数)不同，编译器就会认为是不同方法。从而可以存在同名的不同方法，导致了重载现象。
-        JavaScript：js中的函数是作为一个特殊对象类型存在的，函数的名字只是一个普通的变量，先后定义的两个同名函数，
-        实际上相当于两个函数对象绑定到了同一个变量上，后者肯定是会覆盖前者的，自然不会共存，也不会重载。
-        function box(num, a){
-           return  num + a + 100;
-        }
-        function box(num){
-           return  num + 200;
-        }
-       alert(box(50,1));   //结果显示250,而不是151
-       因为上述代码相当于：
-       var sum = function box(num, a){
-          return  num + a + 100;
-       };
-       sum = function box(num){
-          return  num + 200;
-       };
-      alert(sum);   //结果显示250,而不是151
-    作为值的函数：--因为EMCAScript中函数名本身就是变量，所以函数也可以当做值来使用。
-
-
-JavaScript的语法
-JavaScript的语法
   JavaScript中任何类型和字符串相加都是转换成字符串类型
   举例：var i = 5;var j = "5";var m = i+j;则m输出为55
         var i = 5;var j = "5"; i==j为真,i===j为false，因为===需要满足类型也想通（类似有！=和！==）

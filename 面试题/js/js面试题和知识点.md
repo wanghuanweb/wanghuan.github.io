@@ -355,14 +355,7 @@ http://blog.csdn.net/github_34514750/article/details/51320982
 
 ##### 8.说说写JavaScript的基本规范？
 
-
-##### 9.JavaScript原型，原型链 ? 有什么特点？
-
-
-##### 10.Javascript如何实现继承？
-
-
-##### 11.Javascript创建对象的几种方式？
+##### 9.Javascript创建对象的几种方式？
 
 ###### 1.使用Object构造函数创建对象
 
@@ -557,8 +550,109 @@ alert(person1.sayName === person2.sayName);//true
 //说明两者的函数指针相同
 ```
 
+###### 7.动态原型模式
+
+**动态原型模式的优点**
+
+1.看起来更像传统的面向对象编程，具有更好的封装性
+
+2.初次调用构造函数才可执行下面的if判断方法
+
+3.不需要对每一个方法进行if检查，只需要检查其中一个即可
+
+```
+function Person(name,age,job)
+{
+    //属性
+    this.name=name;
+    this.age=age;
+    this.job=job;
+    this.friends=["shu","guang"];
+    //方法，不需要对每一个方法进行if检查，只需要检查其中一个即可
+    if(typeof this.sayName !="function")
+    {
+        Person.prototype.sayName=function()
+        {
+            alert(this.name);
+        };
+
+        Person.prototype.sayFriends=function()
+        {
+            alert(this.friends);
+        };
+    }
+}
+
+var person = new Person("wanghuan",23,"SE");
+person.sayName();
+person.sayFriends();
+```
+
+##### 10.JavaScript原型，原型链 ? 有什么特点？
+**构造函数，原型和实例的关系**
+
+**构造函数**：都有一个原型属性，指向一个原型对象。prototype
+
+**原型对象**：都包含一个指向构造函数的指针.constructor
+
+**实例**：包含一个指向原型对象的**内部指针**.[[prototype]]
+
+**原型**
+
+1.创建的每个函数都有一个prototype属性，指向原型对象，prototype属性是一个指针，指向一个对象，这个对象包含可以由特定类型的所有实例共享的属性和方法。
+
+2.每个实例都有一个内部属性[[Prototype]],指向它的原型对象
+
+**原型链**
+
+让原型对象等于另一个类型的实例(SubType.prototype = new SuperType();)，则重写了prototype的constructor，则会让一个原型对象包含一个指向另一个原型的指针[[Prototype]],这样层层递进，构成了实例与原型的链条，也就是原型链。
+
+因此访问一个属性过程：
+
+1.在实例中搜索该属性
+
+2.若没找到，则会搜索实例的原型
+
+3.若还没找到，则沿着原型链继续往上搜索原型
+
+
+```
+<script type="text/javascript">  
+    function Person(name,age){  
+        this.name=name;  
+        this.age=age;  
+    }  
+    Person.prototype.sayHello=function(){  
+        alert("使用原型得到Name："+this.name);  
+    }  
+    var per=new Person("wanghuan",22);  
+    per.sayHello(); //输出：使用原型得到Name:wanghuan
+
+    function Student(){}  
+    Student.prototype=new Person("shuguang",22);  
+    Student.prototype.grade=5;  
+    Student.prototype.intr=function(){  
+        alert(this.grade);  
+    }  
+    var stu=new Student();  
+    //stu指向Student的原型，Student原型又指向Person的原型
+    stu.sayHello();//输出：使用原型得到Name:shuguang
+    stu.intr();//输出：5  
+</script>  
+```
+![这里写图片描述](http://img.blog.csdn.net/20160917215757067)
+
+##### 11.Javascript如何实现继承？
+
+继承实际是依靠原型链来实现的，原型链是实现继承的主要方法。
+
 ##### 12.Javascript作用链域?
 
+全局函数无法查看局部函数的内部细节，但局部函数可以查看其上层的函数细节，直至全局细节。
+
+当需要从局部函数查找某一属性或方法时，如果当前作用域没有找到，就会上溯到上层作用域查找，
+
+直至全局函数，这种组织形式就是作用域链。
 
 ##### 13.谈谈this对象的理解。
 
