@@ -1,0 +1,48 @@
+.radius{
+    width: 200px;
+    height: 200px;
+    border-radius: 100px;
+    background: black;
+}
+.ellipse{
+    width: 200px;
+    height: 100px;
+    border-radius: 50%;
+    background: black;
+}
+.x-ellipse{
+    width: 200px;
+    height: 150px;
+    border-radius: 50%/ 100% 100% 0 0;
+    /*相当于50% 50% 50% 50%/ 100% 100% 0 0;*/
+    background: black;
+}
+.y-ellipse{
+    width: 200px;
+    height: 150px;
+    border-radius: 100% 0 0 100%/50%;
+    background: black;
+}
+.quarter-ellipse{
+    width: 200px;
+    height: 150px;
+    border-radius: 100% 0 0 0;
+    background: black;
+}
+
+.paralle {
+    position: relative;
+    left: 100px;
+    width:200px;
+    height: 100px;
+    background:#44a5fc;
+
+    line-height: 100px;
+    text-align: center;
+    font-weight: bolder;
+
+    transform: skew(-20deg);
+}
+.paralle p{
+    transform: skew(20deg);
+}

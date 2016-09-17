@@ -288,7 +288,7 @@ concat(),slice(),substring(),substr()都不修改字符串本身的值
 
 slice(),substring(),substr()三者区别：
 
-slice():
+**slice():**
 
 参数：接收一个或者两个参数，第一个参数指定字符串的开始位置；第二个参数表示子字符串到最后一个字符后面的位置
 
@@ -297,14 +297,43 @@ var stringValue = "hello world";
 stringValue.slice(3);//"lo world"
 stringValue.slice(3,7);//"lo w"
 ```
+参数为负数时：两个参数会将负数和字符串的长度相加
 
-substring():
+```
+var stringValue = "hello world";
+stringValue.slice(-3);//"rld"
+stringValue.slice(3,-4);//"lo w"
+```
+
+**substring():**
 
 参数：和slice()相同
 
-substr():
+参数为负数时：两个参数都转换成0
+
+```
+var stringValue = "hello world";
+stringValue.substring(-3);//"hello world"
+stringValue.substring(3,-4);//"hel"--首先会是substring(3,0)--自动会把较小的数为开始位置substring(0,3)
+```
+
+**substr():**
 
 参数：接收一个或者两个参数，第一个参数指定字符串的开始位置；第二个参数表示返回子字符串的长度
+
+```
+var stringValue = "hello world";
+stringValue.substr(3);//"lo world"
+stringValue.substr(3,7);//"lo worl"
+```
+
+参数为负数时：第一个参数会将负数和字符串的长度相加，第二个参数变成0
+
+```
+var stringValue = "hello world";
+stringValue.substr(-3);//"rld"
+stringValue.substr(3,-4);//""
+```
 
 **字符串位置方法**
 
@@ -315,6 +344,8 @@ indexOf(),lastIndexOf()
 创建一个字符串副本，删除前缀和后缀所有空格
 
 **字符串大小写转换方法**
+
+toUpperCase(),toLowerCase()
 
 **字符串的模式匹配方法**
 
@@ -327,11 +358,204 @@ http://blog.csdn.net/github_34514750/article/details/51320982
 
 ##### 9.JavaScript原型，原型链 ? 有什么特点？
 
+
 ##### 10.Javascript如何实现继承？
 
 
 ##### 11.Javascript创建对象的几种方式？
 
+###### 1.使用Object构造函数创建对象
+
+```
+var person = new Object();
+person.name = "wanghuan";
+person.age = 23;
+person.sayName = function(){
+    alert(this.name);
+};
+```
+###### 2.使用对象字面量创建对象
+```
+var person = {
+    name:"wanghuan",
+    age:23,
+    sayName:function(){
+        alert(this.name);
+    }
+};
+```
+**上述两个方法都是创建单个对象，要想批量创建对象，则使用下列方法**
+###### 3.使用工厂模式创建对象
+**工厂模式的优点：**
+
+发明了一种函数，用函数来封装以特定接口创建对象的细节。
+
+**工厂模式的问题：**
+
+虽然解决了多个相似对象的问题，但却没有解决对象识别的问题。
+
+```
+function createPerson (name,age,job) {
+	var o = new Object();
+	o.name = name;
+	o.age = age;
+	o.job = job;
+	o.sayName = function(){
+	alert(this.name);
+    }
+    return o;
+}
+var person1 = createPerson("wanghuan",22,"software engineer");
+var person2 = createPerson("shuguang",22,"army");
+```
+###### 4.使用构造函数模式创建对象
+**构造函数模式的优点：**
+
+自定义的构造函数意味着将来可以把它的实例标识为一种特定的类型，这正是构造函数模式胜过工厂模式的地方。
+
+```
+function Person (name,age,job) {//构造函数，习惯性的第一个字母大写
+   this.name = name;
+   this.age = age;
+   this.job = job;
+   this.sayName = function(){
+     alert(this.name);
+   }//其实有this对象在，根本不用在执行代码前把函数绑定到特定对象上边
+}
+var person1 =  new Person("wanghuan",22,"software engineer");
+var person2 = new Person("shuguang",22,"army");
+```
+**构造函数模式的缺点：**
+
+构造函数主要问题就是每个方法都要在每个实例上重新创建一遍，这种方法创建函数，会导致不同的作用域链和标识符解析。
+因此，用
+```
+function Person (name,age,job) {//构造函数，习惯性的第一个字母大写
+   this.name = name;
+   this.age = age;
+   this.job = job;
+}
+function sayName(){
+   alert(this.name);
+}//把sayName()函数的定义转移到了构造函数外部，对象共享在全局作用域中定义的同一个函数
+var person1 =  new Person("wanghuan",22,"software engineer");
+var person2 = new Person("shuguang",22,"army");    
+```    
+ **但还有缺点：**
+1. 全局作用域定义的函数每次被一个对象调用，全局作用域不是名副其实
+2. 对象需要定义很多方法，要是全部都定义成全局函数，自定义的引用类型就丝毫无封装性可言。
+
+###### 5.使用原型模式创建对象
+
+**原型模式prototype属性**
+
+prototype属性是一个这指针，指向一个对象，这个对象包含可以由特定类型的所有实例共享他所包含的属性和方法。可看下图
+
+
+**原型模式的缺点**
+
+所有属性的共享会导致所有实例默认一样的属性值，不合常理
+
+创建的每个函数都有一个prototype(原型)属性，这个属性是一个指针，指向函数的原型对象。
+![prototype属性指向函数的原型对象](http://img.blog.csdn.net/20160402143519956)
+每次读取某个对象的某个属性的时候，需要执行搜索：
+
+1.搜索对象实例本身，在实例中找到给定名字的属性，则返回属性的值，使用delete属性可以删除实例属性。
+
+2.若没找到，则继续搜索指针指向的原型对象。
+言外之意，对象实例本身的属性优先。
+ps：用hasOwnProperty来判断属性是否存在于实例中或者原型中
+
+此图为添加实例属性的情况：
+
+看构造函数，构造函数的原型对象，和实例之间的关系
+
+![这里写图片描述](http://img.blog.csdn.net/20160402143808676)
+
+```
+<!-- 注意上图的prototype、constructor、[[Prototype]]三个指针
+Person.prototype.constructor指向Person -->
+Person.prototype.constructor == Person
+
+且实例都包含内部属性[[Prototype]]，该属性指向Person.prototype
+```
+
+```
+function Person () {
+}
+Person.prototype.name = "wanghuan";
+Person.prototype.age = "22";
+Person.prototype.job = "software engineer";
+Person.prototype.sayName = function(){
+	alert(this.name);
+};
+
+var person1 = new Person();
+var person2 = new Person();
+person1.name = "shuguang";
+alert(person1.name);//shuguang---先搜索实例对象，就返回
+alert(person1.hasOwnProperty("name"));//true
+alert(person2.name);//wanghuan--原型对象属性返回
+
+delete person1.name;//delete操作符删除实例属性
+alert(person1.hasOwnProperty("name"));//false
+alert(person1.name);//wanghuan--原型对象属性返回
+```
+**原型模式更简单的语法**
+
+以对象字面量形式创建的新对象，但是这样相当于重写了Person.prototype则constructor属性也就跟着改变，所以若按照下面写，constructor属性就变成了新对象的constructor属性(指向Object构造函数)
+
+```
+function Person () {
+}
+Person.prototype = {
+	name:"wanghuan",
+    age : "22",
+	job : "software engineer",
+	sayName: function(){
+		alert(this.name);
+	}
+};
+```
+
+```
+var friend = new Person();
+alert(friend instanceof Object);//true
+alert(friend instanceof Person);//true
+alert(friend.constructor == Person);//false
+alert(friend.constructor == Object);//true
+```
+
+###### 6.原型模式和构造函数模型的组合使用创建对象
+
+**组合模式的优点**
+
+每个实例有自己的属性，所有的实例共享着对方法的引用，最大限制的节省了内存。
+
+```
+//构造函数
+function Person(name,age,job){
+	this.name = name;
+	this.age = age;
+	this.job = job;
+	this.friends = ["a","b"];
+}
+//原型对象
+Person.prototype = {
+	constructor:Person;
+	sayName:function(){
+		alert(this.name);
+	}
+}
+var person1 = new Person("wanghuan",22,"software engineer");
+var person2 = new Person("shuguang",22,"army");
+
+person2.friends.push("c");
+alert(person1.friends);//a,b
+alert(person2.friends);//a,b,c
+alert(person1.sayName === person2.sayName);//true
+//说明两者的函数指针相同
+```
 
 ##### 12.Javascript作用链域?
 
@@ -341,8 +565,58 @@ http://blog.csdn.net/github_34514750/article/details/51320982
 
 ##### 14.eval是做什么的？
 
+**语法**
+
+eval(string)
+
+**参数说明**
+
+该方法只接受原始字符串作为参数，若string参数不是原始字符串，则不做任何改变地返回。因此，不要为此函数传递String对象来作为参数
+
+**使用场景**
+
+eval其实就是让字符串当成js代码执行(把一段字符串传递给JS解释器，由JS解释器将这段字符串解释成JS代码并执行),虽然任何字符串都可以当js代码执行，但是预先编辑好的（不是在动态运行时候决定）没有理由使用eval()
+
+**例子**
+
+```
+<script type="text/javascript">
+    eval("alert(1+1)"); //2,字符串被解释成js代码执行的，但是这样用着没什么意义
+<script>
+
+```
+
+```
+//eval函数的使用经常在DOM中，例如我们有div1,div2,div3，那么在document.getElementByID时我们的ID没有办法去得到
+
+<script type="text/javascript">
+    for (var loop = 1; loop < 10; loop++)  
+    {
+
+        eval('document.getElementById("div"+loop).innerHTML="123"');
+    }
+<script>
+```
 
 ##### 15.什么是window对象? 什么是document对象?
+
+**window对象**
+
+BOM就是浏览器窗口对象模型，顶级对象就是window
+
+window对象表示浏览器中一个打开的窗口，也就是窗体
+
+所有的全局对象和函数都属于window对象的属性和方法。
+
+http://www.w3school.com.cn/jsref/dom_obj_window.asp
+
+**document对象**
+
+document对象是window对象的一个属性，因此可以将他当成全局对象来访问。
+
+document对象代表整个html文档，可用来访问页面中的所有元素，也就是页面。
+
+http://www.w3school.com.cn/jsref/dom_obj_document.asp
 
 
 ##### 16.null，undefined的区别？
@@ -366,19 +640,58 @@ parseInt("2", 1)--NaN--数值都超过了进制2>1不合理，无法解析
 parseInt("3", 2)--NaN--数值都超过了进制3>2不合理，无法解析
 ```
 
-##### 15.关于事件，IE与火狐的事件机制有什么区别？ 如何阻止冒泡？
+##### 19.关于事件，IE与火狐的事件机制有什么区别？ 如何阻止冒泡？
 
 
-##### 16.什么是闭包（closure），为什么要用它？
+##### 20.什么是闭包（closure），为什么要用它？
 
 
-##### 17.javascript 代码中的"use strict";是什么意思 ? 使用它区别是什么？
+##### 21.javascript 代码中的"use strict";是什么意思 ? 使用它区别是什么？
+
+**use strict**：严格模式
+
+除了正常运行模式，ECMAScript5添加了第二种运行模式：严格模式，这种模式让js在更严格的条件下运行。
+
+**使用严格模式的区别**
+
+1.消除js语法的一些不合理，不严谨之处，比如不能用with，也不能在意外的情况下给全局变量赋值
+
+2.消除代码中的一些不安全之处，保证代码的安全
+
+比如：禁止this关键字指向全局对象
+
+```
+function f(){
+　　　　return !this;
+　　}
+　　// 返回false，因为"this"指向全局对象，"!this"就是false
+　　function f(){
+　　　　"use strict";
+　　　　return !this;
+　　}
+　　// 返回true，因为严格模式下，this的值为undefined，所以"!this"为true。
+```
+
+因此，使用构造函数时，如果忘了加new，this不再指向全局对象，而是报错。
+
+```
+function f(){
+　　　　"use strict";
+　　　　this.a = 1;
+　　};
+　　f();// 报错，this未定义
+```
+
+3.提高编译器效率，增加运行速度
+
+4.为未来新版本的Javascript做好铺垫
 
 
-##### 18.如何判断一个对象是否属于某个类？
+##### 22.如何判断一个对象是否属于某个类？
 
+object instanceof construtor
 
-##### 19.new操作符具体干了什么呢?
+##### 23.new操作符具体干了什么呢?
 
 
 ##### 20.用原生JavaScript的实现过什么功能吗？
