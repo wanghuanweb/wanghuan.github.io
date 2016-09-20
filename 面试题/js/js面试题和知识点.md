@@ -91,30 +91,396 @@ parseFloat()--字符串第一个小数点有效，和parseInt()区别是会忽�
 
 ##### 4.JavaScript的类型转换
 
- http://www.cnblogs.com/mizzle/archive/2011/08/12/2135885.html
+###### 4.1.显式转换
+转换为数值类型：Number(mix)、parseInt(string,radix)、parseFloat(string)
+转换为字符串类型：toString(radix)、String(mix)
+转换为布尔类型：Boolean(mix)
 
-**注意：**
+**Number(mix)**
+1.如果是布尔值，true和false分别被转换为1和0
+2.如果是数字值，返回本身。
+3.如果是null，返回0.
+4.如果是undefined，返回NaN。
+5.如果是字符串，遵循以下规则：
 
- 关系操作符（<, >, <=, >=）中第二条(如果两个操作值都是字符串，则比较字符串对应的字符编码值),大写字母的字符编码全部小于小写字母的字符编码值
+	5.1.如果字符串中只包含数字，则将其转换为十进制（忽略前导0）
+	5.2.如果字符串中包含有效的浮点格式，将其转换为浮点数值（忽略前导0）
+	5.3.如果是空字符串，将其转换为0
+	5.4.如果字符串中包含非以上格式，则将其转换为NaN
+
+6.如果是对象，则调用对象的valueOf()方法，然后依据前面的规则转换返回的值。如果转换的结果是NaN，则调用对象的toString()方法，再次依照前面的规则转换返回的字符串值。
 
 ```
-    var result = "Brick" < "alphabet";//true
+	console.log(Number("hello CSSer!"));//NaN
+    console.log(Number("0×8"));//NaN--无效的十六进制
+    console.log(Number("0xf"));//15--有效的十六进制
+    console.log(Number(""));//0
+    console.log(Number("020dd"));//NaN
+    console.log(Number("070"));//70--只包含数字，忽略前导0
+    console.log(Number(true));//1
+```
+
+**parseInt(string,radix)**--此函数在转换字符串时,更多的是看是否符合数值模式
+
+1.忽略字符串前面的空格，直至找到第一个非空字符
+2.如果第一个字符不是数字符号或者负号，返回NaN
+3.如果第一个字符是数字，则继续解析直至字符串解析完毕或者遇到一个非数字符号为止
+4.如果上步解析的结果以0开头，则将其当作八进制来解析；如果以0x开头，则将其当作十六进制来解析
+5.如果指定radix参数，则以radix为基数进行解析
+
+```
+//它忽略了字符串前边的空格，直到找到第一个非空格字符，若第一个字符不是数字字符或者负号，则返回NaN
+
+    parseInt("1234blue");//1234
+    parseInt(" ");//NaN
+    parseInt("w");//NaN
+    parseInt("0xA");//10
+    parseInt("22.5");//22
+
+//此函数还有第二个参数，转换时使用的基数
+
+    parseInt("10",2);//2
+    parseInt("10",8);//8
+    parseInt("10",10);//10
+    parseInt("10",16);//16
+```
+
+**parseFloat(string)**
+
+```
+//parseFloat()--字符串第一个小数点有效，和parseInt()区别是会忽略前导0
+
+    parseFloat("1234blue");//1234
+    parseFloat("0xA");//0(此处就是区别)
+    parseFloat("1234.23.4");//1234.23
+```
+
+**toString(radix)、String(mix)**
+
+数值、布尔值、对象和字符串值都可以使用toString()方法，但是null和undefined没有toString()方法
+
+在不知道转换的是是不是null和undefined的时候，使用转型函数String(),规则
+
+ 1. 若值有toString()方法，则调用此方法并返回相应的结果
+ 2. 若值是null，则返回"null"
+ 3. 若值是undefined,则返回"undefined"
+
+**Boolean(mix)**
+
+以下值会被转换为false：false、”"、0、NaN、null、undefined，其余任何值都会被转换为true。
+
+###### 4.2.隐式转换
+
+主要分为三个方面：
+1.一些函数涉及的隐式转换
+2.对象的隐式转换
+3.操作符与隐式类型转换
+
+###### 4.2.1 一些函数涉及的隐式转换
+
+用于检测是否为非数值的函数：isNaN(mix)
+isNaN()函数，经测试发现，该函数会尝试将参数值用Number()进行转换，如果结果为“非数值”则返回true，否则返回false。
+
+###### 4.2.2 对象的隐式转换
+
+**对象转换成布尔**
+ 基本包装类型Boolean、Number、Sring，这些对象都被转换成布尔值ture
+
+
+```
+  var falseObject = new Boolean(false);
+  var res = falseObject && true;
+  alert(res); //true
+
+  var falseValue = false;
+  var res = falseValue && true;
+  alert(res); //false
+```
+**对象转换成数字**
+
+对象转数字经过如下步骤：
+
+如果对象有valueOf()方法，后者返回一个原始值，那么将这个原始值转换为数字并返回
+
+如果对象没有valueOf()方法，或返的不是一个原始值，尝试toString()方法。如果有toString()方法，且返回一个原始值，那么将其转换成数字并返回
+
+如果无法从valueOf()或toString()获得一个原始值，那么将抛出一个类型错误异常
+
+```
+function Obj() {}
+Obj.prototype.toString = function() {
+    return "20"
+};
+
+console.log(new Obj() * 1);//输出20
+
+Obj.prototype.valueOf = function() {
+    return "10"
+};
+
+console.log(new Obj() * 1);//输出10
+```
+
+**对象转换成字符串**
+
+对象转字符串经过如下步骤：
+
+如果对象有toString()方法，则调用toString()。如果toString()返回一个原始值，那么将这个值转为字符串（如果它不是字符串的话），并返回
+
+如果对象没有toString()方法，或者调用toString()方法返回的不是一个原始值，那么调用valueOf()方法。 如果valueOf()方法返回的是原始值，那么将它转换为字符串，并返回
+
+如果无法从toString()或valueOf()获得一个原始值，那么将抛出一个类型错误异常
+
+```
+function Obj(){}
+Obj.prototype.toString = function(){return "callToString"}
+Obj.prototype.valueOf = function(){return "callValueOf"}
+var data = {
+    "callToString" : "callToString",
+    "callValueOf" : "callValueOf"
+};
+
+console.log(data[new Obj()]);//输出"callToString"
+
+Obj.prototype.toString = function(){return {};}
+
+console.log(data[new Obj()]);//输出"callValueOf"
+```
+
+###### 2.3 操作符与隐式类型转换
+
+**递增递减操作符**
+
+这些操作符适用于任何数据类型的值，针对不同类型的值，该操作符遵循以下规则（经过对比发现，其规则与Number()规则基本相同）：
+
+1.如果是包含有效数字字符的字符串，先将其转换为数字值（转换规则同Number()），在执行加减1的操作，字符串变量变为数值变量。
+
+2.如果是不包含有效数字字符的字符串，将变量的值设置为NaN，字符串变量变成数值变量。
+
+3.如果是布尔值false，先将其转换为0再执行加减1的操作，布尔值变量编程数值变量。
+
+4.如果是布尔值true，先将其转换为1再执行加减1的操作，布尔值变量变成数值变量。
+
+5.如果是浮点数值，执行加减1的操作。
+
+6.如果是对象，先调用对象的valueOf()方法，然后对该返回值应用前面的规则。如果结果是NaN，则调用toString()方法后再应用前面的规则。对象变量变成数值变量。
+
+**加法操作符**
+
+如果两个操作值都是数值，其规则为：
+
+1.如果一个操作数为NaN，则结果为NaN
+
+2.如果是Infinity+Infinity，结果是Infinity
+
+3.如果是-Infinity+(-Infinity)，结果是-Infinity
+
+4.如果是Infinity+(-Infinity)，结果是NaN
+
+5.如果是+0+(+0)，结果为+0
+
+6.如果是(-0)+(-0)，结果为-0
+
+7.如果是(+0)+(-0)，结果为+0
+
+如果有一个操作值为字符串，则：
+
+1.如果两个操作值都是字符串，则将它们拼接起来
+
+2.如果只有一个操作值为字符串，则将另外操作值转换为字符串，然后拼接起来
+
+3.如果一个操作数是对象、数值或者布尔值，则调用toString()方法取得字符串值，然后再应用前面的字符串规则。对于undefined和null，分别调用String()显式转换为字符串。
+
+```
+function Obj(){}
+Obj.prototype.valueOf = function(){
+    return "234";
+};
+
+console.log(123 + new Obj());//输出"123234"
+
+Obj.prototype.valueOf = function(){
+    return 234;
+};
+
+console.log(123 + new Obj());//输出"357"
+
+Obj.prototype.valueOf = function(){
+    return true;
+};
+
+console.log(123 + new Obj());//输出"124"
+
+console.log(123 + new Date());//输出"123Sun Mar 30 2014 12:53:02 GMT+0800 (中国标准时间)"
+```
+
+**乘除、减号运算符、取模运算符**
+
+这些操作符针对的是运算，所以他们具有共同性：如果操作值之一不是数值，则被隐式调用Number()函数进行转换。
+
+**逻辑操作符（!、&&、||）**
+
+逻辑非（！）操作符首先通过Boolean()函数将它的操作值转换为布尔值，然后求反。
+
+```
+!""
+true
+
+!NaN
+true
+
+!"a"
+false
+```
+
+逻辑与（&&）操作符，如果一个操作值不是布尔值时，遵循以下规则进行转换：
+
+1.如果第一个操作数经Boolean()转换后为true，则返回第二个操作值，否则返回第一个值（不是Boolean()转换后的值）
+
+2.如果有一个操作值为null，返回null
+
+3.如果有一个操作值为NaN，返回NaN
+
+4.如果有一个操作值为undefined，返回undefined
+
+```
+var a,b;
+a = null;
+b = "something";
+console.log(a && b);//输出null
+
+a = "something";
+b = null;
+console.log(a && b);//输出null
+
+a = "something";
+b = "otherthing";
+console.log(a && b);//输出"otherthing"
+```
+
+逻辑或（||）操作符，如果一个操作值不是布尔值，遵循以下规则：
+
+1.如果第一个操作值经Boolean()转换后为false，则返回第二个操作值，否则返回第一个操作值（不是Boolean()转换后的值）
+2.对于undefined、null和NaN的处理规则与逻辑与（&&）相同
+
+```
+var a,b;
+a = "something";
+b = null;
+console.log(a || b);//输出"something"
+
+a = null;
+b = null;
+console.log(a || b);//输出null
+
+a = null;
+b = "something";
+console.log(a || b);//输出"something"
+```
+
+**关系操作符**
+
+与上述操作符一样，关系操作符的操作值也可以是任意类型的，所以使用非数值类型参与比较时也需要系统进行隐式类型转换：
+
+1.如果两个操作值都是数值，则进行数值比较
+
+2.如果两个操作值都是字符串，则比较字符串对应的字符编码值
+
+```
+//大写字母的字符编码全部小于小写字母的字符编码值
+var result = "Brick" < "alphabet";//true
     var result = "Brick".toLowerCase() < "alphabet".toLowerCase();//false
 ```
 
-相等操作符（==），进行类型转换之后比较~ === 则是直接比较
+3.如果只有一个操作值是数值，则将另一个操作值转换为数值，进行数值比较
 
-ps:null和undefined是相等的
+4.如果一个操作数是对象，则调用valueOf()方法（如果对象没有valueOf()方法则调用toString()方法），得到的结果按照前面的规则执行比较
 
-   null和undefined在比较之前不能转换成任何一个值，所以null != 0且undefined != 0且null == undefined
+5.如果一个操作值是布尔值，则将其转换为数值，再进行比较
+
+注：NaN是非常特殊的值，它不和任何类型的值相等，包括它自己，同时它与任何类型的值比较大小时都返回false。
 
 ```
-    NaN == NaN//FALSE,NaN和谁都不相等
+NaN < 1
+false
+
+NaN > 1
+false
+
+Infinity < Infinity
+fasle
+
+Infinity > Infinity
+false
+
+Infinity > -Infinity
+true
+
+"a" < "b"
+true
+
+"abcd" < "abce"
+true
+```
+
+**相等操作符**
+
+相等操作符（==），进行类型转换之后比较~ === 则是直接比较
+
+相等操作符会对操作值进行隐式转换后进行比较：
+
+1.如果一个操作值为布尔值，则在比较之前先将其转换为数值
+
+2.如果一个操作值为字符串，另一个操作值为数值，则通过Number()函数将字符串转换为数值
+
+3.如果一个操作值是对象，另一个不是，则调用对象的valueOf()方法，得到的结果按照前面的规则进行比较
+
+4.null与undefined是相等的
+
+5.如果一个操作值为NaN，则相等比较返回false
+
+6.如果两个操作值都是对象，则比较它们是不是指向同一个对象
+
+```
+// null和undefined在比较之前不能转换成任何一个值，所以null != 0且undefined != 0且null == undefined
+	NaN == NaN//FALSE,NaN和谁都不相等
     NaN != NaN//TRUE
     undefined == 0//false
     null == 0//false
     null == undefined//true
+
+null == undefined
+true
+
+({}) == ({})
+false
+
+[] == []
+false
+
+"123" == 123
+true
+
+true == "1"
+true
+
+NaN == NaN
+false
+
+function Obj(){}
+Obj.prototype.toString = function(){return "tostring";}
+Obj.prototype.valueOf = function(){return "valueof";}
+new Obj() == "valueof"
+true
+
+nfinity == Infinity
+true
+
+Infinity == -Infinity
+false
 ```
+
+
 
 ##### 5.检测JavaScript的数据类型。
 
