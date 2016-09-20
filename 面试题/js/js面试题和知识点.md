@@ -599,9 +599,9 @@ person.sayFriends();
 
 **原型**
 
-1.创建的每个函数都有一个prototype属性，指向原型对象，prototype属性是一个指针，指向一个对象，这个对象包含可以由特定类型的所有实例共享的属性和方法。
+1.创建的每个函数都有一个prototype原型属性，指向原型对象，prototype属性是一个指针，指向一个对象，这个对象包含可以由特定类型的所有实例共享的属性和方法。
 
-2.每个实例都有一个内部属性[[Prototype]],指向它的原型对象
+2.每个实例都有一个内部属性原型[[Prototype]],指向它的原型对象
 
 **原型链**
 
@@ -642,9 +642,156 @@ person.sayFriends();
 ```
 ![这里写图片描述](http://img.blog.csdn.net/20160917215757067)
 
+**确定原型和实例之间的关系**：
+**instanceof**:
+
+```
+alert(stu instanceof Object);
+//true,所有引用类型默认都继承了Object，其实也是通过原型链实现的
+alert(stu instanceof Student);//true
+alert(stu instanceof Person);//true
+```
+
+**isPrototypeOf():**
+
+```
+alert(Object.prototype.isPrototypeOf(stu));//true
+alert(Student.prototype.isPrototypeOf(stu));//true
+alert(Person.prototype.isPrototypeOf(stu));//true
+```
+**getPrototypeOf():**
+
+```
+Object.getPrototypeOf(person1)==Person.prototye
+```
+
+**原型链的一些题目**
+```
+function A(){
+
+}
+
+1.new A()._proto_ == A.prototype
+2.A.prototype._proto_ == Object.prototype 也就是Object{}
+3.A.prototype._proto_._proto_ == null;
+```
+
 ##### 11.Javascript如何实现继承？
 
+###### 1.使用原型链实现继承
 继承实际是依靠原型链来实现的，原型链是实现继承的主要方法。
+```
+function SuperType(){
+	this.colors = ["red","blue","green"];
+}
+function SubType(){
+}
+//继承了SuperType
+SubType.prototype = new SuperType();
+
+var instance1 = new SubType();
+instance1.colors.push("black");
+alert(instance1.colors);//red,blue,green,black
+
+var instance2 = new SubType();
+alert(instance2.colors);//red,blue,green,black
+```
+
+```
+function Parent(){}
+function Child(){}
+Child.prototype = new Parent();
+console.log(new Child().constructor);
+//输出：function Parent(){}
+```
+
+```
+function Parent(){}
+function Child(){}
+Child.prototype = new Parent();
+Child.prototype.constructor = Child;
+console.log(new Child().constructor);
+//输出：function Child(){}
+```
+但是有包含引用类型值带来的问题：
+
+因为此原型是父对象的一个实例，则实例属性会成为原型属性，这样原型属性会被所有实例共享。也就是实例属性就变成了现在的原型属性。
+
+###### 2.借用构造函数实现继承
+
+即子类型构造函数的内部调用超类型构造函数
+
+**缺点**
+
+方法是在构造函数中定义，因此函数复用就无从谈起了。
+```
+function SuperType(){
+	this.colors = ["red","blue","green"];
+}
+function SubType(){
+	//继承了构造函数SuperType
+	SuperType.call(this);
+}
+var instance1 = new SubType();
+instance1.colors.push("black");
+alert(instance1.colors);//red,blue,green,black
+
+var instance2 = new SubType();
+alert(instance2.colors);//red,blue,green
+```
+
+```
+function SuperType(){
+	this.name = name;
+}
+function SubType(){
+	//继承了构造函数SuperType,同时还传递了参数
+	SuperType.call(this,"wanghuan");
+    //实例属性
+	this.age = 22;
+}
+var instance = new SubType();
+alert(instance.name);//"wanghuan"
+alert(instance.age);//22
+```
+###### 3.组合继承（原型链和借用构造函数的技术组合）
+
+**优点**：
+
+使用最多的继承模式就是组合继承，这种模式使用原型链继承共享的属性和方法，而且通过借用构造函数实现实例属性的继承。
+
+```
+function SuperType(name){
+	this.name = name;
+	this.colors = ["red","blue","green"];
+}
+SuperType.prototype.sayName = function(){
+	alert(this.name);
+};
+function SubType(name,age){
+	//继承属性
+	SuperType.call(this,name);
+	this.age = age;
+}
+//继承方法
+SubType.prototype = new SuperType();
+SubType.prototype.constructor = SubType;
+SubType.prototype.sayAge = function(){
+	alert(this.age);
+};
+//这种组合继承，可以使两个不同的SubType实例分别有各自的属性--包含colors属性，又可以使用相同的方法
+var instance1 = new SubType("wanghuan","22");
+instance1.colors.push("black");
+alert(instance1.colors);//red,blue,green,black
+instance1.sayName();//wanghuan
+instance1.sayAge();//22
+
+var instance2= new SubType("shuguang","23");
+alert(instance2.colors);//red,blue,green
+instance2.sayName();//shuguang
+instance2.sayAge();//23
+```
+
 
 ##### 12.Javascript作用链域?
 
@@ -702,6 +849,19 @@ window对象表示浏览器中一个打开的窗口，也就是窗体
 
 所有的全局对象和函数都属于window对象的属性和方法。
 
+但是定义全局变量与window对象上直接定义属性有差别：全局变量不能通过delete操作符删除，但是window对象上定义的属性可以被delete删除。
+
+```
+var age = 29;
+window.color = "red";
+
+delete window.age;
+
+delete window.color;
+alert(window.age);//29
+alert(window.color);//undefined
+```
+
 http://www.w3school.com.cn/jsref/dom_obj_window.asp
 
 **document对象**
@@ -715,6 +875,46 @@ http://www.w3school.com.cn/jsref/dom_obj_document.asp
 
 ##### 16.null，undefined的区别？
 
+**null**
+
+null表示“没有对象”，即该处不应该存在值
+
+（1） 作为函数的参数，表示该函数的参数不是对象。
+
+（2） 作为对象原型链的终点。
+
+```
+Object.getPrototypeOf(Object.prototype)
+// null
+
+```
+
+**undefined**
+
+undefined表示"缺少值",就是此处应该有个值，变量声明但是没有初始化
+
+（1）变量被声明了，但没有赋值时，就等于undefined。
+
+（2) 调用函数时，应该提供的参数没有提供，该参数等于undefined。
+
+（3）对象没有赋值的属性，该属性的值为undefined。
+
+（4）函数没有返回值时，默认返回undefined。
+
+```
+var i;
+i // undefined
+
+function f(x){console.log(x)}
+f() // undefined
+
+var  o = new Object();
+o.p // undefined
+
+var x = f();
+x // undefined
+
+```
 
 ##### 17.写一个通用的事件侦听器函数(机试题)。
 
@@ -739,6 +939,9 @@ parseInt("3", 2)--NaN--数值都超过了进制3>2不合理，无法解析
 
 ##### 20.什么是闭包（closure），为什么要用它？
 
+**闭包**
+
+闭包就是有权访问另一个函数作用域中的变量的函数
 
 ##### 21.javascript 代码中的"use strict";是什么意思 ? 使用它区别是什么？
 
@@ -787,12 +990,39 @@ object instanceof construtor
 
 ##### 23.new操作符具体干了什么呢?
 
+new操作符：
+
+1.创建一个空对象
+
+2.修改这个对象的内部属性_proto_，使其指向构造函数的prototype
+
+3.将这个对象交给构造函数的this，调用构造函数
+
+4.如果构造函数没有return，就返回这个对象。否则构造函数返回return语句后面的内容
+
+我们可以通过在Function.prototype上创建个新方法来模拟new：
+
+```
+Function.prototype._new_ = function() {
+
+    var newObj,
+        resultObj;
+
+    newObj = {};
+    newObj._proto_ = this.prototype;
+    resultObj = this.apply(newObj,arguments);
+
+    return (typeof resultObj === "object" && resultObj) || newObj;
+};
+```
 
 ##### 20.用原生JavaScript的实现过什么功能吗？
 
 
 ##### 21.Javascript中，有一个函数，执行时对象查找时，永远不会去查找原型，这个函数是？
 
+hasOwnProperty
+javaScript中hasOwnProperty函数方法是返回一个布尔值，指出一个对象是否具有指定名称的属性。此方法无法检查该对象的原型链中是否具有该属性；该属性必须是对象本身的一个成员。
 
 ##### 22.对JSON的了解？
 
@@ -802,11 +1032,30 @@ object instanceof construtor
 
 ##### 24.js延迟加载的方式有哪些？
 
+defer和async、动态创建DOM方式（用得最多）、按需异步载入js
 
 ##### 25.Ajax 是什么? 如何创建一个Ajax？
 
+ajax的全称：Asynchronous Javascript And XML。
+
+(1)创建XMLHttpRequest对象,也就是创建一个异步调用对象
+
+(2)创建一个新的HTTP请求,并指定该HTTP请求的方法、URL及验证信息
+
+(3)设置响应HTTP请求状态变化的函数
+
+(4)发送HTTP请求
+
+(5)获取异步调用返回的数据
+
+(6)使用JavaScript和DOM实现局部刷新
+
 
 ##### 26.同步和异步的区别?
+
+同步：浏览器访问服务器请求，用户看得到页面刷新，重新发请求,等请求完，页面刷新，新内容出现，用户看到新内容,j进行下一步操作。
+
+异步：浏览器访问服务器请求，用户正常操作，浏览器后端进行请求。等请求完，页面不刷新，新内容也会出现，用户看到新内容。
 
 
 ##### 27.如何解决跨域问题?
@@ -832,12 +1081,42 @@ object instanceof construtor
 
 ##### 34.异步加载的方式有哪些？
 
+(1) defer，只支持IE
+
+(2) async：
+
+(3) 创建script，插入到DOM中，加载完毕后callBack
 
 ##### 35.documen.write和 innerHTML的区别?
 
 
 ##### 36.DOM操作——怎样添加、移除、移动、复制、创建和查找节点?
 
+（1）创建新节点
+
+       createDocumentFragment()    //创建一个DOM片段
+
+       createElement()   //创建一个具体的元素
+
+       createTextNode()   //创建一个文本节点
+
+（2）添加、移除、替换、插入
+
+       appendChild()
+
+       removeChild()
+
+       replaceChild()
+
+       insertBefore() //在已有的子节点前插入一个新的子节点
+
+（3）查找
+
+       getElementsByTagName()    //通过标签名称
+
+       getElementsByName()    //通过元素的Name属性的值(IE容错能力较强，会得到一个数组，其中包括id等于name值的)
+
+       getElementById()    //通过元素Id，唯一性
 
 ##### 37. .call() 和 .apply() 的作用和区别？
 

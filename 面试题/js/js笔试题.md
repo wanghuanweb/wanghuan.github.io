@@ -476,3 +476,18 @@ a === b
 false
 解析：
 Object.getPrototypeOf(f)是找到f.[[prototye]],和f.prototype不同，因此是false
+
+####17.What is the result of this expression? (or multiple ones)
+
+```
+function A(){}
+A.prototype = {}
+console.log(new A().constructor)
+//输出：function Object() { [native code] }
+
+var tmp = new A();
+console.log(tmp.__proto__.hasOwnProperty("constructor"));
+//输出：false
+console.log(tmp.__proto__.__proto__.hasOwnProperty("constructor"));
+//输出：true
+```
