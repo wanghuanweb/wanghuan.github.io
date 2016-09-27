@@ -26,12 +26,10 @@ $(document).ready(function() {
         $("#contentModule1-1").attr("src","image/product-features/1-choosen.png");
         $("#contentModule1-2").attr("src","image/product-features/1-2choosen.png");
         $("#contentModule1-2").addClass("contentModule-active");
-        // $("#contentModule-p1").addClass("contentModulep-active");
     },function(){
         $("#contentModule1-1").attr("src","image/product-features/1.png");
         $("#contentModule1-2").attr("src","image/product-features/1-2.png");
         $("#contentModule1-2").removeClass("contentModule-active");
-        // $("#contentModule-p1").removeClass("contentModulep-active");
     });
 
     $(".contentModule2").hover(function(){

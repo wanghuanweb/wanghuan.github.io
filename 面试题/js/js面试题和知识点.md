@@ -93,14 +93,21 @@ parseFloat()--字符串第一个小数点有效，和parseInt()区别是会忽�
 
 ###### 4.1.显式转换
 转换为数值类型：Number(mix)、parseInt(string,radix)、parseFloat(string)
+
 转换为字符串类型：toString(radix)、String(mix)
+
 转换为布尔类型：Boolean(mix)
 
 **Number(mix)**
+
 1.如果是布尔值，true和false分别被转换为1和0
+
 2.如果是数字值，返回本身。
+
 3.如果是null，返回0.
+
 4.如果是undefined，返回NaN。
+
 5.如果是字符串，遵循以下规则：
 
 	5.1.如果字符串中只包含数字，则将其转换为十进制（忽略前导0）
@@ -111,7 +118,7 @@ parseFloat()--字符串第一个小数点有效，和parseInt()区别是会忽�
 6.如果是对象，则调用对象的valueOf()方法，然后依据前面的规则转换返回的值。如果转换的结果是NaN，则调用对象的toString()方法，再次依照前面的规则转换返回的字符串值。
 
 ```
-	console.log(Number("hello CSSer!"));//NaN
+	  console.log(Number("hello CSSer!"));//NaN
     console.log(Number("0×8"));//NaN--无效的十六进制
     console.log(Number("0xf"));//15--有效的十六进制
     console.log(Number(""));//0
@@ -123,9 +130,13 @@ parseFloat()--字符串第一个小数点有效，和parseInt()区别是会忽�
 **parseInt(string,radix)**--此函数在转换字符串时,更多的是看是否符合数值模式
 
 1.忽略字符串前面的空格，直至找到第一个非空字符
+
 2.如果第一个字符不是数字符号或者负号，返回NaN
+
 3.如果第一个字符是数字，则继续解析直至字符串解析完毕或者遇到一个非数字符号为止
+
 4.如果上步解析的结果以0开头，则将其当作八进制来解析；如果以0x开头，则将其当作十六进制来解析
+
 5.如果指定radix参数，则以radix为基数进行解析
 
 ```
@@ -361,6 +372,7 @@ console.log(a && b);//输出"otherthing"
 逻辑或（||）操作符，如果一个操作值不是布尔值，遵循以下规则：
 
 1.如果第一个操作值经Boolean()转换后为false，则返回第二个操作值，否则返回第一个操作值（不是Boolean()转换后的值）
+
 2.对于undefined、null和NaN的处理规则与逻辑与（&&）相同
 
 ```
@@ -1388,6 +1400,7 @@ Function.prototype._new_ = function() {
 ##### 21.Javascript中，有一个函数，执行时对象查找时，永远不会去查找原型，这个函数是？
 
 hasOwnProperty
+
 javaScript中hasOwnProperty函数方法是返回一个布尔值，指出一个对象是否具有指定名称的属性。此方法无法检查该对象的原型链中是否具有该属性；该属性必须是对象本身的一个成员。
 
 ##### 22.对JSON的了解？
@@ -1455,7 +1468,47 @@ ajax的全称：Asynchronous Javascript And XML。
 
 ##### 35.documen.write和 innerHTML的区别?
 
+##### 36.DOM的作用和Node接口？
 
+**1.DOM的作用**
+
+DOM是针对HTML和XML文档的API，允许开发人员添加，移除和修改页面的某一部分。
+
+**2.Node接口--12种节点**
+
+DOM1级定义了一个 **Node接口** ，该接口将DOM中的所有节点类型实现，总共有12种节点。
+
+常用的有元素节点，属性节点，文本节点，注释节点，文档节点
+
+ELEMENT_NODE(1),ATTRIBUTE_NODE(2),TEXT_NODE(3),COMMENT_NODE(8),DOCUMENT_NODE(9)
+
+判断节点类型
+
+```
+// 在ie种无效，因为ie没有公开NODE的构造函数
+if(someNode.nodeType == NODE.ELEMENT_NODE) {
+
+}
+
+//一般通用，在ie中也有效
+if(someNode.nodeType == 1) {
+
+}
+```
+
+**3.node类型的属性和方法**
+
+```
+someNode.nodeType
+someNode.nodeName
+someNode.nodeValue
+someNode.childNodes
+someNode.firstChild
+someNode.lastChild
+someNode.parentNode
+someNode.nextSibling
+someNode.previousSibling
+```
 ##### 36.DOM操作——怎样添加、移除、移动、复制、创建和查找节点?
 
 （1）创建新节点
