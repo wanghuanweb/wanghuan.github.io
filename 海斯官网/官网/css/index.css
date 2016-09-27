@@ -4,7 +4,7 @@
 }
 body{
     background-color:#ffffff;
-    font-family: SimHei;
+    font-family: "Microsoft YaHei";
 
     -webkit-font-smoothing:antialiased;
 }
@@ -12,7 +12,7 @@ body{
 
 .header{
     height: 66px;
-    font-size:20px;
+    font-size:18px;
     /*height: 100px;*/
     font-weight: bold;
     /*border: 1px solid black;*/
@@ -50,7 +50,10 @@ body{
     letter-spacing: 2px;
     cursor: pointer;
     text-decoration: none;
-    color: black;
+    color:#333;
+}
+.header .header-content .header-ul li a:hover{
+    color:#0ea7ff;
 }
 .header .header-content .buttons{
     position: absolute;
@@ -59,7 +62,7 @@ body{
     top: 20px;
 }
 .header .header-content .buttons a{
-    font-size: 14px;
+    font-size: 16px;
     letter-spacing: 2px;
     /*line-height: 20px;*/
     font-family: 微软雅黑;
@@ -202,14 +205,16 @@ body{
     z-index: -1;
 }
 .content .product-features .product-features-content .contentModule .contentModule-p{
-    margin-top: 5px;
     position: absolute;
     top: 260px;
     left: 50%;
     margin-left: -105px;
     font-size: 14px;
     display: none;
-    font-weight: lighter;
+    font-family: "Microsoft YaHei";
+
+    line-height: 1.5;
+    color:#666
 }
 .content .product-features .product-features-content .contentModule .contentModule-img3{
     position: absolute;
@@ -219,11 +224,11 @@ body{
 .content .product-features .product-features-content .contentModule  span{
 
     word-spacing: 2px;
-    font-size: 18px;
-    font-family: 微软雅黑;
+    font-size: 20px;
+    font-family: "Microsoft YaHei";
     text-align: center;
 
-    color: white;
+    color: #ffffff;
 
     position: absolute;
     top: 216px;
@@ -262,28 +267,30 @@ body{
 }
 .content .service-content .service-content-content div .service-content-img1{
     margin-left: 60px;
+    /*margin-top: 60px;*/
 }
 .content .service-content .service-content-content div .service-content-img2{
     margin-left: 40px;
     opacity: 0.6;
 }
 .content .service-content .service-content-content .service-content-module .p1{
-    font-size: 20px;
-    font-family: 'SimHei';
+    font-size: 24px;
+    font-family: "Microsoft YaHei";
     letter-spacing: 2px;
 
     position: absolute;
     left: 210px;
     top: 10px;
+
 }
 .content .service-content .service-content-content .service-content-module .p2{
     font-size: 12px;
-    font-family: '宋体';
+    font-family: "Microsoft YaHei";
     font-weight: bold;
     letter-spacing: 1px;
     -webkit-font-smoothing:antialiased;
 
-    color: white;
+    color: #ffffff;
     opacity: 0.8;
 
     position: absolute;
