@@ -9,26 +9,30 @@
  * tFoot:保存着对<tfoot>元素的指针
  * ********************
  * createCaption()
- * createtHead()
+ * createTHead()
  * insertRow(pos)
- * createtFoot()
+ * createTFoot()
  * *********************
  * deleteCaption()
- * deletetHead()
+ * deleteTHead()
  * deleteRow(pos)
- * deletetFoot()
+ * deleteTFoot()
+ *
+ *
  * tbody元素的属性和方法
  * *************************
  * *************************
  * rows
  * insertRow(pos)
  * deleteRow(pos)
+ *
+ *
  * tr元素的属性和方法
  * *************************
  * *************************
  * cells()是一个<tr>元素的HTMLCollection
- * deleteCell(pos)
  * insertCell(pos)
+ * deleteCell(pos)
  */
 var datas = [
     {

@@ -1248,6 +1248,8 @@ document对象是window对象的一个属性，因此可以将他当成全局对
 
 document对象代表整个html文档，可用来访问页面中的所有元素，也就是页面。
 
+Document类型表示文档。document对象是Document的一个实例，表示整个HTML页面。document对象是window对象的一个属性，可以作为全局对象来访问。
+
 http://www.w3school.com.cn/jsref/dom_obj_document.asp
 
 
@@ -1468,6 +1470,12 @@ ajax的全称：Asynchronous Javascript And XML。
 
 ##### 35.documen.write和 innerHTML的区别?
 
+document.write是重写这个document也就是重写页面，写入内容是字符串的html
+
+innerHTML是DOM元素的一个属性，代表这个元素的内部html内容。
+
+innerHTML允许更精确的控制刷新某个页面的某个部分，所以优于document.write
+
 ##### 36.DOM的作用和Node接口？
 
 **1.DOM的作用**
@@ -1502,18 +1510,216 @@ if(someNode.nodeType == 1) {
 someNode.nodeType
 someNode.nodeName
 someNode.nodeValue
-someNode.childNodes
+someNode.childNodes----保存着NodeList对象，可以用someNode.childNodes[0]或者someNode.childNodes.item(0)两种方式访问(可用以下方法来转换成数组)
 someNode.firstChild
 someNode.lastChild
 someNode.parentNode
 someNode.nextSibling
 someNode.previousSibling
 ```
+
+**4.node类型--Document类型**
+
+Document类型表示文档。document对象是Document的一个实例，表示整个HTML页面。document对象是window对象的一个属性，可以作为全局对象来访问。
+
+document对象的属性和方法
+```
+document.nodeType--9
+document.nodeName--"#document"
+document.nodeValue--null
+document.parentNode--null
+
+<!-- 所有浏览器访问html和body通用的方法是document.documentElement和document.body -->
+html == document.documentElement---一般不用document.childNodes[0]或者document.firstChild因为前边可能有注释节点
+body == document.body
+
+<!-- 文档信息 -->
+document.title
+
+<!-- 和网页请求相关的属性 -->
+document.URL--页面完整的URL
+document.domain--页面的域名
+document.referrer--保存着链接到当前页面的那个页面的URL
+
+<!-- 查找元素 -->
+document.getElementById("someId");
+var images = document.getElementsByTagName("img");
+images[0]---其实就是在后台调用images.item(0)
+images["myImage"]--其实就是在后台调用images.namedItem("myImage");
+```
+
+**5.node类型--Element类型**
+
+element对象的属性和方法，注意attributes这个属性
+```
+element.nodeType--1
+element.nodeName--元素的标签名
+element.nodeValue--null
+element.parentNode--Document或Element
+<!-- 访问设置元素的属性 -->
+element.getAttribute();
+element.setAttribute();
+element.removeAttribute();
+element.attributes--也是一个类似nodeList
+```
+
+遍历元素的所有属性element.attributes
+```
+function outputAttributes(element) {
+    var pairs = new Array(),
+        attrName,
+        attrValue,
+        len,
+        i;
+
+    for(i = 0,len = element.attributes.length;i < len;i++) {
+        attrName = element.attributes[i].nodeName;
+        attrValue = element.attributes[i].nodeValue;
+        <!-- 加上此判断语句是为了防止IE7以更早的版本中会返回所有可能的属性，而不是只返回被指定的特性 -->
+        if(element.attributes[i].specified) {
+            pairs.push(attrName + "=\"" + attrValue + "\"");
+        }
+    }
+    return pairs.join(" ");
+}
+```
+
+元素的子节点(li标签之间有空白是如何形成的)
+```
+<!-- IE解析成3个子节点，但是其他浏览器解析成7个节点(3个li元素节点和4个空白文本节点) -->
+<ul id="myList">
+    <li>Item 1</li>
+    <li>Item 2</li>
+    <li>Item 3</li>
+</ul>
+```
+所以要想遍历li标签的方法如下两种：
+
+1.childNode遍历
+
+2.直接使用getElementsByTagName
+```
+var ulList = document.getElementById("myList");
+
+for(var i = 0 ,len = ulList.childNodes.length;i < len;i++) {
+    <!-- 确保是li子节点 -->
+    if(ulList.childNodes[i].nodeType == 1) {
+        // do something
+    }
+}
+```
+
+```
+var ulList = document.getElementById("myList");
+var items = ulList.getElementsByTagName("li");
+```
+**6.node类型--Attr类型**--不常用
+
+attr对象的属性和方法--虽然也是节点，但不被人为是DOM文档树的一部分
+```
+attrNode.nodeType--2
+attrNode.nodeName--特性的名称
+attrNode.nodeValue--特性的值
+attrNode.parentNode--null
+```
+一般我们都用元素的getAttribute(),setAttribute(),removeAttribute()，很少直接引用特性节点
+Attr对象3个属性name特性名称，value特性的值，specified代码中是否注定此特性，是布尔值
+
+**访问特性的三个方法**
+```
+var attr = document.createAttribute("align");
+attr.value = "left";
+element.setAttributeNode(attr);--为元素添加特性
+<!-- 访问特性的三种方法
+1.getAttribute()只返回特性的值
+2.getAttributeNode()返回特性节点
+3.attributes也是返回特性节点
+ -->
+element.attributes["align"].value;--left
+element.getAttribute("align");--left
+element.getAttributeNode("align").value;--left
+```
+
+**7.node类型--Text类型**
+
+text对象的属性和方法
+```
+textNode.nodeType--3
+textNode.nodeName--"#text"
+textNode.nodeValue--节点所包含的文本
+textNode.parentNode--是一个element
+
+<!-- 无文本节点 -->
+<div></div>
+<!-- 有空格，有一个文本节点 -->
+<div> </div>
+<!-- 有内容，有一个文本节点 -->
+<div>hello world！</div>
+
+<!-- 规范化文本节点normalize()和分割文本节点splitText() -->
+在一个包含两个或者多个文本节点的父元素调用normalize方法
+
+```
+
+**8.node类型--Comment类型**
+comment对象的属性和方法
+```
+commentNode.nodeType--8
+commentNode.nodeName--"#comment"
+commentNode.nodeValue--注释的内容
+commentNode.parentNode--可能是Document或Element
+```
+**9.node类型--DocumentFragment类型**
+DocumentFragment对象的属性和方法
+```
+documentFragmentNode.nodeType--11
+documentFragmentNode.nodeName--"#document-fragment"
+documentFragmentNode.nodeValue--null
+documentFragmentNode.parentNode--null
+```
+
+documentFragment是一种轻量级的文档，是文档片段，文档片段不能直接添加到文档中，但是可以作为一个仓库来使用，可以在里面保存将来可能会添加到文档中的节点。
+```
+var fragment = document.createDocumentFragment();
+var ul = document.getElementById("myList");
+var li = null;
+
+for(var i = 0;i < 3;i++) {
+    li = document.createElement("li");
+    li.appendChild(document.createTextNode("Item" + (i+1)));
+    fragment.appendChild(li);
+}
+
+ul.appendChild(fragment);
+```
+##### 37.NodeList转换成数组的方法？
+
+```
+<!--  一般用此方法转换成数组，但是在IE8及更早版本吧nodelist实现成一个COM对象，不能用js对象的方法，所以IE8之前需要枚举所有对象 -->
+Array.prototype.slice.call(someNode.childNodes,0);
+
+<!-- 通用的方法 -->
+
+function convertListToArray(nodes) {
+    var array = null;
+    try{
+        array = Array.prototype.slice.call(nodes,0);
+    }catch(ex){
+        array = new Array();
+        for(var i = 0,len = nodes.length;i < len;i++) {
+            array.push(nodes[i]);
+        }
+    }
+
+    return array;
+}
+```
+
 ##### 36.DOM操作——怎样添加、移除、移动、复制、创建和查找节点?
 
-（1）创建新节点
+（1）创建新节点（只是创建没添加到文档中，添加还需要2中的方法）
 
-       createDocumentFragment()    //创建一个DOM片段
+       createDocumentFragment()    //创建一个DOM文档片段
 
        createElement()   //创建一个具体的元素
 
@@ -1523,11 +1729,11 @@ someNode.previousSibling
 
        appendChild()
 
-       removeChild()
-
        replaceChild()
 
        insertBefore() //在已有的子节点前插入一个新的子节点
+
+       removeChild()
 
 （3）查找
 
