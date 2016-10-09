@@ -139,7 +139,7 @@ font-family,font-size,font-style,font-variant,font-weight,font可继承
 
 **文本属性：**
 
-word-spacing letter-spacing text-align text-transform text-indent line-height可以继承
+word-spacing word-break letter-spacing text-align text-transform text-indent text-shadow line-height可以继承
 
 text-decoration vertical-align不可继承
 
@@ -244,7 +244,149 @@ html > body div [id=”totals”] ul li > p {color:red;}--Specificity值为 0,0,
 
 http://blog.csdn.net/github_34514750/article/details/51122212
 
-##### 7.如何居中div？如何居中一个浮动元素？如何让绝对定位的div居中？
+##### 7.元素的水平居中？垂直居中？水平垂直居中？
+
+**水平居中**
+
+1.如果需要居中的是常规流中inline元素
+
+则在 **父元素** 中使用text-align: center;
+
+```
+<div class="content">
+    <span>a aa a</span>
+</div>
+
+<style>
+   .content{
+        width: 500px;
+        border: 1px solid black;
+        text-align: center;
+   }
+</style>
+```
+
+2.如果需要居中的是常规流中block元素
+
+则需要为1.元素设置宽度，2.设置左右margin为auto，3.IE6下需在父元素上设置text-align: center;再给子元素恢复需要的值
+
+```
+<body>
+    <div class="content">
+    aaaaaa aaaaaa a a a a a a a a
+    </div>
+</body>
+
+<style>
+    body {
+        background: #DDD;
+        text-align: center; /* 3 */
+    }
+    .content {
+        width: 500px;      /* 1 */
+        text-align: left;  /* 3 */
+        margin: 0 auto;    /* 2 */
+
+        background: purple;
+    }
+</style>
+```
+
+或者使用incline-block水平居中
+
+仅inline-block属性是无法让元素水平居中，display:incline-block;
+关键之处要在元素的父容器中设置text-align的属性为“center”，这样才能达到效果
+
+3.如果需要居中的元素为浮动元素
+
+则需要为 1.为元素设置宽度 2.position: relative 3.浮动方向偏移量（left或者right）设置为50% 4.浮动方向上的margin设置为元素宽度一半乘以-1
+
+```
+<body>
+    <div class="content">
+    aaaaaa aaaaaa a a a a a a a a
+    </div>
+</body>
+
+<style>
+    body {
+        background: #DDD;
+    }
+    .content {
+        width: 500px;         /* 1 */
+        float: left;
+
+        position: relative;   /* 2 */
+        left: 50%;            /* 3 */
+        margin-left: -250px;  /* 4 */
+
+        background-color: purple;
+    }
+</style>
+```
+
+4.如果需要居中的元素为绝对定位元素
+
+则需要1.为元素设置宽度 2.偏移量设置为50% 3.偏移方向外边距设置为元素宽度一半乘以-1
+```
+<body>
+    <div class="content">
+    aaaaaa aaaaaa a a a a a a a a
+    </div>
+</body>
+
+<style>
+    body {
+        background: #DDD;
+        position: relative;
+    }
+    .content {
+        width: 800px;/* 1 */
+
+        position: absolute;
+        left: 50%;/* 2 */
+        margin-left: -400px;/* 3 */
+
+        background-color: purple;
+    }
+</style>
+```
+
+或者
+
+需要1.为元素设置宽度 2.设置左右偏移量都为0 3.设置左右外边距都为auto
+
+```
+<body>
+    <div class="content">
+    aaaaaa aaaaaa a a a a a a a a
+    </div>
+</body>
+
+<style>
+    body {
+        background: #DDD;
+        position: relative;
+    }
+    .content {
+        width: 800px;/* 1 */
+
+        position: absolute;
+        margin: 0 auto;/* 3 */
+        left: 0;/* 2 */
+        right: 0;/* 2 */
+
+        background-color: purple;
+    }
+</style>
+```
+
+**垂直居中**
+Vertical-align is similar. It also applies to table cells and it works with some inline elements.不用于块级元素
+
+**水平垂直居中**
+
+如何居中div？如何居中一个浮动元素？如何让绝对定位的div居中？
 居中div
 
     div{
@@ -277,7 +419,7 @@ http://blog.csdn.net/github_34514750/article/details/51122212
 
 像块类型元素一样显示
 
-**inline**
+**inline** 注意和inline-block的区别
 
 默认。此元素会被显示为内联元素，元素前后没有换行符。
 
@@ -410,7 +552,7 @@ gradient线性渐变
 3.下边两个div，高：50%，宽50%，一个是float:left;一个float:right;
 或者是设置下边两个div的display:inline-block;注意不能用inline因为这样是行内元素，宽高设置会无效
 
-
+```
     <!DOCTYPE html>
     <html>
         <head>
@@ -486,19 +628,52 @@ gradient线性渐变
         </body>
     </html>
 
+```
 
 ##### 14.经常遇到的浏览器的兼容性有哪些？原因，解决方法是什么，常用hack的技巧 ？
 
 1.浏览器默认的margin和padding不同，解决方法是使用如下代码统一
-
+```
     *{
         margin:0;
         padding:0;
     }
 
 2.
-
+```
 ##### 15.li与li之间有看不见的空白间隔是什么原因引起的？有什么解决办法？
+
+元素的子节点(li标签之间有空白是如何形成的)
+```
+<!-- IE解析成3个子节点，但是其他浏览器解析成7个节点(3个li元素节点和4个空白文本节点) -->
+<ul id="myList">
+    <li>Item 1</li>
+    <li>Item 2</li>
+    <li>Item 3</li>
+</ul>
+```
+
+解决办法：
+所以要想遍历li标签的方法如下两种：
+
+1.childNode遍历
+
+2.直接使用getElementsByTagName
+```
+var ulList = document.getElementById("myList");
+
+for(var i = 0 ,len = ulList.childNodes.length;i < len;i++) {
+    <!-- 确保是li子节点 -->
+    if(ulList.childNodes[i].nodeType == 1) {
+        // do something
+    }
+}
+```
+
+```
+var ulList = document.getElementById("myList");
+var items = ulList.getElementsByTagName("li");
+```
 
 ##### 16.为什么要初始化CSS样式?
 
@@ -508,6 +683,7 @@ gradient线性渐变
 
 3.初始化代码
 
+```
     *{
         margin:0;
         padding:0;
@@ -526,6 +702,7 @@ gradient线性渐变
     img{border:0;vertical-align:middle}
     table{border-collapse:collapse;border-spacing:0}
     p{word-wrap:break-word}
+```
 
 ##### 17.absolute的containing block计算方式跟正常流有什么不同？
 
@@ -563,7 +740,7 @@ gradient线性渐变
 
 ##### 18.CSS里的visibility属性有个collapse属性值是干嘛用的？在不同浏览器下以后什么区别？
 
-    visibility:hidden/visible/inherit/collapse
+visibility:hidden/visible/inherit/collapse
 
 visibility:collapse 当在表格中使用的时候，此值可以删除一行或者一列。值被应用于其他元素时，则呈现为hidden
 
@@ -1106,9 +1283,15 @@ css规范中规定此属性overflow：
 @import url('a.css');
 </style>
 ```
+
+**link和@import的区别**
+
 (1)link是html标签，除了加载css还可以定义rss等其他事物；@import属于css范畴，只可以加载css
-(2)link引入css，是页面载入同时加载；但是import则是页面完全载入后才加载，所以会延长页面下载时间
+
+(2)link引入css，是页面载入同时加载，是并行下载；但是import则是页面完全载入后才加载，是串行下载，所以会延长页面下载时间
+
 (3)link是html标签，没有兼容问题；但是import则有此问题
+
 (4)link支持js控制dom改变样式，但是@import不支持
 
 3.精简css，减少css代码量。
@@ -1318,6 +1501,50 @@ oblique会显示一个倾斜的字体样式。一些不常用的字体没有ital
 
 ##### 44.png、jpg、gif 这些图片格式解释一下，分别什么时候用。有没有了解过webp？
 
+**png**
+
+1.有PNG8和truecolor PNG，NG8类似GIF颜色上限为256，文件小，支持alpha透明度，无动画
+
+2.无损耗(png是一种无损耗的图像格式，这也意味着你可以对png图片做任何操作也不会使  得图像质量产生损耗。这也使得png可以作为jpeg编辑的过渡格式)
+
+3.不支持动画
+
+4.支持alpha透明(透明，半透明，不透明)
+
+5.适合图标、背景、按钮
+
+**jpg**
+
+1.颜色限于256，能支持上百万种颜色
+
+2.有损压缩，可控制压缩质量(从而使文件长度更小，下载时间更短。有损压缩会放弃图像中的某些细节，以减少文件长度。)
+
+3.不支持动画
+
+4.不支持透明
+
+5.适合照片
+
+JPG也不如GIF图像那么灵活，它不支持图形渐进、背景透明，更不支持动画。
+
+**gif**
+
+1.8位像素，256色
+
+2.支持无损压缩(无损压缩是不损失图片细节而压缩图片的有效方法，由于GIF格式采用无损压缩，所以它更适合于线条、图标和图纸。 )
+
+3.支持简单动画(GIF格式可以将单帧的图象组合起来，然后轮流播放每一帧而成为动画)
+
+4.支持背景透明(GIF图片假如背景色设置为透明，它将与浏览器背景相结合，生成非矩形的图片。 )
+
+5.支持图形渐变(渐进是指图片渐渐显示在屏幕上，渐进图片将比非渐进图片更快地出现在屏幕上，可以让访问者更快地知道图片的概貌。 )
+
+6.适合简单动画
+
+**Webp格式**
+
+Google开发的一种旨在加快图片加载速度的图片格式。图片压缩体积大约只有JPEG的2/3，并能节省大量的服务器带宽资源和数据空间。Facebook Ebay等知名网站已经开始测试并使用WebP格式。当然其也是一种有损压缩，其主要目的就是加快网络图片的传输效率，让图片能更快的显示在用户的眼前。目前所知道的只有高版本的W3C浏览器才支持这种格式，比如chorme39+，safari7+等等。
+
 ##### 45.什么是Cookie 隔离？（或者说：请求资源的时候不要让它带cookie怎么做）
 如果静态文件都放在主域名下，那静态文件请求的时候都带有的cookie的数据提交给server的，非常浪费流量，
 所以不如隔离开。
@@ -1338,4 +1565,158 @@ oblique会显示一个倾斜的字体样式。一些不常用的字体没有ital
 后处理器例如：PostCSS，通常被视为在完成的样式表中根据CSS规范处理CSS，让其更有效；目前最常做的
  是给CSS属性添加浏览器私有前缀，实现跨浏览器兼容性的问题。
 
-##### 48.css绘制几何图形
+##### 48.IE6浏览器有哪些常见的bug,缺陷或者与标准不一致的地方,如何解决
+
+1.IE6不支持min-height，解决办法使用css hack：
+```
+.target {
+    min-height: 100px;
+    height: auto !important;
+    height: 100px;   // IE6下内容高度超过会自动扩展高度
+}
+```
+2.ol内li的序号全为1，不递增。
+
+解决方法：为li设置样式display: list-item;
+
+3.未定位父元素overflow: auto;，包含position: relative;子元素，子元素高于父元素时会溢出。
+
+解决办法：
+
+1）子元素去掉position: relative;;
+
+2）不能为子元素去掉定位时，父元素position: relative;
+
+```
+<style type="text/css">
+.outer {
+    width: 215px;
+    height: 100px;
+    border: 1px solid red;
+    overflow: auto;
+    position: relative;  /* 修复bug */
+}
+.inner {
+    width: 100px;
+    height: 200px;
+    background-color: purple;
+    position: relative;
+}
+</style>
+
+<div class="outer">
+    <div class="inner"></div>
+</div>
+```
+
+4.IE6只支持a标签的:hover伪类，解决方法：使用js为元素监听mouseenter，mouseleave事件，添加类实现效果：
+```
+<style type="text/css">
+.p:hover,
+.hover {
+    background: purple;
+}
+</style>
+
+<p class="p" id="target">aaaa bbbbb<span>DDDDDDDDDDDd</span> aaaa lkjlkjdf j</p>
+
+<script type="text/javascript">
+function addClass(elem, cls) {
+    if (elem.className) {
+        elem.className += ' ' + cls;
+    } else {
+        elem.className = cls;
+    }
+}
+function removeClass(elem, cls) {
+    var className = ' ' + elem.className + ' ';
+    var reg = new RegExp(' +' + cls + ' +', 'g');
+    elem.className = className.replace(reg, ' ').replace(/^ +| +$/, '');
+}
+
+var target = document.getElementById('target');
+if (target.attachEvent) {
+    target.attachEvent('onmouseenter', function () {
+        addClass(target, 'hover');
+    });
+    target.attachEvent('onmouseleave', function () {
+        removeClass(target, 'hover');
+    })
+}
+</script>
+```
+
+5.IE6-7不支持display: inline-block解决办法：设置inline并触发hasLayout
+```
+display: inline-block;
+    *display: inline;
+    *zoom: 1;
+```
+
+6.IE6下浮动元素在浮动方向上与父元素边界接触元素的外边距会加倍。
+
+解决办法：
+
+ 1）使用padding控制间距。
+
+ 2）浮动元素display: inline;这样解决问题且无任何副作用：css标准规定浮动元素display:inline会自动调整为block
+
+7.通过为块级元素设置宽度和左右margin为auto时，IE6不能实现水平居中
+
+解决方法：为父元素设置text-align: center;
+
+##### 49.display: none;与visibility: hidden;的区别
+
+**联系**
+
+它们都能让元素不可见
+
+**区别**
+
+1.display:none;会让元素完全从渲染树中消失，渲染的时候不占据任何空间；
+
+visibility: hidden;不会让元素从渲染树消失，渲染师元素继续占据空间，只是内容不可见
+
+2.display: none;是非继承属性，子孙节点消失由于元素从渲染树消失造成，通过修改子孙节点属性无法显示；
+
+visibility: hidden;是继承属性，子孙节点消失由于继承了hidden，通过设置visibility: visible;可以让子孙节点显式
+
+3.修改常规流中元素的display通常会造成文档重排。修改visibility属性只会造成本元素的重绘。
+
+4.读屏器不会读取display: none;元素内容；会读取visibility: hidden;元素内容
+
+#### 50.什么是FOUC?如何避免
+
+Flash Of Unstyled Content无样式内容的闪退
+
+用户定义样式表加载之前浏览器使用默认样式显示文档，用户样式加载渲染之后再从新显示文档，造成页面闪烁。
+
+解决方法：把样式表放到文档的head
+
+
+请问 "resetting" 和 "normalizing" CSS 之间的区别？你会如何选择，为什么？
+请解释浮动 (Floats) 及其工作原理。
+描述z-index和叠加上下文是如何形成的。
+请解释 CSS sprites，以及你要如何在页面或网站中实现它。
+你最喜欢的图片替换方法是什么，你如何选择使用。
+你会如何解决特定浏览器的样式问题？
+如何为有功能限制的浏览器提供网页？
+你会使用哪些技术和处理方法？
+有哪些的隐藏内容的方法 (如果同时还要保证屏幕阅读器可用呢)？
+你用过栅格系统 (grid system) 吗？如果使用过，你最喜欢哪种？
+你用过媒体查询，或针对移动端的布局/CSS 吗？
+你熟悉 SVG 样式的书写吗？
+如何优化网页的打印样式？
+在书写高效 CSS 时会有哪些问题需要考虑？
+使用 CSS 预处理器的优缺点有哪些？
+请描述你曾经使用过的 CSS 预处理器的优缺点。
+如果设计中使用了非标准的字体，你该如何去实现？
+请解释浏览器是如何判断元素是否匹配某个 CSS 选择器？
+请解释你对盒模型的理解，以及如何在 CSS 中告诉浏览器使用不同的盒模型来渲染你的布局。
+请解释 * { box-sizing: border-box; } 的作用, 并且说明使用它有什么好处？
+CSS 中字母 'C' 的意思是叠层 (Cascading)。请问在确定样式的过程中优先级是如何决定的 (请举例)？如何有效使用此系统？
+你在开发或生产环境中使用过哪些 CSS 框架？你觉得应该如何改善他们？
+请问你有尝试过 CSS Flexbox 或者 Grid 标准规格吗？
+为什么响应式设计 (responsive design) 和自适应设计 (adaptive design) 不同？
+你有兼容 retina 屏幕的经历吗？如果有，在什么地方使用了何种技术？
+请问为何要使用 translate() 而非 absolute positioning，或反之的理由？为什么？
