@@ -118,7 +118,7 @@ parseFloat()--字符串第一个小数点有效，和parseInt()区别是会忽�
 6.如果是对象，则调用对象的valueOf()方法，然后依据前面的规则转换返回的值。如果转换的结果是NaN，则调用对象的toString()方法，再次依照前面的规则转换返回的字符串值。
 
 ```
-	  console.log(Number("hello CSSer!"));//NaN
+	console.log(Number("hello CSSer!"));//NaN
     console.log(Number("0×8"));//NaN--无效的十六进制
     console.log(Number("0xf"));//15--有效的十六进制
     console.log(Number(""));//0
@@ -1631,9 +1631,6 @@ someNode.previousSibling
 
 
 ##### 68.Underscore 对哪些 JS 原生对象进行了扩展以及提供了哪些好用的函数方法？
-
-
-##### 69.解释JavaScript中的作用域与变量声明提升？
 
 
 ##### 70.那些操作会造成内存泄漏？
