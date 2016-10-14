@@ -539,7 +539,7 @@ false
 
 ##### 6.JavaScript的作用域。
 
-js **无块级作用域**,只是把变量声明添加到 **最近的执行环境** 当中(函数执行环境或者全局执行环境)
+js通过函数来管理作用域， **无块级作用域**,只是把变量声明添加到 **最近的执行环境** 当中(函数执行环境或者全局执行环境)
 
 也就是所谓的var hoisting变量声明提升，但是变量初始化不提升
 
@@ -573,6 +573,24 @@ for (i = 0;i < 10;i++) {
 }
 
 alert(i); //10
+```
+
+```
+function func() {
+    alert(myname); // "undefined"
+    var myname = "local";
+    alert(myname); // "local"
+}
+func();
+
+
+myname = "global"; // global variable
+function func() {
+   var myname; // 等同于 -> var myname = undefined;
+   alert(myname); // "undefined"
+   myname = "local";
+   alert(myname); // "local"}
+func();
 ```
 
 ```
@@ -731,7 +749,77 @@ toUpperCase(),toLowerCase()
 
 http://blog.csdn.net/github_34514750/article/details/51320982
 
-##### 8.说说写JavaScript的基本规范？
+##### 8.说说写JavaScript的基本规范？或者说如何编写高质量的可维护的js代码？
+
+**1.注意变量的声明**
+
+一方面是避免创建隐藏的全局变量，另一方面尽量使用单个var的声明。
+
+1.注意使用var声明变量，避免创建隐藏的全局变量
+
+2.避免用任务链进行部分var声明，从而避免创建隐藏的全局变量
+
+```
+//a是本地变量，b是全局变量
+function foo() {
+   var a = b = 0;
+   // ...
+}
+```
+
+3.使用单var形式声明变量(代码少，且变量放一起增加可读性,且反正变量会hoisting)
+
+```
+function func() {
+   var a = 1,
+       b = 2,
+       sum = a + b,
+       myobject = {},
+       i,
+       j;
+   // function body...
+}
+```
+
+**2.注意for循环和for-in循环**
+
+for循环一方面是缓存数组的长度，另一方面是避免使用i++
+
+1.缓存数组的长度
+
+```
+// 若myarray是HTMLCOLLECTION对象的话，需要每次查询HTML页面，也就是实时操作DOM，则效率很低
+for (var i = 0; i < myarray.length; i++) {
+   // 使用myarray[i]做点什么
+}
+//因此使用缓存数组长度
+for (var i = 0, max = myarray.length; i < max; i++) {
+   // 使用myarray[i]做点什么
+}
+```
+2.避免使用i++
+
+对象使用for-in循环(属性列表顺序不被保证，所以虽然可以遍历数组但是不推荐)，数组使用for循环
+
+```
+var man = {
+    hands:2,
+    legs:2,
+    heads,1
+};
+
+if(typeof Object.prototype.clone === "undefined") {
+    Object.prototype.clone = function() {
+
+    };
+}
+//需要应用hasOwnProperty()方法过滤原型属性
+for(var i in man) {
+    if(man.hasOwnPrototype) {
+        console.log(i, ":", man[i]);
+    }
+}
+```
 
 ##### 9.Javascript创建对象的几种方式？
 
@@ -1317,7 +1405,7 @@ parseInt("3", 2)--NaN--数值都超过了进制3>2不合理，无法解析
 ##### 19.关于事件，IE与火狐的事件机制有什么区别？ 如何阻止冒泡？
 
 
-##### 20.什么是闭包（closure），为什么要用它？
+##### 20.什么是闭包（closure）？如何使用闭包？为什么要用它？
 
 **闭包**
 
@@ -1595,9 +1683,8 @@ function outputAttributes(element) {
 ```
 所以要想遍历li标签的方法如下两种：
 
-1.childNode遍历
+1.childNodes节点遍历
 
-2.直接使用getElementsByTagName
 ```
 var ulList = document.getElementById("myList");
 
@@ -1609,9 +1696,36 @@ for(var i = 0 ,len = ulList.childNodes.length;i < len;i++) {
 }
 ```
 
+2.直接使用getElementsByTagName
+
 ```
 var ulList = document.getElementById("myList");
 var items = ulList.getElementsByTagName("li");
+```
+
+3.使用专门的元素遍历方法(dom扩展中)，这样就不用担心空白的文本节点了
+
+DOM扩展的元素遍历的属性：
+
+childElementCount
+
+firstElementChild
+
+lastElementChild
+
+previousElementSibling
+
+nextElementSibling
+
+```
+var ulList = document.getElementById("myList"),
+    child = ulList.firstElementChild;
+
+for(var i = 0 ,len = ulList.childElementCount;i < len;i++) {
+    if(child != ulList.firstElementChild) {
+        child = child.nextElementSibling;
+    }
+}
 ```
 **6.node类型--Attr类型**--不常用
 
@@ -1743,6 +1857,44 @@ function convertListToArray(nodes) {
 
        getElementById()    //通过元素Id，唯一性
 
+##### 37.DOM扩展?
+
+1.选择器API
+
+querySelector(),querySelectorAll(),matchesSelector()
+
+2.元素遍历(上边讲过了)
+
+3.HTML5 DOM扩展--支持的浏览器不全
+
+  getElementByClassName()--一个可以包含一个或者多个类名的名字
+
+  childList--操作类名的时候，需要通过className属性添加，删除和替换类名，可以操作类名
+
+```
+操作类名的原始方法
+var classNames = div.className.split(/\s+/);
+
+var pos = -1,
+    len,
+    i;
+
+for(i = 0,len = classNames.length;i < len;i++) {
+    if(classNames[i] == "user") {
+        pos = i;
+        break;
+    }
+}
+classNames.splice(i,1);
+div.className = classNames.join(" ");
+
+有了classList之后可以直接用整个方法，classList有如下方法
+div.classList.add(value);
+div.classList.contains(value);
+div.classList.remove(value);
+div.classList.toggle(value);
+```
+    DOM焦点功能
 ##### 37. .call() 和 .apply() 的作用和区别？
 
 
@@ -1751,68 +1903,10 @@ function convertListToArray(nodes) {
 
 ##### 39.JS 怎么实现一个类。怎么实例化这个类
 
-
-##### 40.JavaScript中的作用域与变量声明提升？
-
-
 ##### 41.如何编写高性能的Javascript？
 
 
 ##### 42.那些操作会造成内存泄漏？
-
-
-##### 43.JQuery的源码看过吗？能不能简单概况一下它的实现原理？
-
-
-##### 44.jQuery.fn的init方法返回的this指的是什么对象？为什么要返回this？
-
-
-##### 45.jquery中如何将数组转化为json字符串，然后再转化回来？
-
-
-##### 46.jQuery 的属性拷贝(extend)的实现原理是什么，如何实现深拷贝？
-
-
-##### 47.jquery.extend 与 jquery.fn.extend的区别？
-
-
-##### 48.jQuery 的队列是如何实现的？队列可以用在哪些地方？
-
-
-##### 49.谈一下Jquery中的bind(),live(),delegate(),on()的区别？
-
-
-##### 50.JQuery一个对象可以同时绑定多个事件，这是如何实现的？
-
-
-##### 51.是否知道自定义事件。jQuery里的fire函数是什么意思，什么时候用？
-
-
-##### 52.jQuery 是通过哪个方法和 Sizzle 选择器结合的？（jQuery.fn.find()进入Sizzle）
-
-
-##### 53.针对 jQuery性能的优化方法？
-
-
-##### 54.Jquery与jQuery UI有啥区别？
-
-
-##### 55.JQuery的源码看过吗？能不能简单说一下它的实现原理？
-
-
-##### 56.jquery 中如何将数组转化为json字符串，然后再转化回来？
-
-
-##### 57.jQuery和Zepto的区别？各自的使用场景？
-
-
-##### 58.针对 jQuery 的优化方法？
-
-
-##### 59.Zepto的点透问题如何解决？
-
-
-##### 60.jQueryUI如何自定义组件?
 
 
 ##### 61.需求：实现一个页面操作不会整页刷新的网站，并且能在浏览器前进、后退时正确响应。给出你的技术实现方案？
@@ -1823,8 +1917,6 @@ function convertListToArray(nodes) {
 
 ##### 63.移动端最小触控区域是多大？
 
-
-##### 64.jQuery 的 slideUp动画 ，如果目标元素是被外部事件驱动, 当鼠标快速地连续触发外部元素事件, 动画会滞后的反复执行，该如何处理呢?
 
 
 ##### 65.把 Script 标签 放在页面的最底部的body封闭之前 和封闭之后有什么区别？浏览器会如何解析它们？
@@ -1840,11 +1932,6 @@ function convertListToArray(nodes) {
 
 
 ##### 70.那些操作会造成内存泄漏？
-
-
-##### 71.JQuery一个对象可以同时绑定多个事件，这是如何实现的？
-
-
 ##### 71.Node.js的适用场景？
 
 
@@ -1888,18 +1975,14 @@ function convertListToArray(nodes) {
 
 请解释事件代理 (event delegation)。
 请解释 JavaScript 中 this 是如何工作的。
-请解释原型继承 (prototypal inheritance) 的原理。
 你怎么看 AMD vs. CommonJS？
 请解释为什么接下来这段代码不是 IIFE (立即调用的函数表达式)：function foo(){ }();.
 要做哪些改动使它变成 IIFE?
-描述以下变量的区别：null，undefined 或 undeclared？
 该如何检测它们？
-什么是闭包 (closure)，如何使用它，为什么要使用它？
 请举出一个匿名函数的典型用例？
 你是如何组织自己的代码？是使用模块模式，还是使用经典继承的方法？
 请指出 JavaScript 宿主对象 (host objects) 和原生对象 (native objects) 的区别？
 请指出以下代码的区别：function Person(){}、var person = Person()、var person = new Person()？
-.call 和 .apply 的区别是什么？
 请解释 Function.prototype.bind？
 在什么时候你会使用 document.write()？
 请指出浏览器特性检测，特性推断和浏览器 UA 字符串嗅探的区别？
@@ -1908,17 +1991,14 @@ function convertListToArray(nodes) {
 请解释 JSONP 的工作原理，以及它为什么不是真正的 Ajax。
 你使用过 JavaScript 模板系统吗？
 如有使用过，请谈谈你都使用过哪些库？
-请解释变量声明提升 (hoisting)。
 请描述事件冒泡机制 (event bubbling)。
 "attribute" 和 "property" 的区别是什么？
 为什么扩展 JavaScript 内置对象不是好的做法？
 请指出 document load 和 document DOMContentLoaded 两个事件的区别。
-== 和 === 有什么不同？
 请解释 JavaScript 的同源策略 (same-origin policy)。
 如何实现下列代码：
 [1,2,3,4,5].duplicator(); // [1,2,3,4,5,1,2,3,4,5]
 什么是三元表达式 (Ternary expression)？“三元 (Ternary)” 表示什么意思？
-什么是 "use strict"; ? 使用它的好处和坏处分别是什么？
 请实现一个遍历至 100 的 for loop 循环，在能被 3 整除时输出 "fizz"，在能被 5 整除时输出 "buzz"，在能同时被 3 和 5 整除时输出 "fizzbuzz"。
 为何通常会认为保留网站现有的全局作用域 (global scope) 不去改变它，是较好的选择？
 为何你会使用 load 之类的事件 (event)？此事件有缺点吗？你是否知道其他替代品，以及为何使用它们？
