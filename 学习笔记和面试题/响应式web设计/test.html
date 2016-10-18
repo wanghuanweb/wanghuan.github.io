@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>test</title>
+</head>
+<body>
+    <p class="text">erer sdg hgfgj</p>
+    <div class="img-wrap">
+        <img src="robots.jpg" alt="" class="responsive">
+        <p>erer sdg hgfgj</p>
+    </div>
+
+    <style>
+    /*但此时图片还是静态的，一直宽度不变*/
+        p.text{
+            float: left;
+            width: 60%;
+        }
+        div.img-wrap{
+            float: right;
+            width: 40%;
+        }
+        /*实现方法----可以适应浏览器的窗口的大小了*/
+        img.responsive{
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
+</body>
+</html>
