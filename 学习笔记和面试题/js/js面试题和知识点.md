@@ -751,7 +751,11 @@ http://blog.csdn.net/github_34514750/article/details/51320982
 
 ##### 8.说说写JavaScript的基本规范？或者说如何编写高质量的可维护的js代码？
 
-**1.注意变量的声明**
+**1.注意编程规范**
+
+注意常量，函数灯命名的大小写，注释，空格，缩进等
+
+**2.注意变量的声明**
 
 一方面是避免创建隐藏的全局变量，另一方面尽量使用单个var的声明。
 
@@ -781,7 +785,7 @@ function func() {
 }
 ```
 
-**2.注意for循环和for-in循环**
+**3.注意for循环和for-in循环**
 
 for循环一方面是缓存数组的长度，另一方面是避免使用i++
 
@@ -815,10 +819,59 @@ if(typeof Object.prototype.clone === "undefined") {
 }
 //需要应用hasOwnProperty()方法过滤原型属性
 for(var i in man) {
-    if(man.hasOwnPrototype) {
+    if(man.hasOwnPrototype(i)) {
         console.log(i, ":", man[i]);
     }
 }
+//或者这样使用hasOwnPrototype来过滤属性
+for(var i in man) {
+    if(Object.prototype.hasOwnPrototype.call(man,i)) {
+        console.log(i,":",man[i]);
+    }
+}
+```
+
+**4.避免隐式类型的转换**
+
+在比较值和表达式类型的时候始终使用===和!==操作符
+
+**5.避免使用eval**
+
+1.动态访问属性，可以用[]来代替
+
+```
+//避免使用eval访问动态属性，用[]方法访问动态属性
+var property = "name";
+alert(eval("obj." + property));
+
+// 更好的
+var property = "name";
+alert(obj[property]);
+```
+
+2.若必须使用eval(),可以考虑使用new Function()来代替
+
+因为在新Function()中作代码评估是在局部函数作用域中运行，所以代码中任何被评估的通过var 定义的变量都不会自动变成全局变量
+
+```
+console.log(typeof un);    // "undefined"
+console.log(typeof deux); // "undefined"
+console.log(typeof trois); // "undefined"
+
+var jsstring = "var un = 1; console.log(un);";
+eval(jsstring); // logs "1"
+
+jsstring = "var deux = 2; console.log(deux);";
+new Function(jsstring)(); // logs "2"
+
+jsstring = "var trois = 3; console.log(trois);";
+(function () {
+   eval(jsstring);
+}()); // logs "3"
+
+console.log(typeof un); // number
+console.log(typeof deux); // "undefined"
+console.log(typeof trois); // "undefined"
 ```
 
 ##### 9.Javascript创建对象的几种方式？
@@ -1055,6 +1108,7 @@ person.sayFriends();
 ```
 
 ##### 10.JavaScript原型，原型链 ? 有什么特点？
+
 **构造函数，原型和实例的关系**
 
 **构造函数**：都有一个原型属性，指向一个原型对象。prototype
@@ -1282,7 +1336,8 @@ eval(string)
 
 **使用场景**
 
-eval其实就是让字符串当成js代码执行(把一段字符串传递给JS解释器，由JS解释器将这段字符串解释成JS代码并执行),虽然任何字符串都可以当js代码执行，但是预先编辑好的（不是在动态运行时候决定）没有理由使用eval()
+eval其实就是让字符串当成js代码执行(把一段字符串传递给JS解释器，由JS解释器将这段字符串解释成JS代码并执行)
+若代码是事先知道，不是在运行时才确定的，不用使用eval()
 
 **例子**
 
@@ -1384,7 +1439,12 @@ x // undefined
 
 ```
 
-##### 17.写一个通用的事件侦听器函数(机试题)。
+##### 17.立即调用的函数表达式Immediately-Invoked Function Expression (IIFE)？
+
+
+这段代码不是 IIFE (立即调用的函数表达式)：function foo(){ }();.
+要做哪些改动使它变成 IIFE?
+该如何检测它们？
 
 
 ##### 18.["1", "2", "3"].map(parseInt) 答案是多少？
@@ -1483,21 +1543,6 @@ Function.prototype._new_ = function() {
     return (typeof resultObj === "object" && resultObj) || newObj;
 };
 ```
-
-##### 20.用原生JavaScript的实现过什么功能吗？
-
-
-##### 21.Javascript中，有一个函数，执行时对象查找时，永远不会去查找原型，这个函数是？
-
-hasOwnProperty
-
-javaScript中hasOwnProperty函数方法是返回一个布尔值，指出一个对象是否具有指定名称的属性。此方法无法检查该对象的原型链中是否具有该属性；该属性必须是对象本身的一个成员。
-
-##### 22.对JSON的了解？
-
-
-##### 23. [].forEach.call($$("*"),function(a){ a.style.outline="1px solid #"+(~~(Math.random()*(1<<24))).toString(16) })  能解释一下这段代码的意思吗？
-
 
 ##### 24.js延迟加载的方式有哪些？
 
@@ -1829,7 +1874,7 @@ function convertListToArray(nodes) {
 }
 ```
 
-##### 36.DOM操作——怎样添加、移除、移动、复制、创建和查找节点?
+##### 38.DOM操作——怎样添加、移除、移动、复制、创建和查找节点?
 
 （1）创建新节点（只是创建没添加到文档中，添加还需要2中的方法）
 
@@ -1857,7 +1902,7 @@ function convertListToArray(nodes) {
 
        getElementById()    //通过元素Id，唯一性
 
-##### 37.DOM扩展?
+##### 39.DOM扩展?
 
 1.选择器API
 
@@ -1895,15 +1940,27 @@ div.classList.remove(value);
 div.classList.toggle(value);
 ```
     DOM焦点功能
-##### 37. .call() 和 .apply() 的作用和区别？
+##### 40. .call() 和 .apply() 的作用和区别？
 
 
-##### 38.数组和对象有哪些原生方法，列举一下？
+##### 20.用原生JavaScript的实现过什么功能吗？
 
 
-##### 39.JS 怎么实现一个类。怎么实例化这个类
+##### 21.Javascript中，有一个函数，执行时对象查找时，永远不会去查找原型，这个函数是？
 
-##### 41.如何编写高性能的Javascript？
+hasOwnProperty
+
+javaScript中hasOwnProperty函数方法是返回一个布尔值，指出一个对象是否具有指定名称的属性。此方法无法检查该对象的原型链中是否具有该属性；该属性必须是对象本身的一个成员。
+
+##### 22.对JSON的了解？
+
+
+##### 23. [].forEach.call($$("*"),function(a){ a.style.outline="1px solid #"+(~~(Math.random()*(1<<24))).toString(16) })  能解释一下这段代码的意思吗？
+
+##### 41.数组和对象有哪些原生方法，列举一下？
+
+
+##### 42.JS 怎么实现一个类。怎么实例化这个类
 
 
 ##### 42.那些操作会造成内存泄漏？
@@ -1964,6 +2021,8 @@ div.classList.toggle(value);
 
 ##### 81.检测浏览器版本版本有哪些方式？
 
+##### 17.写一个通用的事件侦听器函数(机试题)。
+
 
 ##### 82.What is a Polyfill?
 
@@ -1976,9 +2035,7 @@ div.classList.toggle(value);
 请解释事件代理 (event delegation)。
 请解释 JavaScript 中 this 是如何工作的。
 你怎么看 AMD vs. CommonJS？
-请解释为什么接下来这段代码不是 IIFE (立即调用的函数表达式)：function foo(){ }();.
-要做哪些改动使它变成 IIFE?
-该如何检测它们？
+
 请举出一个匿名函数的典型用例？
 你是如何组织自己的代码？是使用模块模式，还是使用经典继承的方法？
 请指出 JavaScript 宿主对象 (host objects) 和原生对象 (native objects) 的区别？
