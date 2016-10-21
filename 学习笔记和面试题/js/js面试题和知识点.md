@@ -29,13 +29,13 @@
 
 **Number**
 
- ###### 1.number类型的数值范围
+###### 1.number类型的数值范围
 
 Number.MIN_VALUE--Number.MAX_VALUE,超出这个范围的被转化-Infinity和Infinity
 
 同时可以使用isFinite()函数来判断此数是否有穷
 
- ######  2.NaN(非数值)--一个特殊的数值
+######  2.NaN(非数值)--一个特殊的数值
 
   1.任何涉及到非数值的操作返回都是NaN
 
@@ -187,12 +187,12 @@ parseFloat()--字符串第一个小数点有效，和parseInt()区别是会忽�
 2.对象的隐式转换
 3.操作符与隐式类型转换
 
-###### 4.2.1 一些函数涉及的隐式转换
+####### 4.2.1 一些函数涉及的隐式转换
 
 用于检测是否为非数值的函数：isNaN(mix)
 isNaN()函数，经测试发现，该函数会尝试将参数值用Number()进行转换，如果结果为“非数值”则返回true，否则返回false。
 
-###### 4.2.2 对象的隐式转换
+####### 4.2.2 对象的隐式转换
 
 **对象转换成布尔**
  基本包装类型Boolean、Number、Sring，这些对象都被转换成布尔值ture
@@ -258,7 +258,7 @@ Obj.prototype.toString = function(){return {};}
 console.log(data[new Obj()]);//输出"callValueOf"
 ```
 
-###### 2.3 操作符与隐式类型转换
+####### 4.3 操作符与隐式类型转换
 
 **递增递减操作符**
 
@@ -492,8 +492,6 @@ Infinity == -Infinity
 false
 ```
 
-
-
 ##### 5.检测JavaScript的数据类型。
 
   **typeof操作符来检测基本数据类型**
@@ -617,7 +615,7 @@ Goodbye Jack
 注意js的var hoisting变量声明提升，虽然声明提升，但是初始化并不提升
 则上述代码相当于
 
-##### 6.介绍js有哪些内置对象？
+##### 7.介绍js有哪些内置对象？
 
 引用类型：
 
@@ -745,11 +743,11 @@ toUpperCase(),toLowerCase()
 
 **字符串的模式匹配方法**
 
-##### 7.js数组合并的方法？
+##### 8.js数组合并的方法？
 
 http://blog.csdn.net/github_34514750/article/details/51320982
 
-##### 8.说说写JavaScript的基本规范？或者说如何编写高质量的可维护的js代码？
+##### 9.说说写JavaScript的基本规范？或者说如何编写高质量的可维护的js代码？
 
 **1.注意编程规范**
 
@@ -874,7 +872,9 @@ console.log(typeof deux); // "undefined"
 console.log(typeof trois); // "undefined"
 ```
 
-##### 9.Javascript创建对象的几种方式？
+##### 10.Javascript创建对象的几种方式？
+
+请指出以下代码的区别：function Person(){}、var person = Person()、var person = new Person()？(可结合下列知识点回答)
 
 ###### 1.使用Object构造函数创建对象
 
@@ -887,6 +887,7 @@ person.sayName = function(){
 };
 ```
 ###### 2.使用对象字面量创建对象
+
 ```
 var person = {
     name:"wanghuan",
@@ -896,8 +897,11 @@ var person = {
     }
 };
 ```
+
 **上述两个方法都是创建单个对象，要想批量创建对象，则使用下列方法**
+
 ###### 3.使用工厂模式创建对象
+
 **工厂模式的优点：**
 
 发明了一种函数，用函数来封装以特定接口创建对象的细节。
@@ -920,7 +924,9 @@ function createPerson (name,age,job) {
 var person1 = createPerson("wanghuan",22,"software engineer");
 var person2 = createPerson("shuguang",22,"army");
 ```
+
 ###### 4.使用构造函数模式创建对象
+
 **构造函数模式的优点：**
 
 自定义的构造函数意味着将来可以把它的实例标识为一种特定的类型，这正是构造函数模式胜过工厂模式的地方。
@@ -1107,7 +1113,7 @@ person.sayName();
 person.sayFriends();
 ```
 
-##### 10.JavaScript原型，原型链 ? 有什么特点？
+##### 11.JavaScript原型，原型链 ? 有什么特点？
 
 **构造函数，原型和实例的关系**
 
@@ -1196,7 +1202,7 @@ function A(){
 3.A.prototype._proto_._proto_ == null;
 ```
 
-##### 11.Javascript如何实现继承？
+##### 12.Javascript如何实现继承？
 
 ###### 1.使用原型链实现继承
 继承实际是依靠原型链来实现的，原型链是实现继承的主要方法。
@@ -1313,16 +1319,7 @@ instance2.sayAge();//23
 ```
 
 
-##### 12.Javascript作用链域?
-
-全局函数无法查看局部函数的内部细节，但局部函数可以查看其上层的函数细节，直至全局细节。
-
-当需要从局部函数查找某一属性或方法时，如果当前作用域没有找到，就会上溯到上层作用域查找，
-
-直至全局函数，这种组织形式就是作用域链。
-
 ##### 13.谈谈this对象的理解。
-
 
 ##### 14.eval是做什么的？
 
@@ -1439,13 +1436,148 @@ x // undefined
 
 ```
 
-##### 17.立即调用的函数表达式Immediately-Invoked Function Expression (IIFE)？
+##### 17.函数和立即调用的函数表达式Immediately-Invoked Function Expression (IIFE)？
+
+###### 1.创建函数的方法
+
+创建函数的方法是函数声明和函数表达式
+
+**函数声明**
+
+function 函数名称 (参数：可选){ 函数体 }
+
+```
+function foo(){} // 声明，因为它是程序的一部分
+
+(function(){
+    function bar(){} // 声明，因为它是函数体的一部分
+})();
+```
+**函数表达式**
+
+function 函数名称（可选）(参数：可选){ 函数体 }
+
+```
+无函数名的肯定是函数表达式
+var bar = function foo(){}; // 表达式，因为它是赋值表达式的一部分
+new function bar(){}; // 表达式，因为它是new表达式
+(function foo(){}); // 函数表达式：包含在分组操作符内，是因为括号 ()是一个分组操作符，它的内部只能包含表达式
+```
+
+**函数声明和函数表达式的区别**
+
+1.函数声明会在任何表达式被解析和求值之前先被解析和求值,也就是函数声明提升,但是函数表达式无函数声明提升的特性
+
+```
+sayName();//Name
+function sayName(){
+    alert("Name");
+}
+
+sayName();//报错，函数不存在
+var sayName = function(){
+    alert("Name");
+}
+```
+
+2.函数声明只能出现在程序或函数体内。从句法上讲，它们 不能出现在Block（块）（{ ... }）中，例如不能出现在 if、while 或 for 语句中。因为 Block（块） 中只能包含Statement语句， 而不能包含函数声明这样的源元素。另一方面，仔细看一看规则也会发现，唯一可能让表达式出现在Block（块）中情形，就是让它作为表达式语句的一部分。但是，规范明确规定了表达式语句不能以关键字function开头。而这实际上就是说，函数表达式同样也不能出现在Statement语句或Block（块）中（因为Block（块）就是由Statement语句构成的）。
+
+```
+// 千万别这样做！
+// 因为有的浏览器会返回first的这个function，而有的浏览器返回的却是第二个
+
+if (true) {
+    function foo() {
+      return 'first';
+    }
+}
+else {
+    function foo() {
+      return 'second';
+    }
+}
+foo();
+
+// 相反，这样情况，我们要用函数表达式
+var foo;
+if (true) {
+    foo = function() {
+      return 'first';
+    };
+}
+else {
+    foo = function() {
+      return 'second';
+    };
+}
+foo();
+```
 
 
-这段代码不是 IIFE (立即调用的函数表达式)：function foo(){ }();.
-要做哪些改动使它变成 IIFE?
-该如何检测它们？
+###### 2.立即调用的函数表达式Immediately-Invoked Function Expression (IIFE)
 
+**函数的正常调用**
+
+函数function foo(){}或者var foo = function(){}，调用时，你都需要在后面加上一对圆括号，像这样foo()。
+
+**立即调用的函数表达式**
+
+```
+//立即调用的几种形式
+var foo = function(){}();
+//这两种模式都可以被用来立即调用一个函数表达式，利用函数的执行来创造私有变量
+
+(function(){/* code */}());//Crockford recommends this one，括号内的表达式代表函数立即调用表达式
+(function(){/* code */})();//But this one works just as well，括号内的表达式代表函数表达式
+```
+function foo(){ }();--不是立即调用的函数表达式,
+
+原因：因为圆括号放在一个函数表达式后面指明了这是一个被调用的函数;但若在一个声明后面则意味着和前面的声明分开了，只是一个简单的代表符号(用来控制运算优先的括号)。
+
+解决：将函数声明包裹在圆括号里来告诉语法分析器去当成一个函数表达式解析
+
+**保存闭包的状态**
+
+一个立即调用的函数表达式可以用来锁定值并且有效的保存此时的状态
+
+闭包：一个函数内的函数可以访问外部函数作用域的变量
+
+```
+//i没有被锁定，相反的，每个链接，当被点击时（循环已经被很好的执行完毕）,因此会弹出所有元素的总数,因为这是 `i` 此时的真实值。
+var elems = document.getElementsByTagName("a");
+
+for(var i = 0,len = elems.length;i < len;i++) {
+    elems[i].addEventListener('click',function(e){
+        e.preventDefault();
+        alert('I am link #' + i)
+    },false);
+}
+// 而像下面这样改写，便可以了，因为在IIFE里，`i`值被锁定在了`lockedInIndex`里。
+// 在循环结束执行时，尽管`i`值的数值是所有元素的总和，但每一次函数表达式被调用时，
+// IIFE 里的 `lockedInIndex` 值都是`i`传给它的值,所以当链接被点击时，正确的值被弹出。
+var elems = document.getElementsByTagName("a");
+
+for(var i = 0,len = elems.length;i < len;i++) {
+    (function(lockedInIndex){
+        elems[i].addEventListener('click',function(e){
+            e.preventDefault();
+            alert('I am link #' + lockedInIndex);
+        },false);
+    })(i);
+}
+//你同样可以像下面这样使用IIFE，仅仅只用括号包括点击处理函数，并不包含整个`addEventListener`。
+//无论用哪种方式，这两个例子都可以用IIFE将值锁定，不过我发现前面一个例子更可读
+var elems = document.getElementsByTagName("a");
+
+for(var i = 0,len = elems.length;i < len;i++) {
+    elems[i].addEventListener('click',(function(lockedInIndex){
+        return function(e) {
+            e.preventDefault();
+            alert('I am link #' + lockedInIndex);
+        };
+    }(i),false);
+}
+```
 
 ##### 18.["1", "2", "3"].map(parseInt) 答案是多少？
 
@@ -1461,9 +1593,13 @@ parseInt("1", 0)--1--radix为0时，比较特殊，其实当成10进制处理。
 parseInt("2", 1)--NaN--数值都超过了进制2>1不合理，无法解析
 parseInt("3", 2)--NaN--数值都超过了进制3>2不合理，无法解析
 ```
+##### 19.Javascript作用链域?
 
-##### 19.关于事件，IE与火狐的事件机制有什么区别？ 如何阻止冒泡？
+全局函数无法查看局部函数的内部细节，但局部函数可以查看其上层的函数细节，直至全局细节。
 
+当需要从局部函数查找某一属性或方法时，如果当前作用域没有找到，就会上溯到上层作用域查找，
+
+直至全局函数，这种组织形式就是作用域链。
 
 ##### 20.什么是闭包（closure）？如何使用闭包？为什么要用它？
 
@@ -2035,11 +2171,8 @@ javaScript中hasOwnProperty函数方法是返回一个布尔值，指出一个�
 请解释事件代理 (event delegation)。
 请解释 JavaScript 中 this 是如何工作的。
 你怎么看 AMD vs. CommonJS？
-
 请举出一个匿名函数的典型用例？
-你是如何组织自己的代码？是使用模块模式，还是使用经典继承的方法？
 请指出 JavaScript 宿主对象 (host objects) 和原生对象 (native objects) 的区别？
-请指出以下代码的区别：function Person(){}、var person = Person()、var person = new Person()？
 请解释 Function.prototype.bind？
 在什么时候你会使用 document.write()？
 请指出浏览器特性检测，特性推断和浏览器 UA 字符串嗅探的区别？
@@ -2072,4 +2205,6 @@ What is the extent of your experience with Promises and/or their polyfills?
 请解释同步 (synchronous) 和异步 (asynchronous) 函数的区别。
 什么是事件循环 (event loop)？
 请问调用栈 (call stack) 和任务队列 (task queue) 的区别是什么？
-解释 function foo() {} 与 var foo = function() {} 用法的区别
+
+
+##### 19.关于事件，IE与火狐的事件机制有什么区别？ 如何阻止冒泡？
