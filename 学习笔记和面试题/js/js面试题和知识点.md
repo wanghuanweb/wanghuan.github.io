@@ -1317,11 +1317,7 @@ alert(instance2.colors);//red,blue,green
 instance2.sayName();//shuguang
 instance2.sayAge();//23
 ```
-
-
-##### 13.谈谈this对象的理解。
-
-##### 14.eval是做什么的？
+##### 13.eval是做什么的？
 
 **语法**
 
@@ -1357,7 +1353,7 @@ eval其实就是让字符串当成js代码执行(把一段字符串传递给JS�
 <script>
 ```
 
-##### 15.什么是window对象? 什么是document对象?
+##### 14.什么是window对象? 什么是document对象?
 
 **window对象**
 
@@ -1393,7 +1389,7 @@ Document类型表示文档。document对象是Document的一个实例，表示�
 http://www.w3school.com.cn/jsref/dom_obj_document.asp
 
 
-##### 16.null，undefined的区别？
+##### 15.null，undefined的区别？
 
 **null**
 
@@ -1436,7 +1432,7 @@ x // undefined
 
 ```
 
-##### 17.函数和立即调用的函数表达式Immediately-Invoked Function Expression (IIFE)？
+##### 16.函数和立即调用的函数表达式Immediately-Invoked Function Expression (IIFE)？
 
 ###### 1.创建函数的方法
 
@@ -1578,28 +1574,199 @@ for(var i = 0,len = elems.length;i < len;i++) {
     }(i),false);
 }
 ```
+##### 17.变量对象(VO variable object),活动对象(AO active object),执行上下文
 
-##### 18.["1", "2", "3"].map(parseInt) 答案是多少？
+**变量对象VO**
 
-答案：
+变量对象VO是与执行上下文相关的特殊对象,用来存储上下文的函数声明，函数形参和变量。
+每个上下文拥有自己的变量对象：对于全局上下文，它是全局对象自身；对于函数，它是活动对象。
+
+变量对象VO存储上下文中声明的以下内容
+{
+    函数声明FD(如果在函数上下文中),----不包含函数表达式
+    函数形参function arguments,
+    变量声明--注意b=10不是变量，但是var b = 10;是变量，有变量声明提升
+    alert(a); // undefined
+    alert(b); // "b" 没有声明
+
+    b = 10;
+    var a = 20;
+}
 
 ```
-[1, NaN, NaN]
-```
-解析：
-考察map函数，map的第一个参数是回调函数，并且自动给回调函数传递item,index,array三个参数，这里parseInt是回调函数，但是parseInt只接受两个参数(element,radix)，其实就是
-```
-parseInt("1", 0)--1--radix为0时，比较特殊，其实当成10进制处理。
-parseInt("2", 1)--NaN--数值都超过了进制2>1不合理，无法解析
-parseInt("3", 2)--NaN--数值都超过了进制3>2不合理，无法解析
-```
-##### 19.Javascript作用链域?
+var a = 10;
 
-全局函数无法查看局部函数的内部细节，但局部函数可以查看其上层的函数细节，直至全局细节。
+function test(x) {
+  var b = 20;
+};
 
-当需要从局部函数查找某一属性或方法时，如果当前作用域没有找到，就会上溯到上层作用域查找，
+test(30);
 
-直至全局函数，这种组织形式就是作用域链。
+// 全局上下文的变量对象
+VO(globalContext) = {
+  a: 10,
+  test: <reference to function>
+};
+
+// test函数上下文的变量对象
+VO(test functionContext) = {
+  x: 30,
+  b: 20
+};
+```
+
+**变量对象VO分类**
+
+全局上下文的变量对象VO，函数上下文的变量对象VO
+
+```
+//全局上下文的变量对象VO就是全局对象
+VO(globalContext) === global;
+```
+
+**活动变量AO**
+
+当函数被调用后，这个特殊的活动对象就被创建了。它包含普通参数与特殊参数对象（具有索引属性的参数映射表）。活动对象在函数上下文中作为变量对象使用。
+
+在函数执行上下文中，VO是不能直接访问的，此时由活动对象(activation object,缩写为AO)扮演VO的角色。
+
+```
+VO(functionContext) === AO;
+```
+
+Arguments对象是活动对象的一个属性，它包括如下属性：
+
+callee — 指向当前函数的引用
+
+length — 真正传递的参数个数
+
+properties-indexes (字符串类型的整数) 属性的值就是函数的参数值(按参数列表从左到右排列)。
+properties-indexes内部元素的个数等于arguments.length. properties-indexes 的值和实际传递进来的参数之间是共享的。
+
+```
+function foo(x, y, z) {
+
+  // 声明的函数参数数量arguments (x, y, z)
+  alert(foo.length); // 3
+
+  // 真正传进来的参数个数(only x, y)
+  alert(arguments.length); // 2
+
+  // 参数的callee是函数自身
+  alert(arguments.callee === foo); // true
+
+  // 参数共享
+
+  alert(x === arguments[0]); // true
+  alert(x); // 10
+
+  arguments[0] = 20;
+  alert(x); // 20
+
+  x = 30;
+  alert(arguments[0]); // 30
+
+  // 不过，没有传进来的参数z，和参数的第3个索引值是不共享的
+
+  z = 40;
+  alert(arguments[2]); // undefined
+
+  arguments[2] = 50;
+  alert(z); // 40
+
+}
+
+foo(10, 20);
+```
+
+**处理上下文代码的2个阶段**
+
+进入执行上下文和执行代码
+
+**进入执行上下文：**
+
+1.建立变量，函数，arguments对象，参数，变量是进入上下文阶段放入VO中，也就是变量声明提升并且变量声明顺序上是在函数声明和形参声明后
+2.建立作用域链
+3.确定上下文中this的指向对象
+
+若把执行上下文看成一个对象，则应该包含如下属性
+
+```
+(executionContextObj = {
+   variableObject: { /* 函数中的arguments对象, 参数, 内部的变量以及函数声明 */ },
+   scopeChain: { /* variableObject 以及所有父执行上下文中的variableObject */ },
+   this: {}
+   }
+)
+```
+
+```
+if (true) {
+  var a = 1;
+} else {
+  var b = 2;
+}
+
+alert(a); // 1
+alert(b); // undefined,不是b没有声明，而是b的值是undefined
+```
+
+```
+//变量声明在顺序上跟在函数声明和形式参数声明之后，而且在这个进入上下文阶段，变量声明不会干扰VO中已经存在的同名函数声明或形式参数声明
+alert(x); // function
+
+var x = 10;
+alert(x); // 10
+
+x = 20;
+
+function x() {};
+
+alert(x); // 20
+```
+
+```
+function test(a, b) {
+  var c = 10;
+  function d() {}
+  var e = function _e() {};
+  (function x() {});
+}
+
+test(10); // call
+当进入带有参数10的test函数上下文时，AO表现为如下：
+//AO里并不包含函数“x”。这是因为“x” 是一个函数表达式(FunctionExpression, 缩写为 FE) 而不是函数声明，函数表达式不会影响VO
+AO(test) = {
+  a: 10,
+  b: undefined,
+  c: undefined,
+  d: <reference to FunctionDeclaration "d">
+  e: undefined
+};
+```
+
+**代码执行：**
+
+变量赋值，函数引用，执行其它代码
+
+http://www.cnblogs.com/TomXu/archive/2012/01/16/2309728.html
+
+##### 18.Javascript作用链域(Scope Chain)?
+
+作用域链就是内部上下文的变量对象VO的列表，作用域链用来查询变量。
+
+##### 19.谈谈this对象的理解。
+
+如上，this是执行上下文的一个属性，this值在 **进入** 上下文时确定，并且在上下文运行期间永久不变。
+
+```
+(executionContextObj = {
+   variableObject: { /* 函数中的arguments对象, 参数, 内部的变量以及函数声明 */ },
+   scopeChain: { /* variableObject 以及所有父执行上下文中的variableObject */ },
+   this: {}
+   }
+)
+```
 
 ##### 20.什么是闭包（closure）？如何使用闭包？为什么要用它？
 
@@ -2078,7 +2245,20 @@ div.classList.toggle(value);
     DOM焦点功能
 ##### 40. .call() 和 .apply() 的作用和区别？
 
+##### 18.["1", "2", "3"].map(parseInt) 答案是多少？
 
+答案：
+
+```
+[1, NaN, NaN]
+```
+解析：
+考察map函数，map的第一个参数是回调函数，并且自动给回调函数传递item,index,array三个参数，这里parseInt是回调函数，但是parseInt只接受两个参数(element,radix)，其实就是
+```
+parseInt("1", 0)--1--radix为0时，比较特殊，其实当成10进制处理。
+parseInt("2", 1)--NaN--数值都超过了进制2>1不合理，无法解析
+parseInt("3", 2)--NaN--数值都超过了进制3>2不合理，无法解析
+```
 ##### 20.用原生JavaScript的实现过什么功能吗？
 
 
