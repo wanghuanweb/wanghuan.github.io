@@ -1168,6 +1168,58 @@ person.sayFriends();
 ```
 ![这里写图片描述](http://img.blog.csdn.net/20160917215757067)
 
+注意：需要注意构造函数也有自己的_proto_，这点容易被自己忽略，如下所示
+
+```
+// 构造函数
+function Foo(y) {
+  // 构造函数将会以特定模式创建对象：被创建的对象都会有"y"属性
+  this.y = y;
+}
+
+// "Foo.prototype"存放了新建对象的原型引用
+// 所以我们可以将之用于定义继承和共享属性或方法
+// 所以，和上例一样，我们有了如下代码：
+
+// 继承属性"x"
+Foo.prototype.x = 10;
+
+// 继承方法"calculate"
+Foo.prototype.calculate = function (z) {
+  return this.x + this.y + z;
+};
+
+// 使用foo模式创建 "b" and "c"
+var b = new Foo(20);
+var c = new Foo(30);
+
+// 调用继承的方法
+b.calculate(30); // 60
+c.calculate(40); // 80
+
+// 让我们看看是否使用了预期的属性
+
+console.log(
+
+  b.__proto__ === Foo.prototype, // true
+  c.__proto__ === Foo.prototype, // true
+
+  // "Foo.prototype"自动创建了一个特殊的属性"constructor"
+  // 指向a的构造函数本身
+  // 实例"b"和"c"可以通过授权找到它并用以检测自己的构造函数
+
+  b.constructor === Foo, // true
+  c.constructor === Foo, // true
+  Foo.prototype.constructor === Foo // true
+
+  b.calculate === b.__proto__.calculate, // true
+  b.__proto__.calculate === Foo.prototype.calculate // true
+
+);
+```
+
+![这里写图片描述](http://img.blog.csdn.net/20161024141846209)
+
 **确定原型和实例之间的关系**：
 **instanceof**:
 
@@ -1574,7 +1626,92 @@ for(var i = 0,len = elems.length;i < len;i++) {
     }(i),false);
 }
 ```
-##### 17.变量对象(VO variable object),活动对象(AO active object),执行上下文
+##### 17.执行上下文(EC Execution Context),变量对象(VO variable object),活动对象(AO active object)
+
+
+若把执行上下文看成一个对象，则应该包含如下属性
+
+```
+(executionContextObj = {
+   variableObject: { /* 函数中的arguments对象, 参数, 内部的变量以及函数声明,注意不包含函数表达式 */ },
+   scopeChain: { /* variableObject 以及所有父执行上下文中的variableObject */ },
+   this: {}
+   }
+)
+```
+
+```
+var foo = 10;
+
+function bar() {} // // 函数声明
+(function baz() {}); // 函数表达式
+
+console.log(
+  this.foo == foo, // true
+  window.bar == bar // true
+);
+
+console.log(baz); // 引用错误，baz没有被定义
+```
+![这里写图片描述](http://img.blog.csdn.net/20161024144141046)
+**处理上下文代码的2个阶段**
+
+进入执行上下文和执行代码
+
+**进入执行上下文：** important
+
+1.建立变量对象AO，函数，arguments对象，参数，变量是进入上下文阶段放入VO中，也就是变量声明提升并且变量声明顺序上是在函数声明和形参声明后
+2.建立作用域链
+3.确定上下文中this的指向对象
+
+```
+if (true) {
+  var a = 1;
+} else {
+  var b = 2;
+}
+
+alert(a); // 1
+alert(b); // undefined,不是b没有声明，而是b的值是undefined
+```
+
+```
+//变量声明在顺序上跟在函数声明和形式参数声明之后，而且在这个进入上下文阶段，变量声明不会干扰VO中已经存在的同名函数声明或形式参数声明
+alert(x); // function
+
+var x = 10;
+alert(x); // 10
+
+x = 20;
+
+function x() {};
+
+alert(x); // 20
+```
+
+```
+function test(a, b) {
+  var c = 10;
+  function d() {}
+  var e = function _e() {};
+  (function x() {});
+}
+
+test(10); // call
+当进入带有参数10的test函数上下文时，AO表现为如下：
+//AO里并不包含函数“x”。这是因为“x” 是一个函数表达式(FunctionExpression, 缩写为 FE) 而不是函数声明，函数表达式不会影响VO
+AO(test) = {
+  a: 10,
+  b: undefined,
+  c: undefined,
+  d: <reference to FunctionDeclaration "d">
+  e: undefined
+};
+```
+
+**代码执行：**
+
+变量赋值，函数引用，执行其它代码
 
 **变量对象VO**
 
@@ -1679,86 +1816,46 @@ function foo(x, y, z) {
 foo(10, 20);
 ```
 
-**处理上下文代码的2个阶段**
-
-进入执行上下文和执行代码
-
-**进入执行上下文：**
-
-1.建立变量，函数，arguments对象，参数，变量是进入上下文阶段放入VO中，也就是变量声明提升并且变量声明顺序上是在函数声明和形参声明后
-2.建立作用域链
-3.确定上下文中this的指向对象
-
-若把执行上下文看成一个对象，则应该包含如下属性
-
-```
-(executionContextObj = {
-   variableObject: { /* 函数中的arguments对象, 参数, 内部的变量以及函数声明 */ },
-   scopeChain: { /* variableObject 以及所有父执行上下文中的variableObject */ },
-   this: {}
-   }
-)
-```
-
-```
-if (true) {
-  var a = 1;
-} else {
-  var b = 2;
-}
-
-alert(a); // 1
-alert(b); // undefined,不是b没有声明，而是b的值是undefined
-```
-
-```
-//变量声明在顺序上跟在函数声明和形式参数声明之后，而且在这个进入上下文阶段，变量声明不会干扰VO中已经存在的同名函数声明或形式参数声明
-alert(x); // function
-
-var x = 10;
-alert(x); // 10
-
-x = 20;
-
-function x() {};
-
-alert(x); // 20
-```
-
-```
-function test(a, b) {
-  var c = 10;
-  function d() {}
-  var e = function _e() {};
-  (function x() {});
-}
-
-test(10); // call
-当进入带有参数10的test函数上下文时，AO表现为如下：
-//AO里并不包含函数“x”。这是因为“x” 是一个函数表达式(FunctionExpression, 缩写为 FE) 而不是函数声明，函数表达式不会影响VO
-AO(test) = {
-  a: 10,
-  b: undefined,
-  c: undefined,
-  d: <reference to FunctionDeclaration "d">
-  e: undefined
-};
-```
-
-**代码执行：**
-
-变量赋值，函数引用，执行其它代码
-
 http://www.cnblogs.com/TomXu/archive/2012/01/16/2309728.html
 
-##### 18.Javascript作用链域(Scope Chain)?
+##### 18.Javascript作用链域(Scope Chain)?如何延长或者改变作用域链？
 
-作用域链就是内部上下文的变量对象VO的列表，作用域链用来查询变量。
+作用域链就是内部上下文的变量对象VO的列表，作用域链用来检索上下文出现的标识符，从而保证有序访问所有变量和函数。
 
-##### 19.谈谈this对象的理解。
+一个作用域链包括父级变量对象（variable object）（作用域链的顶部）、函数自身变量VO和活动对象（activation object）。
+
+当查找标识符的时候，会从作用域链的活动对象部分开始查找，然后(如果标识符没有在活动对象中找到)查找作用域链的顶部，循环往复，就像作用域链那样。
+
+```
+var x = 10;
+
+(function foo() {
+  var y = 20;
+  (function bar() {
+    var z = 30;
+    // "x"和"y"是自由变量
+    // 会在作用域链的下一个对象中找到（函数”bar”的互动对象之后）
+    console.log(x + y + z);
+  })();
+})();
+```
+![这里写图片描述](http://img.blog.csdn.net/20161024155123546)
+
+**改变或者延长作用域链**
+
+如果使用with或者catch语句就会改变作用域链。这两个语句是可以在作用域链前端临时增加一个变量对象，该变量对象在代码执行后被移除。
+
+**with语句** --将指定的对象添加到作用域链中
+
+**try-catch中的catch语句** --创建一个新的变量对象
+
+
+##### 19.谈谈this对象的理解。(全局和函数代码中的this)
 
 如上，this是执行上下文的一个属性，this值在 **进入** 上下文时确定，并且在上下文运行期间永久不变。
 
+也就是this 是动态绑定，或称为运行期绑定的
+
 ```
 (executionContextObj = {
    variableObject: { /* 函数中的arguments对象, 参数, 内部的变量以及函数声明 */ },
@@ -1767,6 +1864,20 @@ http://www.cnblogs.com/TomXu/archive/2012/01/16/2309728.html
    }
 )
 ```
+
+**全局代码中的this**
+
+全局代码中的this始终指向全局对象本身
+
+```
+// 显示定义全局对象的属性
+this.a = 10; // global.a = 10
+alert(a); // 10
+```
+
+**函数代码中的this**
+
+this取决于调用函数的方式。
 
 ##### 20.什么是闭包（closure）？如何使用闭包？为什么要用它？
 
@@ -1782,7 +1893,7 @@ http://www.cnblogs.com/TomXu/archive/2012/01/16/2309728.html
 
 **使用严格模式的区别**
 
-1.消除js语法的一些不合理，不严谨之处，比如不能用with，也不能在意外的情况下给全局变量赋值
+1.消除js语法的一些不合理，不严谨之处，比如不能用with(因为增加了访问作用域链的成本)，也不能在意外的情况下给全局变量赋值
 
 2.消除代码中的一些不安全之处，保证代码的安全
 
