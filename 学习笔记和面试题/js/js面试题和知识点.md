@@ -1877,7 +1877,120 @@ alert(a); // 10
 
 **函数代码中的this**
 
-this取决于调用函数的方式。
+this取决于调用函数的方式。(作为函数调用，对象方法调用，构造函数调用，call或者apply调用)
+
+1.作为函数调用--this绑定到全局对象
+
+```
+//隐式的声明了一个全局变量
+function makeNoSense(x) {
+this.x = x;
+}
+
+makeNoSense(5);
+x;// x 已经成为一个值为 5 的全局变量
+```
+
+对于内部函数，即声明在另外一个函数体内的函数，这种绑定到全局对象的方式会产生另外一个问题。
+
+```
+var point = {
+ x : 0,
+ y : 0,
+ moveTo : function(x, y) {
+     // 内部函数
+     var moveX = function(x) {
+     this.x = x;//this 绑定到了哪里？--绑定到全局对象，生成一个全局变量
+    };
+    // 内部函数
+    var moveY = function(y) {
+    this.y = y;//this 绑定到了哪里？--绑定到全局对象，生成一个全局变量
+    };
+
+    moveX(x);
+    moveY(y);
+    }
+ };
+ point.moveTo(1, 1);
+ console.log(point.x); //==>0
+ console.log(point.y); //==>0
+ console.log(x); //==>1
+ console.log(y); //==>1
+```
+
+解决：内部函数的this应该绑定在外层函数对应的对象上
+
+```
+var point = {
+ x : 0,
+ y : 0,
+ moveTo : function(x, y) {
+     // 内部函数
+     var that = this;
+     var moveX = function(x) {
+     that.x = x;//that 绑定到了外部函数的对象上
+    };
+    // 内部函数
+    var moveY = function(y) {
+    that.y = y;//that 绑定到了外部函数的对象上
+    };
+
+    moveX(x);
+    moveY(y);
+    }
+ };
+ point.moveTo(1, 1);
+ console.log(point.x); //==>0
+ console.log(point.y); //==>0
+ console.log(x); //==>x is not defined
+ console.log(y); //==>y is not defined
+```
+
+2.作为对象方法调用--this绑定到此对象上
+
+```
+var point = {
+x : 0,
+y : 0,
+moveTo : function(x, y) {
+    this.x = this.x + x;
+    this.y = this.y + y;
+    }
+};
+
+point.moveTo(1, 1)//this 绑定到当前对象，即 point 对象
+```
+
+3.作为构造函数调用-- 绑定到新创建的对象上
+
+```
+function Point(x, y){
+    this.x = x;
+    this.y = y;
+ }
+```
+
+4.使用call和apply调用
+
+call和apply是切换函数执行的上下文环境，即this绑定的对象；this指向的是apply中的第一个参数
+
+```
+function Point(x, y){
+    this.x = x;
+    this.y = y;
+    this.moveTo = function(x, y){
+        this.x = x;
+        this.y = y;
+    }
+ }
+
+ var p1 = new Point(0, 0);
+ var p2 = {x: 0, y: 0};
+ p1.moveTo(1, 1);
+ //apply 可以将 p1 的方法应用到 p2 上，这时候 this 也被绑定到对象 p2 上
+ p1.moveTo.apply(p2, [10, 10]);
+```
+
 
 ##### 20.什么是闭包（closure）？如何使用闭包？为什么要用它？
 
