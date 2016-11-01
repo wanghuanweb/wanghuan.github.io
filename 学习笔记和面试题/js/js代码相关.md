@@ -477,7 +477,7 @@ false
 解析：
 Object.getPrototypeOf(f)是找到f.[[prototye]],和f.prototype不同，因此是false
 
-####17.What is the result of this expression? (or multiple ones)
+#### 17.What is the result of this expression? (or multiple ones)
 
 ```
 function A(){}
@@ -530,3 +530,91 @@ setTimeout(function() {
   console.log('two');
 }, 0);
 console.log('three');
+
+#### 18.What is the result of this expression? (or multiple ones)
+
+```
+//做对了
+if (!("a" in window)) {
+    var a = 1;
+}
+alert(a); // undefined 1.声明提升但是赋值不提升--其实就是进入上下文的时候创建变量对象VO里已经有了：函数的所有形参、所有的函数声明、所有的变量声明 2.所有的全局变量都是window的属性
+```
+
+#### 19.What is the result of this expression? (or multiple ones)
+```
+//做对了
+var a = 1,
+    b = function a(x) {
+        x && a(--x);
+    };
+alert(a); //1
+//这个函数其实是一个有名函数表达式，函数表达式不像函数声明一样可以覆盖变量声明，但你可以注意到，变量b是包含了该函数表达式，而该函数表达式的名字是a；不同的浏览器对a这个名词处理有点不一样，在IE里，会将a认为函数声明，所以它被变量初始化覆盖了，就是说如果调用a(--x)的话就会出错，而其它浏览器在允许在函数内部调用a(--x)，因为这时候a在函数外面依然是数字。基本上，IE里调用b(2)的时候会出错，但其它浏览器则返回undefined。
+
+就相当于
+var a = 1,
+    b = function(x) {
+        x && b(--x);
+    };
+alert(a);
+```
+
+#### 20.What is the result of this expression? (or multiple ones)
+
+```
+//做对了
+function a(x) {
+    return x * 2;
+}
+var a;
+alert(a); //function a(x) {return x * 2;}
+
+```
+
+#### 21.What is the result of this expression? (or multiple ones)
+
+```
+//做对了
+function b(x, y, a) {
+    alert(b.length);//3
+    alert(arguments.length);//2
+    arguments[2] = 10;
+    alert(a); //undefined
+    alert(arguments[2]);//10
+}
+b(1, 2);
+```
+
+活动上下文AO是进入函数上下文时候被创建
+AO = {
+  arguments: <ArgO>
+};
+
+Arguments对象是活动对象的一个属性，它包括如下属性：
+callee — 指向当前函数的引用
+length — **真正传递的参数个数**
+properties-indexes (字符串类型的整数) 属性的值就是函数的参数值(按参数列表从左到右排列)。 properties-indexes内部元素的个数等于arguments.length. properties-indexes 的值和实际传递进来的参数之间是共享的。
+
+#### 22.What is the result of this expression? (or multiple ones)
+
+```
+//做对了,注意this指向什么就可以了，在知识点19中
+function a() {
+    alert(this);
+}
+a.call(null); //window
+```
+
+##### 23.["1", "2", "3"].map(parseInt) 答案是多少？
+
+答案：
+
+```
+[1, NaN, NaN]
+```
+解析：
+考察map函数，map的第一个参数是回调函数，并且自动给回调函数传递item,index,array三个参数，这里parseInt是回调函数，但是parseInt只接受两个参数(element,radix)，其实就是
+```
+parseInt("1", 0)--1--radix为0时，比较特殊，其实当成10进制处理。
+parseInt("2", 1)--NaN--数值都超过了进制2>1不合理，无法解析
+parseInt("3", 2)--NaN--数值都超过了进制3>2不合理，无法解析

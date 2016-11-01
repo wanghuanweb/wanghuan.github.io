@@ -1488,7 +1488,7 @@ x // undefined
 
 ###### 1.创建函数的方法
 
-创建函数的方法是函数声明和函数表达式
+创建函数的方法是函数声明,函数表达式,通过函数构造器创建
 
 **函数声明**
 
@@ -1518,6 +1518,27 @@ new function bar(){}; // 表达式，因为它是new表达式
 1, function baz() {};
 ```
 
+**函数构造器创建**
+
+既然这种函数对象也有自己的特色，我们将它与FD和FE区分开来。其主要特点在于这种函数的[[Scope]]属性仅包含全局对象;
+
+```
+//函数bar的[[Scope]]属性不包含foo上下文的Ao——变量”y”不能访问，变量”x”从全局对象中取得。
+var x = 10;
+foo();
+
+function foo() {
+
+  var x = 20;
+  var y = 30;
+
+  var bar = new Function('console.log(x); console.log(y);');
+
+  bar(); // 10, "y" 未定义
+
+}
+
+```
 **函数声明和函数表达式的区别**
 
 1.函数声明FD在进入上下文阶段创建，在代码执行阶段就已经可用了
@@ -1538,7 +1559,7 @@ var sayName = function(){
 ```
 
 2.函数声明影响变量对象VO，也就是存储在上下文的VO中的变量对象
-函数表达式不影响变量对象VO，不存在于变量对象中
+函数表达式不影响变量对象VO，不存在于变量对象中（那样意味着既不可能通过名称在函数声明之前调用它，也不可能在声明之后调用它）。但是，FE在递归调用中可以通过名称调用自身。
 
 ```
 // FE在定义阶段之前不可用（因为它是在代码执行阶段创建）
@@ -1550,6 +1571,21 @@ alert(foo); // "foo" 未定义
 // 定义阶段之后也不可用，因为他不在变量对象VO中
 
 alert(foo);  // "foo" 未定义
+```
+
+```
+(function foo(bar) {
+
+  if (bar) {
+    return;
+  }
+
+  foo(true); // "foo" 是可用的,因为递归调用中可以通过名称调用自身
+
+})();
+
+// 在外部，是不可用的
+foo(); // "foo" 未定义
 ```
 
 ```
@@ -1605,6 +1641,17 @@ foo();
 
 **函数表达式的有优点** -- 不污染全局变量
 
+```
+//在代码执行阶段通过条件语句进行创建FE，不会污染变量对象VO。
+var foo = 10;
+
+var bar = (foo % 2 == 0
+  ? function () { alert(0); }
+  : function () { alert(1); }
+);
+
+bar(); // 0
+```
 
 ###### 2.立即调用的函数表达式Immediately-Invoked Function Expression (IIFE)
 
@@ -1614,6 +1661,8 @@ foo();
 
 **立即调用的函数表达式**
 
+立即调用的函数表达式如果没有引用的话(没有赋值给变量)，是在代码执行阶段这个的function就会被创建，并且立即执行，然后自动销毁。(因为是函数表达式，不在VO中)
+
 ```
 //立即调用的几种形式
 var foo = function(){}();
@@ -1621,12 +1670,40 @@ var foo = function(){}();
 
 (function(){/* code */}());//Crockford recommends this one，括号内的表达式代表函数立即调用表达式
 (function(){/* code */})();//But this one works just as well，括号内的表达式代表函数表达式
+
+//下面一个立即执行的函数，周围的括号不是必须的，因为函数已经处在表达式的位置
+var foo = {
+
+  bar: function (x) {
+    return x % 2 != 0 ? 'yes' : 'no';
+  }(1)
+
+};
+
+alert(foo.bar); // 'yes'--foo.bar是一个字符串而不是一个函数，这里的函数仅仅用来根据条件参数初始化这个属性——它创建后并立即调用
 ```
-function foo(){ }();--不是立即调用的函数表达式,
 
-原因：因为圆括号放在一个函数表达式后面指明了这是一个被调用的函数;但若在一个声明后面则意味着和前面的声明分开了，只是一个简单的代表符号(用来控制运算优先的括号)。
+function (){}();和function foo(){ }();--都不是立即调用的函数表达式,且都会报错
 
-解决：将函数声明包裹在圆括号里来告诉语法分析器去当成一个函数表达式解析
+原因：因为圆括号放在一个函数表达式后面指明了这是一个被调用的函数;但是有关键字function，解释器会将它看做是函数声明，若在一个声明后面则意味着只是一个分组操作符。
+
+比如：
+```
+alert(foo); // 函数
+function foo(){
+    alert(x);
+}(1);
+foo(10); // 这才是一个真正的函数调用，结果是10
+// 1只是分组操作符，不是函数调用，其实相当于下边这段代码
+// 下面的声明的时候产生了2个对象：一个函数声明，一个带有1的分组操作符
+function foo(){
+    alert(x);
+}
+// 一份分组操作符，包含一个表达式1
+(1);
+```
+
+解决：将函数声明包裹在圆括号里来告诉语法分析器去当成一个函数表达式解析，这样才对(function foo(){ })()
 
 **保存闭包的状态**
 
@@ -1670,8 +1747,8 @@ for(var i = 0,len = elems.length;i < len;i++) {
     }(i),false);
 }
 ```
-##### 17.执行上下文(EC Execution Context),变量对象(VO variable object),活动对象(AO active object)
 
+##### 17.执行上下文(EC Execution Context),变量对象(VO variable object),活动对象(AO active object)
 
 若把执行上下文看成一个对象，则应该包含如下属性
 
@@ -1759,7 +1836,7 @@ AO(test) = {
 
 **变量对象VO**
 
-变量对象VO是与执行上下文相关的特殊对象,用来存储上下文的函数声明，函数形参和变量。
+每个执行环境都有一个与之关联的变量对象，变量对象VO是与执行上下文相关的特殊对象,用来存储上下文的函数声明，函数形参和变量。
 每个上下文拥有自己的变量对象：对于全局上下文，它是全局对象自身；对于函数，它是活动对象。
 
 变量对象VO存储上下文中声明的以下内容
@@ -1773,6 +1850,8 @@ AO(test) = {
     b = 10;
     var a = 20;
 }
+
+变量对象的例子
 
 ```
 var a = 10;
@@ -1795,6 +1874,25 @@ VO(test functionContext) = {
   b: 20
 };
 ```
+
+变量对象中 **函数声明可以覆盖变量声明**，但是不能覆盖变量赋值,如下
+
+```
+//函数声明可以覆盖变量声明
+function value(){
+    return 1;
+}
+var value;
+alert(typeof value);    //"function"
+
+//函数声明的优先级高于变量声明的优先级，但如果该变量value赋值了，变量赋值初始化就覆盖了函数声明
+function value(){
+    return 1;
+}
+var value = 1;
+alert(typeof value);    //"number"
+```
+
 
 **变量对象VO分类**
 
@@ -2038,153 +2136,99 @@ function Point(x, y){
 
 ##### 20.什么是闭包（closure）？如何使用闭包？为什么要用它？
 
-**闭包**
+**背景：**
+
+根据作用域和作用域链的原理，我们似乎不能在外部读取其它函数的内部变量。
+
+**闭包：**
 
 闭包就是有权访问另一个函数作用域中的变量的函数
 
-##### 21.javascript 代码中的"use strict";是什么意思 ? 使用它区别是什么？
+**原理：**
 
-**use strict**：严格模式
+1.后台执行环境中，闭包的作用域链包含着自己的作用域、函数的作用域和全局作用域。
 
-除了正常运行模式，ECMAScript5添加了第二种运行模式：严格模式，这种模式让js在更严格的条件下运行。
+2.通常，函数的作用域和变量会在函数执行结束后销毁。
 
-**使用严格模式的区别**
+3.但是，当函数返回一个闭包时，这个函数的作用域将会一直在内存中保存到闭包不存在为止。
 
-1.消除js语法的一些不合理，不严谨之处，比如不能用with(因为增加了访问作用域链的成本)，也不能在意外的情况下给全局变量赋值
+**缺点：**
 
-2.消除代码中的一些不安全之处，保证代码的安全
+1.需要维护额外的作用域
 
-比如：禁止this关键字指向全局对象
+2.过度使用闭包会占用大量内存
 
-```
-function f(){
-　　　　return !this;
-　　}
-　　// 返回false，因为"this"指向全局对象，"!this"就是false
-　　function f(){
-　　　　"use strict";
-　　　　return !this;
-　　}
-　　// 返回true，因为严格模式下，this的值为undefined，所以"!this"为true。
-```
-
-因此，使用构造函数时，如果忘了加new，this不再指向全局对象，而是报错。
+eg1：通过返回内部函数实现闭包对函数内部数据的访问
 
 ```
-function f(){
-　　　　"use strict";
-　　　　this.a = 1;
-　　};
-　　f();// 报错，this未定义
+function sayHello2(name) {
+    var text = 'Hello ' + name; // Local variable
+    var say = function() {
+	    console.log(text);
+    }
+    return say;
+}
+//可以访问函数内部变量，说明text被保存在了闭包中
+var say2 = sayHello2('Bob');
+say2(); // "Hello Bob"
 ```
 
-3.提高编译器效率，增加运行速度
-
-4.为未来新版本的Javascript做好铺垫
-
-
-##### 22.如何判断一个对象是否属于某个类？
-
-object instanceof construtor
-
-##### 23.new操作符具体干了什么呢?
-
-new操作符：
-
-1.创建一个空对象
-
-2.修改这个对象的内部属性_proto_，使其指向构造函数的prototype
-
-3.将这个对象交给构造函数的this，调用构造函数
-
-4.如果构造函数没有return，就返回这个对象。否则构造函数返回return语句后面的内容
-
-我们可以通过在Function.prototype上创建个新方法来模拟new：
+eg2：闭包不是复制本地变量值保存， 而是提供关联本地变量（可理解成指针）
 
 ```
-Function.prototype._new_ = function() {
-
-    var newObj,
-        resultObj;
-
-    newObj = {};
-    newObj._proto_ = this.prototype;
-    resultObj = this.apply(newObj,arguments);
-
-    return (typeof resultObj === "object" && resultObj) || newObj;
-};
+function say667() {
+    var num = 666;
+    var say = function() { console.log(num); }
+    num++;
+    return say;
+}
+var sayNumber = say667();
+sayNumber(); //667
 ```
 
-##### 24.js延迟加载的方式有哪些？
+```
+function foo(x) {
 
-defer和async、动态创建DOM方式（用得最多）、按需异步载入js
+    var tmp = 3;
+    return function (y) {
+        alert(x + y + (++tmp)); //16
+    }
+}
+var bar = foo(2); // bar 现在是一个闭包
+bar(10);
+```
 
-##### 25.Ajax 是什么? 如何创建一个Ajax？
+eg3：闭包不是复制本地变量值保存， 而是提供关联本地变量（可理解成指针）
+```
+var gLogNumber, gIncreaseNumber, gSetNumber;
+function setupSomeGlobals() {
+    // Local variable that ends up within closure
+    var num = 666;
+    // Store some references to functions as global variables
+    gLogNumber = function() { console.log(num); }
+    gIncreaseNumber = function() { num++; }
+    gSetNumber = function(x) { num = x; }
+}
+//第一个闭包创建
+setupSomeGlobals();
+gIncreaseNumber();
+gLogNumber(); // 667
+gSetNumber(5);
+gLogNumber(); // 5
 
-ajax的全称：Asynchronous Javascript And XML。
+var oldLog = gLogNumber;
+//一个新的闭包被创建
+setupSomeGlobals();
+gLogNumber(); // 666
 
-(1)创建XMLHttpRequest对象,也就是创建一个异步调用对象
+oldLog() // 5
+```
 
-(2)创建一个新的HTTP请求,并指定该HTTP请求的方法、URL及验证信息
-
-(3)设置响应HTTP请求状态变化的函数
-
-(4)发送HTTP请求
-
-(5)获取异步调用返回的数据
-
-(6)使用JavaScript和DOM实现局部刷新
-
-
-##### 26.同步和异步的区别?
-
-同步：浏览器访问服务器请求，用户看得到页面刷新，重新发请求,等请求完，页面刷新，新内容出现，用户看到新内容,j进行下一步操作。
-
-异步：浏览器访问服务器请求，用户正常操作，浏览器后端进行请求。等请求完，页面不刷新，新内容也会出现，用户看到新内容。
-
-
-##### 27.如何解决跨域问题?
-
-
-##### 28.页面编码和被请求的资源编码如果不一致如何处理？
-
-
-##### 29.模块化开发怎么做？
-
-
-##### 30.AMD（Modules/Asynchronous-Definition）、CMD（Common Module Definition）规范区别？
-
-
-##### 31.requireJS的核心原理是什么？（如何动态加载的？如何避免多次加载的？如何 缓存的？）
-
-
-##### 32.谈一谈你对ECMAScript6的了解？
-
-
-##### 33.ECMAScript6 怎么写class，为什么会出现class这种东西?
-
-
-##### 34.异步加载的方式有哪些？
-
-(1) defer，只支持IE
-
-(2) async：
-
-(3) 创建script，插入到DOM中，加载完毕后callBack
-
-##### 35.documen.write和 innerHTML的区别?
-
-document.write是重写这个document也就是重写页面，写入内容是字符串的html
-
-innerHTML是DOM元素的一个属性，代表这个元素的内部html内容。
-
-innerHTML允许更精确的控制刷新某个页面的某个部分，所以优于document.write
-
-##### 36.DOM的作用和Node接口？
+##### 21.DOM的作用和Node接口？
 
 **1.DOM的作用**
 
-DOM是针对HTML和XML文档的API，允许开发人员添加，移除和修改页面的某一部分。
+DOM是针对HTML和XML文档的API，允许开发人员添加，移除和修改页面的某一部分。DOM为web文档创建带有层级的结果，这些层级是通过node节点组成
 
 **2.Node接口--12种节点**
 
@@ -2391,6 +2435,18 @@ textNode.parentNode--是一个element
 
 ```
 
+创建文本节点document.createTextNode()
+
+```
+var element = document.createElement("div");
+element.className = "message";
+
+var textNode = document.createTextNode("Hello world!");
+element.appendChild(textNode);
+
+document.body.appendChild(element);
+```
+
 **8.node类型--Comment类型**
 comment对象的属性和方法
 ```
@@ -2422,7 +2478,7 @@ for(var i = 0;i < 3;i++) {
 
 ul.appendChild(fragment);
 ```
-##### 37.NodeList转换成数组的方法？
+##### 22.NodeList转换成数组的方法？
 
 ```
 <!--  一般用此方法转换成数组，但是在IE8及更早版本吧nodelist实现成一个COM对象，不能用js对象的方法，所以IE8之前需要枚举所有对象 -->
@@ -2445,7 +2501,7 @@ function convertListToArray(nodes) {
 }
 ```
 
-##### 38.DOM操作——怎样添加、移除、移动、复制、创建和查找节点?
+##### 23.DOM操作——怎样添加、移除、移动、复制、创建和查找节点?
 
 （1）创建新节点（只是创建没添加到文档中，添加还需要2中的方法）
 
@@ -2473,7 +2529,7 @@ function convertListToArray(nodes) {
 
        getElementById()    //通过元素Id，唯一性
 
-##### 39.DOM扩展?
+##### 24.DOM扩展?
 
 1.选择器API
 
@@ -2510,22 +2566,153 @@ div.classList.contains(value);
 div.classList.remove(value);
 div.classList.toggle(value);
 ```
-    DOM焦点功能
+
+
+
+
+
+##### 21.javascript 代码中的"use strict";是什么意思 ? 使用它区别是什么？
+
+**use strict**：严格模式
+
+除了正常运行模式，ECMAScript5添加了第二种运行模式：严格模式，这种模式让js在更严格的条件下运行。
+
+**使用严格模式的区别**
+
+1.消除js语法的一些不合理，不严谨之处，比如不能用with(因为增加了访问作用域链的成本)，也不能在意外的情况下给全局变量赋值
+
+2.消除代码中的一些不安全之处，保证代码的安全
+
+比如：禁止this关键字指向全局对象
+
+```
+function f(){
+　　　　return !this;
+　　}
+　　// 返回false，因为"this"指向全局对象，"!this"就是false
+　　function f(){
+　　　　"use strict";
+　　　　return !this;
+　　}
+　　// 返回true，因为严格模式下，this的值为undefined，所以"!this"为true。
+```
+
+因此，使用构造函数时，如果忘了加new，this不再指向全局对象，而是报错。
+
+```
+function f(){
+　　　　"use strict";
+　　　　this.a = 1;
+　　};
+　　f();// 报错，this未定义
+```
+
+3.提高编译器效率，增加运行速度
+
+4.为未来新版本的Javascript做好铺垫
+
+
+##### 22.如何判断一个对象是否属于某个类？
+
+object instanceof construtor
+
+##### 23.new操作符具体干了什么呢?
+
+new操作符：
+
+1.创建一个空对象
+
+2.修改这个对象的内部属性_proto_，使其指向构造函数的prototype
+
+3.将这个对象交给构造函数的this，调用构造函数
+
+4.如果构造函数没有return，就返回这个对象。否则构造函数返回return语句后面的内容
+
+我们可以通过在Function.prototype上创建个新方法来模拟new：
+
+```
+Function.prototype._new_ = function() {
+
+    var newObj,
+        resultObj;
+
+    newObj = {};
+    newObj._proto_ = this.prototype;
+    resultObj = this.apply(newObj,arguments);
+
+    return (typeof resultObj === "object" && resultObj) || newObj;
+};
+```
+
+##### 24.js延迟加载的方式有哪些？
+
+defer和async、动态创建DOM方式（用得最多）、按需异步载入js
+
+##### 25.Ajax 是什么? 如何创建一个Ajax？
+
+ajax的全称：Asynchronous Javascript And XML。
+
+(1)创建XMLHttpRequest对象,也就是创建一个异步调用对象
+
+(2)创建一个新的HTTP请求,并指定该HTTP请求的方法、URL及验证信息
+
+(3)设置响应HTTP请求状态变化的函数
+
+(4)发送HTTP请求
+
+(5)获取异步调用返回的数据
+
+(6)使用JavaScript和DOM实现局部刷新
+
+
+##### 26.同步和异步的区别?
+
+同步：浏览器访问服务器请求，用户看得到页面刷新，重新发请求,等请求完，页面刷新，新内容出现，用户看到新内容,j进行下一步操作。
+
+异步：浏览器访问服务器请求，用户正常操作，浏览器后端进行请求。等请求完，页面不刷新，新内容也会出现，用户看到新内容。
+
+
+##### 27.如何解决跨域问题?
+
+
+##### 28.页面编码和被请求的资源编码如果不一致如何处理？
+
+
+##### 29.模块化开发怎么做？
+
+
+##### 30.AMD（Modules/Asynchronous-Definition）、CMD（Common Module Definition）规范区别？
+
+
+##### 31.requireJS的核心原理是什么？（如何动态加载的？如何避免多次加载的？如何 缓存的？）
+
+
+##### 32.谈一谈你对ECMAScript6的了解？
+
+
+##### 33.ECMAScript6 怎么写class，为什么会出现class这种东西?
+
+
+##### 34.异步加载的方式有哪些？
+
+(1) defer，只支持IE
+
+(2) async：
+
+(3) 创建script，插入到DOM中，加载完毕后callBack
+
+##### 35.documen.write和 innerHTML的区别?
+
+document.write是重写这个document也就是重写页面，写入内容是字符串的html
+
+innerHTML是DOM元素的一个属性，代表这个元素的内部html内容。
+
+innerHTML允许更精确的控制刷新某个页面的某个部分，所以优于document.write
+
+
 ##### 40. .call() 和 .apply() 的作用和区别？
 
-##### 18.["1", "2", "3"].map(parseInt) 答案是多少？
 
-答案：
-
-```
-[1, NaN, NaN]
-```
-解析：
-考察map函数，map的第一个参数是回调函数，并且自动给回调函数传递item,index,array三个参数，这里parseInt是回调函数，但是parseInt只接受两个参数(element,radix)，其实就是
-```
-parseInt("1", 0)--1--radix为0时，比较特殊，其实当成10进制处理。
-parseInt("2", 1)--NaN--数值都超过了进制2>1不合理，无法解析
-parseInt("3", 2)--NaN--数值都超过了进制3>2不合理，无法解析
 ```
 ##### 20.用原生JavaScript的实现过什么功能吗？
 
