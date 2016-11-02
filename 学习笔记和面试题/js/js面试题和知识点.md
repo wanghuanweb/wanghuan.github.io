@@ -1992,7 +1992,7 @@ var x = 10;
 **try-catch中的catch语句** --创建一个新的变量对象
 
 
-##### 19.谈谈this对象的理解。(全局和函数代码中的this)
+##### 19.谈谈this对象的理解。(全局和函数代码中的this)--且有函数调用的方式
 
 如上，this是执行上下文的一个属性，this值在 **进入** 上下文时确定，并且在上下文运行期间永久不变。
 
@@ -2017,7 +2017,7 @@ this.a = 10; // global.a = 10
 alert(a); // 10
 ```
 
-**函数代码中的this**
+**函数代码中的this** --- **函数调用的方式**
 
 this取决于调用函数的方式。(作为函数调用，对象方法调用，构造函数调用，call或者apply调用)
 
@@ -2114,7 +2114,7 @@ function Point(x, y){
 
 4.使用call和apply调用
 
-call和apply是切换函数执行的上下文环境，即this绑定的对象；this指向的是apply中的第一个参数
+call和apply是改变了被调用函数的执行上下文环境，即this绑定的对象；this指向的是apply中的第一个参数
 
 ```
 function Point(x, y){
@@ -2133,8 +2133,56 @@ function Point(x, y){
  p1.moveTo.apply(p2, [10, 10]);
 ```
 
+##### 20.aplly(),call(),bind()的区别？
 
-##### 20.什么是闭包（closure）？如何使用闭包？为什么要用它？
+函数调用的方式在上边已经讲过了，其中一种就是使用call和apply，这里说一下他们的区别
+
+call,apply,bind都是改变了被调用函数的执行上下文环境，且都属于Function.prototype的一个方法
+
+call,apply是直接执行了函数，bind则是返回一个绑定上下文的函数
+
+bind该方法创建一个新函数，称为绑定函数，绑定函数会以创建它时传入bind方法的第一个参数作为this，传入bind方法的第二个以及以后的参数加上绑定函数运行时本身的参数按照顺序作为原函数的参数来调用原函数。所以有下面多种写法
+
+```
+var zlw = {
+    name: "zlw",
+    sayHello: function (age) {
+         console.log("hello, i am ", this.name + " " + age " years old");
+     }
+};
+
+var  xlj = {
+    name: "xlj",
+};
+
+zlw.sayHello(24);// hello, i am zlw 24 years old
+
+//call ，apply
+zlw.sayHello.call(xlj, 24);// hello, i am xlj 24 years old
+zlw.sayHello.apply(xlj, [24]);// hello, i am xlj 24 years old
+
+//bind
+zlw.sayHello.bind(xlj, 24)(); //hello, i am xlj 24 years old
+zlw.sayHello.bind(xlj, [24])(); //hello, i am xlj 24 years old
+zlw.sayHello.bind(xlj)(24); //hello, i am xlj 24 years old
+zlw.sayHello.bind(xlj)([24]); //hello, i am xlj 24 years old
+```
+
+call和apply的区别是：
+
+1.语法结构--call方法中传入的参数是是一个个列举出来的，而apply方法中的参数二是一个数组
+
+```
+apply(thisArg [,arg1,arg2,... ] );
+call(thisArg,arg1,arg2,...);
+```
+
+
+请解释 Function.prototype.bind？
+
+bind是一个新的绑定函数，对于传入的参数是一个数组，和apply以及call的区别则是，一个是返回一个函数，一个是对于返回的函数直接执行。
+
+##### 21.什么是闭包（closure）？如何使用闭包？为什么要用它？
 
 **背景：**
 
@@ -2224,7 +2272,7 @@ gLogNumber(); // 666
 oldLog() // 5
 ```
 
-##### 21.DOM的作用和Node接口？
+##### 22.DOM的作用和Node接口？
 
 **1.DOM的作用**
 
@@ -2478,7 +2526,7 @@ for(var i = 0;i < 3;i++) {
 
 ul.appendChild(fragment);
 ```
-##### 22.NodeList转换成数组的方法？
+##### 23.NodeList转换成数组的方法？
 
 ```
 <!--  一般用此方法转换成数组，但是在IE8及更早版本吧nodelist实现成一个COM对象，不能用js对象的方法，所以IE8之前需要枚举所有对象 -->
@@ -2501,7 +2549,7 @@ function convertListToArray(nodes) {
 }
 ```
 
-##### 23.DOM扩展?
+##### 24.DOM扩展?
 
 1.选择器API
 
@@ -2539,7 +2587,7 @@ div.classList.remove(value);
 div.classList.toggle(value);
 ```
 
-##### 24.通过DOM API操作元素?
+##### 25.通过DOM API操作元素?
 
 ###### 1.操作元素的样式
 
@@ -2732,6 +2780,8 @@ ajax的全称：Asynchronous Javascript And XML。
 ##### 31.requireJS的核心原理是什么？（如何动态加载的？如何避免多次加载的？如何 缓存的？）
 
 
+requireJS就是模块化的管理和生成，且定义无依赖和有依赖的模块
+
 ##### 32.谈一谈你对ECMAScript6的了解？
 
 
@@ -2780,6 +2830,11 @@ javaScript中hasOwnProperty函数方法是返回一个布尔值，指出一个�
 
 
 ##### 42.那些操作会造成内存泄漏？
+
+1.不规范的js代码
+
+比如意外的全局变量，不使用var来定义，js中如果不用 var 声明变量,该变量将被视为 window 对象(全局对象)的属性,也就是全局变量.
+
 
 
 ##### 61.需求：实现一个页面操作不会整页刷新的网站，并且能在浏览器前进、后退时正确响应。给出你的技术实现方案？
@@ -2853,7 +2908,6 @@ javaScript中hasOwnProperty函数方法是返回一个布尔值，指出一个�
 你怎么看 AMD vs. CommonJS？
 请举出一个匿名函数的典型用例？
 请指出 JavaScript 宿主对象 (host objects) 和原生对象 (native objects) 的区别？
-请解释 Function.prototype.bind？
 在什么时候你会使用 document.write()？
 请指出浏览器特性检测，特性推断和浏览器 UA 字符串嗅探的区别？
 请尽可能详尽的解释 Ajax 的工作原理。
