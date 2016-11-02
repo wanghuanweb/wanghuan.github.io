@@ -2501,35 +2501,7 @@ function convertListToArray(nodes) {
 }
 ```
 
-##### 23.DOM操作——怎样添加、移除、移动、复制、创建和查找节点?
-
-（1）创建新节点（只是创建没添加到文档中，添加还需要2中的方法）
-
-       createDocumentFragment()    //创建一个DOM文档片段
-
-       createElement()   //创建一个具体的元素
-
-       createTextNode()   //创建一个文本节点
-
-（2）添加、移除、替换、插入
-
-       appendChild()
-
-       replaceChild()
-
-       insertBefore() //在已有的子节点前插入一个新的子节点
-
-       removeChild()
-
-（3）查找
-
-       getElementsByTagName()    //通过标签名称
-
-       getElementsByName()    //通过元素的Name属性的值(IE容错能力较强，会得到一个数组，其中包括id等于name值的)
-
-       getElementById()    //通过元素Id，唯一性
-
-##### 24.DOM扩展?
+##### 23.DOM扩展?
 
 1.选择器API
 
@@ -2566,6 +2538,79 @@ div.classList.contains(value);
 div.classList.remove(value);
 div.classList.toggle(value);
 ```
+
+##### 24.通过DOM API操作元素?
+
+###### 1.操作元素的样式
+
+-- 1.直接点属性来访问，去除-，首字母变大些 2.像数组一样访问属性
+
+这里我们只是要了基本的CSS属性名称，唯一区别是CSS属性的名称如果带有-的话，就需要去除，比如用marginTop代替margin-top。
+
+```
+document.getElementById('intro').style.color = '#FF0000';
+document.getElementById('intro').style.padding = '2px 3px 0 3px';  
+document.getElementById('intro').style.backgroundColor = '#FFF';  
+document.getElementById('intro').style.marginTop = '20px';
+```
+
+用数组来访问style中的属性
+
+```
+function changeStyle(elem, property, val) {
+    elem.style[property] = val; // 使用[]来访问属性
+}
+
+// 使用上述的函数：  
+var myIntro = document.getElementById('intro'); // 获取intro文本对象
+changeStyle(myIntro, 'color', 'red');  
+```
+
+###### 2.操作元素的内容
+
+通常DOM操作都是改变原始的内容，最简单的是使用innerHTML属性
+
+```
+var myIntro = document.getElementById('intro');  
+
+// 替换当前的内容
+myIntro.innerHTML = 'New content for the <strong>amazing</strong> paragraph!';  
+
+// 添加内容到当前的内容里
+myIntro.innerHTML += '... some more content...';
+```
+###### 3.DOM操作——怎样添加、移除、移动、复制、创建和查找节点?
+
+（1）创建新节点（只是创建没添加到文档中，添加还需要2中的方法）
+
+       createDocumentFragment()    //创建一个DOM文档片段
+
+       createElement()   //创建一个具体的元素
+
+       createTextNode()   //创建一个文本节点
+
+（2）添加、移除、替换、插入
+
+       appendChild()
+
+       replaceChild()
+
+       insertBefore() //在已有的子节点前插入一个新的子节点
+
+       removeChild()
+
+（3）查找
+
+       getElementsByTagName()    //通过标签名称
+
+       getElementsByName()    //通过元素的Name属性的值(IE容错能力较强，会得到一个数组，其中包括id等于name值的)
+
+       getElementById()    //通过元素Id，唯一性
+
+
+
+
+
 
 
 
@@ -2713,7 +2758,7 @@ innerHTML允许更精确的控制刷新某个页面的某个部分，所以优�
 ##### 40. .call() 和 .apply() 的作用和区别？
 
 
-```
+
 ##### 20.用原生JavaScript的实现过什么功能吗？
 
 
@@ -2821,10 +2866,7 @@ javaScript中hasOwnProperty函数方法是返回一个布尔值，指出一个�
 为什么扩展 JavaScript 内置对象不是好的做法？
 请指出 document load 和 document DOMContentLoaded 两个事件的区别。
 请解释 JavaScript 的同源策略 (same-origin policy)。
-如何实现下列代码：
-[1,2,3,4,5].duplicator(); // [1,2,3,4,5,1,2,3,4,5]
 什么是三元表达式 (Ternary expression)？“三元 (Ternary)” 表示什么意思？
-请实现一个遍历至 100 的 for loop 循环，在能被 3 整除时输出 "fizz"，在能被 5 整除时输出 "buzz"，在能同时被 3 和 5 整除时输出 "fizzbuzz"。
 为何通常会认为保留网站现有的全局作用域 (global scope) 不去改变它，是较好的选择？
 为何你会使用 load 之类的事件 (event)？此事件有缺点吗？你是否知道其他替代品，以及为何使用它们？
 请解释什么是单页应用 (single page app), 以及如何使其对搜索引擎友好 (SEO-friendly)。
