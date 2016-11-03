@@ -2621,7 +2621,23 @@ function convertListToArray(nodes) {
 }
 ```
 
-##### 24.DOM扩展?
+##### 24."attribute" 和 "property" 的区别是什么？
+
+Property：属性，property是DOM中的属性，是JavaScript里的对象  比如：element.id;
+
+Attribute：特性，attribute是HTML标签上的特性，它的值只能够是字符串，通过类数组attributes可以罗列所有的attribute。 比如：element.getAttribute("id");或者element.attributes.
+
+标准的 DOM properties 与 attributes 是同步的。公认的（非自定义的）特性会被以属性的形式添加到DOM对象中。如，id，align，style等，这时候操作property或者使用操作特性的DOM方法如getAttribute()都可以操作属性。
+
+优先选择property
+在实际应用中，98%的 DOM 操作都是使用 properties。
+只有两种情形需要使用attributes
+1.自定义 HTML attributes，因为它并不同步到DOM property。
+2.访问内置的 HTML attributes，这些 attribute 不能从 property 同步过来。例如 INPUT标签的value值。
+
+http://www.codeceo.com/article/javascript-property-attribute.html
+
+##### 25.DOM扩展?
 
 1.选择器API
 
@@ -2981,7 +2997,6 @@ javaScript中hasOwnProperty函数方法是返回一个布尔值，指出一个�
 你使用过 JavaScript 模板系统吗？
 如有使用过，请谈谈你都使用过哪些库？
 请描述事件冒泡机制 (event bubbling)。
-"attribute" 和 "property" 的区别是什么？
 为什么扩展 JavaScript 内置对象不是好的做法？
 请指出 document load 和 document DOMContentLoaded 两个事件的区别。
 请解释 JavaScript 的同源策略 (same-origin policy)。
