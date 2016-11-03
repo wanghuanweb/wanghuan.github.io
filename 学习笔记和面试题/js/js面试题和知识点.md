@@ -2135,13 +2135,11 @@ function Point(x, y){
 
 ##### 20.aplly(),call(),bind()的区别？
 
-函数调用的方式在上边已经讲过了，其中一种就是使用call和apply，这里说一下他们的区别
+三者都属于Function.prototype的一个方法，区别如下：
 
-call,apply,bind都是改变了被调用函数的执行上下文环境，且都属于Function.prototype的一个方法
+**call和apply**
 
-call,apply是直接执行了函数，bind则是返回一个绑定上下文的函数
-
-bind该方法创建一个新函数，称为绑定函数，绑定函数会以创建它时传入bind方法的第一个参数作为this，传入bind方法的第二个以及以后的参数加上绑定函数运行时本身的参数按照顺序作为原函数的参数来调用原函数。所以有下面多种写法
+call,apply都是改变了被调用函数的执行上下文环境，并且直接执行了函数
 
 ```
 var zlw = {
@@ -2170,17 +2168,88 @@ zlw.sayHello.bind(xlj)([24]); //hello, i am xlj 24 years old
 
 call和apply的区别是：
 
-1.语法结构--call方法中传入的参数是是一个个列举出来的，而apply方法中的参数二是一个数组
+语法结构--call方法中传入的参数是是一个个列举出来的，而apply方法中的参数二是一个数组
 
 ```
 apply(thisArg [,arg1,arg2,... ] );
 call(thisArg,arg1,arg2,...);
 ```
 
+**bind**  -- (请解释 Function.prototype.bind？)
 
-请解释 Function.prototype.bind？
+bind()方法会创建一个新函数,称为绑定函数。只是返回一个函数但不直接执行该函数。当调用这个绑定函数时,绑定函数会以创建它时传入bind()方法的第一个参数作为 this,传入 bind() 方法的第二个以及以后的参数加上绑定函数运行时本身的参数按照顺序作为原函数的参数来调用原函数(所以有下面多种写法)。
 
-bind是一个新的绑定函数，对于传入的参数是一个数组，和apply以及call的区别则是，一个是返回一个函数，一个是对于返回的函数直接执行。
+19个知识点中讲到了函数调用的方式(为函数调用，对象方法调用，构造函数调用，call或者apply调用)--函数调用中涉及到了函数中的内部函数，this指向全局对象
+
+```
+function Person(name){
+ this.nickname = name;
+ this.distractedGreeting = function() {
+ 
+   setTimeout(function(){
+     console.log("Hello, my name is " + this.nickname);---setTimeout是函数内部的函数，this指向全局对象，所以是undefined
+   }, 500);
+ }
+}
+ 
+var alice = new Person('Alice');
+alice.distractedGreeting();
+//Hello, my name is undefined
+```
+
+以前的方法是缓存this，因为它使得setTimeout函数中可以访问Person的上下文，和上述19知识点类同
+
+```
+function Person(name){
+ this.nickname = name;
+ this.distractedGreeting = function() {
+   var that = this;
+ 
+   setTimeout(function(){
+     console.log("Hello, my name is " + that.nickname);---setTimeout是函数内部的函数，this指向全局对象，所以是undefined
+   }, 500);
+ }
+}
+ 
+var alice = new Person('Alice');
+alice.distractedGreeting();
+//Hello, my name is undefined
+```
+
+更好的方法：是使用bind()来创建，使这个函数不论怎么调用都有同样的 this 值，从原来的函数和原来的对象创建一个绑定函数
+
+```
+function Person(name){
+ this.nickname = name;
+ this.distractedGreeting = function() {
+
+   setTimeout(function(){
+     console.log("Hello, my name is " + this.nickname);---setTimeout是函数内部的函数，this指向全局对象，所以是undefined
+   }.bind(this), 500);
+ }
+}
+ 
+var alice = new Person('Alice');
+alice.distractedGreeting();
+//Hello, my name is undefined
+```
+
+```
+this.x = 9;
+var module = {
+  x: 81,
+  getX: function() { return this.x; }
+};
+ 
+module.getX(); // 81
+ 
+var getX = module.getX;
+getX(); // 9, 因为在这个例子中，"this"指向全局对象
+ 
+// 创建一个'this'绑定到module的函数
+var boundGetX = getX.bind(module);
+boundGetX(); // 81
+```
 
 ##### 21.什么是闭包（closure）？如何使用闭包？为什么要用它？
 
