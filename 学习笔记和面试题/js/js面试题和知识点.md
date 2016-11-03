@@ -1992,7 +1992,7 @@ var x = 10;
 **try-catch中的catch语句** --创建一个新的变量对象
 
 
-##### 19.谈谈this对象的理解。(全局和函数代码中的this)
+##### 19.谈谈this对象的理解。(全局和函数代码中的this)--且有函数调用的方式
 
 如上，this是执行上下文的一个属性，this值在 **进入** 上下文时确定，并且在上下文运行期间永久不变。
 
@@ -2017,7 +2017,7 @@ this.a = 10; // global.a = 10
 alert(a); // 10
 ```
 
-**函数代码中的this**
+**函数代码中的this** --- **函数调用的方式**
 
 this取决于调用函数的方式。(作为函数调用，对象方法调用，构造函数调用，call或者apply调用)
 
@@ -2114,7 +2114,7 @@ function Point(x, y){
 
 4.使用call和apply调用
 
-call和apply是切换函数执行的上下文环境，即this绑定的对象；this指向的是apply中的第一个参数
+call和apply是改变了被调用函数的执行上下文环境，即this绑定的对象；this指向的是apply中的第一个参数
 
 ```
 function Point(x, y){
@@ -2133,8 +2133,56 @@ function Point(x, y){
  p1.moveTo.apply(p2, [10, 10]);
 ```
 
+##### 20.aplly(),call(),bind()的区别？
 
-##### 20.什么是闭包（closure）？如何使用闭包？为什么要用它？
+函数调用的方式在上边已经讲过了，其中一种就是使用call和apply，这里说一下他们的区别
+
+call,apply,bind都是改变了被调用函数的执行上下文环境，且都属于Function.prototype的一个方法
+
+call,apply是直接执行了函数，bind则是返回一个绑定上下文的函数
+
+bind该方法创建一个新函数，称为绑定函数，绑定函数会以创建它时传入bind方法的第一个参数作为this，传入bind方法的第二个以及以后的参数加上绑定函数运行时本身的参数按照顺序作为原函数的参数来调用原函数。所以有下面多种写法
+
+```
+var zlw = {
+    name: "zlw",
+    sayHello: function (age) {
+         console.log("hello, i am ", this.name + " " + age " years old");
+     }
+};
+
+var  xlj = {
+    name: "xlj",
+};
+
+zlw.sayHello(24);// hello, i am zlw 24 years old
+
+//call ，apply
+zlw.sayHello.call(xlj, 24);// hello, i am xlj 24 years old
+zlw.sayHello.apply(xlj, [24]);// hello, i am xlj 24 years old
+
+//bind
+zlw.sayHello.bind(xlj, 24)(); //hello, i am xlj 24 years old
+zlw.sayHello.bind(xlj, [24])(); //hello, i am xlj 24 years old
+zlw.sayHello.bind(xlj)(24); //hello, i am xlj 24 years old
+zlw.sayHello.bind(xlj)([24]); //hello, i am xlj 24 years old
+```
+
+call和apply的区别是：
+
+1.语法结构--call方法中传入的参数是是一个个列举出来的，而apply方法中的参数二是一个数组
+
+```
+apply(thisArg [,arg1,arg2,... ] );
+call(thisArg,arg1,arg2,...);
+```
+
+
+请解释 Function.prototype.bind？
+
+bind是一个新的绑定函数，对于传入的参数是一个数组，和apply以及call的区别则是，一个是返回一个函数，一个是对于返回的函数直接执行。
+
+##### 21.什么是闭包（closure）？如何使用闭包？为什么要用它？
 
 **背景：**
 
@@ -2224,7 +2272,7 @@ gLogNumber(); // 666
 oldLog() // 5
 ```
 
-##### 21.DOM的作用和Node接口？
+##### 22.DOM的作用和Node接口？
 
 **1.DOM的作用**
 
@@ -2479,7 +2527,7 @@ for(var i = 0;i < 3;i++) {
 
 ul.appendChild(fragment);
 ```
-##### 22.NodeList转换成数组的方法？
+##### 23.NodeList转换成数组的方法？
 
 ```
 <!--  一般用此方法转换成数组，但是在IE8及更早版本吧nodelist实现成一个COM对象，不能用js对象的方法，所以IE8之前需要枚举所有对象 -->
@@ -2501,34 +2549,6 @@ function convertListToArray(nodes) {
     return array;
 }
 ```
-
-##### 23.DOM操作——怎样添加、移除、移动、复制、创建和查找节点?
-
-（1）创建新节点（只是创建没添加到文档中，添加还需要2中的方法）
-
-       createDocumentFragment()    //创建一个DOM文档片段
-
-       createElement()   //创建一个具体的元素
-
-       createTextNode()   //创建一个文本节点
-
-（2）添加、移除、替换、插入
-
-       appendChild()
-
-       replaceChild()
-
-       insertBefore() //在已有的子节点前插入一个新的子节点
-
-       removeChild()
-
-（3）查找
-
-       getElementsByTagName()    //通过标签名称
-
-       getElementsByName()    //通过元素的Name属性的值(IE容错能力较强，会得到一个数组，其中包括id等于name值的)
-
-       getElementById()    //通过元素Id，唯一性
 
 ##### 24.DOM扩展?
 
@@ -2567,6 +2587,79 @@ div.classList.contains(value);
 div.classList.remove(value);
 div.classList.toggle(value);
 ```
+
+##### 25.通过DOM API操作元素?
+
+###### 1.操作元素的样式
+
+-- 1.直接点属性来访问，去除-，首字母变大些 2.像数组一样访问属性
+
+这里我们只是要了基本的CSS属性名称，唯一区别是CSS属性的名称如果带有-的话，就需要去除，比如用marginTop代替margin-top。
+
+```
+document.getElementById('intro').style.color = '#FF0000';
+document.getElementById('intro').style.padding = '2px 3px 0 3px';  
+document.getElementById('intro').style.backgroundColor = '#FFF';  
+document.getElementById('intro').style.marginTop = '20px';
+```
+
+用数组来访问style中的属性
+
+```
+function changeStyle(elem, property, val) {
+    elem.style[property] = val; // 使用[]来访问属性
+}
+
+// 使用上述的函数：  
+var myIntro = document.getElementById('intro'); // 获取intro文本对象
+changeStyle(myIntro, 'color', 'red');  
+```
+
+###### 2.操作元素的内容
+
+通常DOM操作都是改变原始的内容，最简单的是使用innerHTML属性
+
+```
+var myIntro = document.getElementById('intro');  
+
+// 替换当前的内容
+myIntro.innerHTML = 'New content for the <strong>amazing</strong> paragraph!';  
+
+// 添加内容到当前的内容里
+myIntro.innerHTML += '... some more content...';
+```
+###### 3.DOM操作——怎样添加、移除、移动、复制、创建和查找节点?
+
+（1）创建新节点（只是创建没添加到文档中，添加还需要2中的方法）
+
+       createDocumentFragment()    //创建一个DOM文档片段
+
+       createElement()   //创建一个具体的元素
+
+       createTextNode()   //创建一个文本节点
+
+（2）添加、移除、替换、插入
+
+       appendChild()
+
+       replaceChild()
+
+       insertBefore() //在已有的子节点前插入一个新的子节点
+
+       removeChild()
+
+（3）查找
+
+       getElementsByTagName()    //通过标签名称
+
+       getElementsByName()    //通过元素的Name属性的值(IE容错能力较强，会得到一个数组，其中包括id等于name值的)
+
+       getElementById()    //通过元素Id，唯一性
+
+
+
+
+
 
 
 
@@ -2688,6 +2781,8 @@ ajax的全称：Asynchronous Javascript And XML。
 ##### 31.requireJS的核心原理是什么？（如何动态加载的？如何避免多次加载的？如何 缓存的？）
 
 
+requireJS就是模块化的管理和生成，且定义无依赖和有依赖的模块
+
 ##### 32.谈一谈你对ECMAScript6的了解？
 
 
@@ -2710,10 +2805,6 @@ innerHTML是DOM元素的一个属性，代表这个元素的内部html内容。
 
 innerHTML允许更精确的控制刷新某个页面的某个部分，所以优于document.write
 
-
-##### 40. .call() 和 .apply() 的作用和区别？
-
-
 ##### 20.用原生JavaScript的实现过什么功能吗？
 
 
@@ -2735,6 +2826,11 @@ javaScript中hasOwnProperty函数方法是返回一个布尔值，指出一个�
 
 
 ##### 42.那些操作会造成内存泄漏？
+
+1.不规范的js代码
+
+比如意外的全局变量，不使用var来定义，js中如果不用 var 声明变量,该变量将被视为 window 对象(全局对象)的属性,也就是全局变量.
+
 
 
 ##### 61.需求：实现一个页面操作不会整页刷新的网站，并且能在浏览器前进、后退时正确响应。给出你的技术实现方案？
@@ -2759,7 +2855,6 @@ javaScript中hasOwnProperty函数方法是返回一个布尔值，指出一个�
 ##### 68.Underscore 对哪些 JS 原生对象进行了扩展以及提供了哪些好用的函数方法？
 
 
-##### 70.那些操作会造成内存泄漏？
 ##### 71.Node.js的适用场景？
 
 
@@ -2804,11 +2899,9 @@ javaScript中hasOwnProperty函数方法是返回一个布尔值，指出一个�
 ##### 84.我们给一个dom同时绑定两个点击事件，一个用捕获，一个用冒泡。会执行几次事件，会先执行冒泡还是捕获？
 
 请解释事件代理 (event delegation)。
-请解释 JavaScript 中 this 是如何工作的。
 你怎么看 AMD vs. CommonJS？
 请举出一个匿名函数的典型用例？
 请指出 JavaScript 宿主对象 (host objects) 和原生对象 (native objects) 的区别？
-请解释 Function.prototype.bind？
 在什么时候你会使用 document.write()？
 请指出浏览器特性检测，特性推断和浏览器 UA 字符串嗅探的区别？
 请尽可能详尽的解释 Ajax 的工作原理。
@@ -2821,10 +2914,7 @@ javaScript中hasOwnProperty函数方法是返回一个布尔值，指出一个�
 为什么扩展 JavaScript 内置对象不是好的做法？
 请指出 document load 和 document DOMContentLoaded 两个事件的区别。
 请解释 JavaScript 的同源策略 (same-origin policy)。
-如何实现下列代码：
-[1,2,3,4,5].duplicator(); // [1,2,3,4,5,1,2,3,4,5]
 什么是三元表达式 (Ternary expression)？“三元 (Ternary)” 表示什么意思？
-请实现一个遍历至 100 的 for loop 循环，在能被 3 整除时输出 "fizz"，在能被 5 整除时输出 "buzz"，在能同时被 3 和 5 整除时输出 "fizzbuzz"。
 为何通常会认为保留网站现有的全局作用域 (global scope) 不去改变它，是较好的选择？
 为何你会使用 load 之类的事件 (event)？此事件有缺点吗？你是否知道其他替代品，以及为何使用它们？
 请解释什么是单页应用 (single page app), 以及如何使其对搜索引擎友好 (SEO-friendly)。
