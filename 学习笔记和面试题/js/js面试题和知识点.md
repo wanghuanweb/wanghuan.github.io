@@ -2627,13 +2627,21 @@ Property：属性，property是DOM中的属性，是JavaScript里的对象  比�
 
 Attribute：特性，attribute是HTML标签上的特性，它的值只能够是字符串，通过类数组attributes可以罗列所有的attribute。 比如：element.getAttribute("id");或者element.attributes.
 
-标准的 DOM properties 与 attributes 是同步的。公认的（非自定义的）特性会被以属性的形式添加到DOM对象中。如，id，align，style等，这时候操作property或者使用操作特性的DOM方法如getAttribute()都可以操作属性。
+property能够从attribute中得到同步；attribute不会同步property上的值；attribute和property之间的数据绑定是单向的，attribute->property；更改property和attribute上的任意值，都会将更新反映到HTML页面中；
 
-优先选择property
-在实际应用中，98%的 DOM 操作都是使用 properties。
-只有两种情形需要使用attributes
-1.自定义 HTML attributes，因为它并不同步到DOM property。
-2.访问内置的 HTML attributes，这些 attribute 不能从 property 同步过来。例如 INPUT标签的value值。
+```
+html代码
+<input id="in_1" value="1" sth="whatever">
+js代码
+var in1 = document.getElementById('in_1');
+in1.value = 'new value of prop';
+console.log(in1.value);				// 'new value of prop'
+console.log(in1.attributes.value);	// 'value="1"'-----attribute不会同步property上的值
+
+in1.attributes.value.value = 'new value of attr';
+console.log(in1.value);				// 'new value of attr'
+console.log(in1.attributes.value);	// 'new value of attr'-----property能够从attribute中得到同步
+```
 
 http://www.codeceo.com/article/javascript-property-attribute.html
 
@@ -2675,9 +2683,9 @@ div.classList.remove(value);
 div.classList.toggle(value);
 ```
 
-##### 25.通过DOM API操作元素?
+##### 26.通过DOM API操作元素(样式，内容，节点)?
 
-###### 1.操作元素的样式
+###### 1.访问元素的样式--DOM2
 
 -- 1.直接点属性来访问，去除-，首字母变大些 2.像数组一样访问属性
 
@@ -2702,6 +2710,26 @@ var myIntro = document.getElementById('intro'); // 获取intro文本对象
 changeStyle(myIntro, 'color', 'red');  
 ```
 
+**style对象定义了一些属性和方法**
+
+cssText,length,getPropertyValue,removeProperty,setProperty
+
+```
+myDiv.style.cssText = "width:25px;height:100px;background-color:green";
+alert(myDiv.style.cssText);
+
+
+for(var i = 0,len = myDiv.style.length;i < len;i++) {
+    var prop,value;
+
+    prop = myDiv.style[i];
+    value = myDiv.style.getPropertyValue(prop);
+    alert(prop + ":" + value);
+}
+
+
+myDiv.style.removeProperty("border");
+```
 ###### 2.操作元素的内容
 
 通常DOM操作都是改变原始的内容，最简单的是使用innerHTML属性
@@ -2745,10 +2773,307 @@ myIntro.innerHTML += '... some more content...';
 
 
 
+##### 27.DOM2 级遍历?
+
+DOM2 级遍历DOM结构的类型：NodeIterator和TreeWalker，两者都是深度优先的DOM结构遍历
+
+###### 1.NodeIterator--较简单
+
+使用document.createNodeIterator()方法创建NodeIterator的新实例，可以接收的4个参数，创建的NodeIterator的新实例中一个内部指针指向根节点
+
+1.root  作为搜索起点的树中的节点
+
+2.whatToShow  想访问那些树中的节点(NodeFilter.SHOW_ELEMENT,NodeFilter.SHOW_ALL,NodeFilter.SHOW_ATTRIBUTE等)
+
+3.filter 是一个NodeFilter对象，或者一个表示应该接收还是拒绝某种特定节点的函数
+
+4.entityReferenceExpansion 布尔值，表示是否要扩展实体引用
+
+NodeIterator类型的两个主要方法:nextNode()，previousNode()
+
+```
+//讲解第三个参数filter，filter对象只是一个方法就是acceptNode()，若该访问此节点，则返回NodeFilter.FILTER_ACCEPT,否则返回NodeFilter.FILTER_SKIP
+
+var filter = {
+    acceptNode: function(node) {
+        return node.tagName.toLowerCase() == "p" ?
+               NodeFilter.FILTER_ACCEPT:
+               NodeFilter.FILTER_SKIP;
+    }
+}
+var iterator = document.createNodeIterator(document,NodeFilter.SHOW_ELEMENT,filter,false);
+```
+
+```
+//下面讲解此遍历函数NodeIterator的使用
+//HTML代码
+<div id="div1">
+    <p><b></b></p>
+</div>
+
+<ul>
+    <li></li>
+    <li></li>
+    <li></li>
+</ul>
+
+//js代码遍历div下的所有元素节点
+var div = document.getElementById("div1"),
+    iterator = document.createNodeIterator(div,NodeFilter.SHOW_ELEMENT,null,false),----创建的NodeIterator的新实例中一个内部指针指向根节点div
+    node = iterator.nextNode();
+
+while(node != null) {
+    alert(node.tagName);
+    node = iterator.nextNode;
+}
+
+//输出 DIV P B UL LI LI LI
+
+//若执行返回li标签
+var filter = function(node) {
+    return node.tagName.toLowerCase() == "li"?
+           NodeFilter.FILTER_ACCEPT:
+           NodeFilter.FILTER_SKIP;
+}
+var div = document.getElementById("div1"),
+    iterator = document.createNodeIterator(div,NodeFilter.SHOW_ELEMENT,filter,false),----创建的NodeIterator的新实例中一个内部指针指向根节点div
+    node = iterator.nextNode();
+
+while(node != null) {
+    alert(node.tagName);
+    node = iterator.nextNode();
+}
+```
+###### 2.TreeWalker--是NodeIterator的另一个更高级的版本
+
+除了NodeIterator的nextNode()和previousNode()的功能外，还有其他方向上遍历DOM结构的方法
+
+pareentNode(),firstChild(),lastChild(),nextSibling(),previousSibling()
+
+使用document.createTreeWalker()方法创建TreeWalker的新实例，可以接收的4个参数(和NodeIterator一致)，创建的TreeWalker的新实例中一个内部指针指向根节点
+
+1.root  作为搜索起点的树中的节点
+
+2.whatToShow  想访问那些树中的节点(NodeFilter.SHOW_ELEMENT,NodeFilter.SHOW_ALL,NodeFilter.SHOW_ATTRIBUTE等)
+
+3.filter 是一个NodeFilter对象，或者一个表示应该接收还是拒绝某种特定节点的函数---区别：这里返回值是NodeFilter.FILTER_ACCEPT,NodeFilter.FILTER_SKIP,NodeFilter.FILTER_REJECT;
+
+NodeFilter.FILTER_SKIP----跳出相应节点继续前进到子树的下一个节点
+NodeFilter.FILTER_REJECT--跳出相应的节点和节点的整个子树
+
+4.entityReferenceExpansion 布尔值，表示是否要扩展实体引用
+
+```
+//下面讲解此遍历函数TreeWalker的使用
+//HTML代码
+<div id="div1">
+    <p><b></b></p>
+</div>
+
+<ul>
+    <li></li>
+    <li></li>
+    <li></li>
+</ul>
+
+//js代码遍历div下的所有元素节点
+var div = document.getElementById("div1"),
+    walker = document.createTreeWalker(div,NodeFilter.SHOW_ELEMENT,null,false;
+
+walker.firstChild(); //转到<p>
+walker.nextSibling();//转到<ul>
+
+var node = walker.firstChild();//转到第一个<li>
+
+while(node != null) {
+    alert(node.tagName);
+    node = walker.nextSibling();
+}
+```
+
+##### 28.事件流(事件冒泡和事件捕获)
+
+事件流描述的是从页面中接受事件的顺序。
+
+事件冒泡机制：当一个元素接收到事件的时候，会把他接收到的所有事件传播给他的父级，一直到顶层window
+
+事件捕获机制：当触发目标元素时，会从目标元素的最顶层的祖先元素事件往下执行到目标元素为止。
+
+事件流的三个阶段：事件捕获阶段，处于目标阶段，事件冒泡阶段(无论是冒泡事件还是捕获事件，元素都会先执行捕获阶段 )
+
+**所有事件的顺序是**(注意本元素代码的顺序执行)
+
+其他元素捕获阶段事件 -> 本元素代码顺序事件 -> 其他元素冒泡阶段事件 。
+
+**关于事件，IE与火狐的事件机制有什么区别？**
+
+IE是事件冒泡、firefox支持事件冒泡和事件捕获模型
+
+**如何阻止事件冒泡？**
+
+1、cancelBubble（HTML DOM Event 对象属性） ：如果事件句柄想阻止事件传播到包容对象，必须把该属性设为 true。
+注意旧ie的方法：ev.cancelBubble = true;
+2、stopPropagation（HTML DOM Event 对象方法）：终止事件在传播过程的捕获、目标处理或起泡阶段进一步传播。调用该方法后，该节点上处理该事件的处理程序将被调用，事件不再被分派到其他节点。
+3、 preventDefault（HTML DOM Event 对象方法）通知浏览器不要执行与事件关联的默认动作。
+
+```
+function stopBubble(e)  
+{  
+    if (e && e.stopPropagation)  
+        e.stopPropagation()  
+    else
+        window.event.cancelBubble=true
+}  
+
+把这个stopBubble(e)函数放到你想要的阻止事件冒泡函数里面就可以阻止事件冒泡了
+```
+
+**我们给一个dom同时绑定两个点击事件，一个用捕获，一个用冒泡。会执行几次事件，会先执行冒泡还是捕获？**
+
+执行两次事件，同一个dom元素且这个是目标阶段的元素，按照事件的顺序执行事件----参数为false是冒泡，为true是捕获
+
+```
+<head>
+  <title></title>
+  <style type="text/css">
+    #p { width: 300px; height: 300px; padding: 10px; border: 1px solid black; }
+    #c { width: 200px; height: 200px; border: 1px solid red; }
+    #sub { width: 100px; height: 100px; border: 1px solid red; }
+  </style>
+</head>
+<body>
+  <div id="p">
+    parent
+    <div id="c">
+      child
+    </div>
+  </div>
+
+  //点击子div，则输出父节点捕获，子节点捕获，子节点冒泡，父节点冒泡
+  <script type="text/javascript">
+    window.alert = function (msg) {
+      console.log(msg);
+    };
+    var p = document.getElementById('p'),
+        c = document.getElementById('c');
+    p.addEventListener('click', function (e) {
+      alert('父节点冒泡')
+    }, false);
+
+    c.addEventListener('click', function (e) {
+      alert('子节点捕获')
+    }, true);
+    c.addEventListener('click', function (e) {
+      alert('子节点冒泡')
+    }, false);
+    p.addEventListener('click', function (e) {
+      alert('父节点捕获')
+    }, true);
+
+    //点击子div，则输出父节点捕获，子节点冒泡，子节点捕获，父节点冒泡
+    p.addEventListener('click', function (e) {
+      alert('父节点冒泡')
+    }, false);
+
+    c.addEventListener('click', function (e) {
+      alert('子节点冒泡')
+    }, false);
+    c.addEventListener('click', function (e) {
+      alert('子节点捕获')
+    }, true);
+
+    p.addEventListener('click', function (e) {
+      alert('父节点捕获')
+    }, true);
+  </script>
+</body>
+</html>
+```
+
+```
+<div id='one'>
+  <div id='two'>
+    <div id='three'>
+      <div id='four'>
+      </div>
+    </div>
+  </div>
+</div>
+
+//点击one元素，输出one；点击two元素，输出two one;点击three元素，输出 three two one；点击four元素，输出 four three two one；
+<script type='text/javascript'>
+  var one=document.getElementById('one');
+  var two=document.getElementById('two');
+  var three=document.getElementById('three');
+  var four=document.getElementById('four');
+  one.addEventListener('click',function(){
+    alert('one');
+  },false);
+  two.addEventListener('click',function(){
+    alert('two');
+  },false);
+  three.addEventListener('click',function(){
+    alert('three');
+  },false);
+  four.addEventListener('click',function(){
+    alert('four');
+  },false);
+</script>
+
+//点击four元素,最终执行结果为：one three four two
+one.addEventListener('click',function(){
+alert('one');
+},true);
+two.addEventListener('click',function(){
+alert('two');
+},false);
+three.addEventListener('click',function(){
+alert('three');
+},true);
+four.addEventListener('click',function(){
+alert('four');
+},false);
 
 
+//点击two执行结果：one(因为是two的父元素支持捕获事件所以先执行)  two,bubble  two,capture(顺序执行，注意逗号不是间隔，是输出内容。)
+//如果目标元素不是two，则two的两个事件按先捕获后冒泡触发执行，点击three执行结果：one two,capture three,bubble two,bubble
+one.addEventListener('click',function(){
+alert('one');
+},true);
+two.addEventListener('click',function(){
+alert('two,bubble');
+},false);
+two.addEventListener('click',function(){
+alert('two,capture');
+},true);
+three.addEventListener('click',function(){
+alert('three,bubble');
+},true);
+four.addEventListener('click',function(){
+alert('four');
+},true);
+```
 
+##### 29.写一个通用的事件侦听器函数(机试题)。
 
+http://www.nowcoder.com/questionTerminal/7d77ad3467b34ca79bcf6383fca0c7b6?pos=99&orderByHotValue=1
+http://blog.csdn.net/u011127925/article/details/47150435
+请指出 document load 和 document DOMContentLoaded 两个事件的区别。
+http://www.jianshu.com/p/d851db5f2f30
+
+为何你会使用 load 之类的事件 (event)？此事件有缺点吗？你是否知道其他替代品，以及为何使用它们？
+什么是事件循环 (event loop)？
+http://www.ruanyifeng.com/blog/2013/10/event_loop.html
+http://www.jb51.net/article/56022.htm
+https://segmentfault.com/a/1190000004322358
+请解释事件代理 (event delegation)。
+http://www.w3cfuns.com/notes/16089/d39e28ecce8b2384e672b73668735e78.html
+http://www.makaidong.com/%E5%8D%9A%E5%AE%A2%E5%9B%AD%E6%96%87/33592.shtml
+##### 26.同步和异步的区别?
+请解释同步 (synchronous) 和异步 (asynchronous) 函数的区别。
+同步：浏览器访问服务器请求，用户看得到页面刷新，重新发请求,等请求完，页面刷新，新内容出现，用户看到新内容,j进行下一步操作。
+
+异步：浏览器访问服务器请求，用户正常操作，浏览器后端进行请求。等请求完，页面不刷新，新内容也会出现，用户看到新内容。
 
 
 
@@ -2846,11 +3171,6 @@ ajax的全称：Asynchronous Javascript And XML。
 (6)使用JavaScript和DOM实现局部刷新
 
 
-##### 26.同步和异步的区别?
-
-同步：浏览器访问服务器请求，用户看得到页面刷新，重新发请求,等请求完，页面刷新，新内容出现，用户看到新内容,j进行下一步操作。
-
-异步：浏览器访问服务器请求，用户正常操作，浏览器后端进行请求。等请求完，页面不刷新，新内容也会出现，用户看到新内容。
 
 
 ##### 27.如何解决跨域问题?
@@ -2974,18 +3294,12 @@ javaScript中hasOwnProperty函数方法是返回一个布尔值，指出一个�
 
 ##### 81.检测浏览器版本版本有哪些方式？
 
-##### 17.写一个通用的事件侦听器函数(机试题)。
-
-
 ##### 82.What is a Polyfill?
 
 
 ##### 83.做的项目中，有没有用过或自己实现一些 polyfill 方案（兼容性处理方案）？
 
 
-##### 84.我们给一个dom同时绑定两个点击事件，一个用捕获，一个用冒泡。会执行几次事件，会先执行冒泡还是捕获？
-
-请解释事件代理 (event delegation)。
 你怎么看 AMD vs. CommonJS？
 请举出一个匿名函数的典型用例？
 请指出 JavaScript 宿主对象 (host objects) 和原生对象 (native objects) 的区别？
@@ -2996,13 +3310,13 @@ javaScript中hasOwnProperty函数方法是返回一个布尔值，指出一个�
 请解释 JSONP 的工作原理，以及它为什么不是真正的 Ajax。
 你使用过 JavaScript 模板系统吗？
 如有使用过，请谈谈你都使用过哪些库？
-请描述事件冒泡机制 (event bubbling)。
+
 为什么扩展 JavaScript 内置对象不是好的做法？
-请指出 document load 和 document DOMContentLoaded 两个事件的区别。
+
 请解释 JavaScript 的同源策略 (same-origin policy)。
 什么是三元表达式 (Ternary expression)？“三元 (Ternary)” 表示什么意思？
 为何通常会认为保留网站现有的全局作用域 (global scope) 不去改变它，是较好的选择？
-为何你会使用 load 之类的事件 (event)？此事件有缺点吗？你是否知道其他替代品，以及为何使用它们？
+
 请解释什么是单页应用 (single page app), 以及如何使其对搜索引擎友好 (SEO-friendly)。
 What is the extent of your experience with Promises and/or their polyfills?
 使用 Promises 而非回调 (callbacks) 优缺点是什么？
@@ -3013,9 +3327,4 @@ What is the extent of your experience with Promises and/or their polyfills?
 请举出 JavaScript 中一个不变性对象 (immutable object) 的例子？
 不变性 (immutability) 有哪些优缺点？
 如何用你自己的代码来实现不变性 (immutability)？
-请解释同步 (synchronous) 和异步 (asynchronous) 函数的区别。
-什么是事件循环 (event loop)？
 请问调用栈 (call stack) 和任务队列 (task queue) 的区别是什么？
-
-
-##### 19.关于事件，IE与火狐的事件机制有什么区别？ 如何阻止冒泡？
