@@ -617,6 +617,10 @@ Goodbye Jack
 
 ##### 7.介绍js有哪些内置对象？
 
+
+请指出 JavaScript 宿主对象 (host objects) 和原生对象 (native objects) 的区别？
+为什么扩展 JavaScript 内置对象不是好的做法？
+
 引用类型：
 
 **Array对象**
@@ -2912,8 +2916,8 @@ IE是事件冒泡、firefox支持事件冒泡和事件捕获模型
 **如何阻止事件冒泡？**
 
 1、cancelBubble（HTML DOM Event 对象属性） ：如果事件句柄想阻止事件传播到包容对象，必须把该属性设为 true。
-注意旧ie的方法：ev.cancelBubble = true;
-2、stopPropagation（HTML DOM Event 对象方法）：终止事件在传播过程的捕获、目标处理或起泡阶段进一步传播。调用该方法后，该节点上处理该事件的处理程序将被调用，事件不再被分派到其他节点。
+注意旧ie的方法：ev.cancelBubble = true;（IE）
+2、stopPropagation（HTML DOM Event 对象方法）：（Firefox）终止事件在传播过程的捕获、目标处理或起泡阶段进一步传播。调用该方法后，该节点上处理该事件的处理程序将被调用，事件不再被分派到其他节点。
 3、 preventDefault（HTML DOM Event 对象方法）通知浏览器不要执行与事件关联的默认动作。
 
 ```
@@ -2949,7 +2953,7 @@ function stopBubble(e)
     </div>
   </div>
 
-  //点击子div，则输出父节点捕获，子节点捕获，子节点冒泡，父节点冒泡
+  //点击子div，则输出父节点捕获，子节点捕获，子节点冒泡，父节点冒泡--看参数false则是事件冒泡，若是true，则是事件捕获
   <script type="text/javascript">
     window.alert = function (msg) {
       console.log(msg);
@@ -3000,7 +3004,7 @@ function stopBubble(e)
   </div>
 </div>
 
-//点击one元素，输出one；点击two元素，输出two one;点击three元素，输出 three two one；点击four元素，输出 four three two one；
+//可看参数全是事件冒泡事件，点击one元素，输出one；点击two元素，输出two one;点击three元素，输出 three two one；点击four元素，输出 four three two one；
 <script type='text/javascript'>
   var one=document.getElementById('one');
   var two=document.getElementById('two');
@@ -3058,22 +3062,125 @@ alert('four');
 
 http://www.nowcoder.com/questionTerminal/7d77ad3467b34ca79bcf6383fca0c7b6?pos=99&orderByHotValue=1
 http://blog.csdn.net/u011127925/article/details/47150435
-请指出 document load 和 document DOMContentLoaded 两个事件的区别。
+
+
+
+##### 30.js是单线程的？什么是同步异步？什么同步异步函数？什么是异步过程？什么是消息队列和事件循环 (event loop)？
+
+事件循环是js的运行机制
+
+**js是单线程**
+
+JavaScript的单线程，与它的用途有关。作为浏览器脚本语言，JavaScript的主要用途是与用户互动，以及操作DOM。这决定了它只能是单线程，否则会带来很复杂的同步问题。比如，假定JavaScript同时有两个线程，一个线程在某个DOM节点上添加内容，另一个线程删除了这个节点，这时浏览器应该以哪个线程为准？
+
+为了利用多核CPU的计算能力，HTML5提出Web Worker标准，允许JavaScript脚本创建多个线程，但是子线程完全受主线程控制，且不得操作DOM。所以，这个新标准并没有改变JavaScript单线程的本质。
+
+**同步和异步区别**
+
+同步：浏览器访问服务器请求，用户看得到页面刷新，重新发请求,等请求完，页面刷新，新内容出现，用户看到新内容,js进行下一步操作。
+
+异步：浏览器访问服务器请求，用户正常操作，浏览器后端进行请求。等请求完，页面不刷新，新内容也会出现，用户看到新内容。
+
+**同步函数和异步函数区别**
+
+假设存在一个函数A：A(args...);
+
+同步函数：如果在函数A返回的时候，调用者就能够得到预期结果(即拿到了预期的返回值或者看到了预期的效果)，那么这个函数就是同步的。
+
+异步函数：如果在函数A返回的时候，调用者还不能够得到预期结果，而是需要在将来通过一定的手段得到，那么这个函数就是异步的。
+
+**异步过程**
+
+主线程发起一个异步请求，相应的工作线程接收请求并告知主线程已收到(异步函数返回)；主线程可以继续执行后面的代码，同时工作线程执行异步任务；工作线程完成工作后，通知主线程；主线程收到通知后，执行一定的动作(调用回调函数)。
+
+异步函数通常具有以下的形式：
+A(args..., callbackFn)
+
+从主线程的角度看，一个异步过程包括下面两个要素：发起函数(或叫注册函数)A和回调函数callbackFn；它们都是在主线程上调用的，其中注册函数用来发起异步过程，回调函数用来处理结果。
+
+eg：setTimeout(fn, 1000);其中的setTimeout就是异步过程的发起函数，fn是回调函数。
+
+**消息队列和事件循环**
+
+异步过程中，工作线程在异步操作完成后需要通知主线程。那么这个通知机制是怎样实现的呢？答案是利用消息队列和事件循环。
+
+消息队列：工作线程将消息放到消息队列，消息队列是一个先进先出的队列，它里面存放着各种消息。
+
+事件循环：主线程通过事件循环过程去取消息（消息队列中的每条消息实际上都对应着一个事件。），事件循环是指主线程重复从消息队列中取消息、执行的过程。实际上，主线程只会做一件事情，就是从消息队列里面取消息、执行消息，再取消息、再执行。当消息队列为空时，就会等待直到消息队列变成非空。而且主线程只有在将当前的消息执行完成后，才会去取下一个消息。这种机制就叫做事件循环机制，取一个消息并执行的过程叫做一次循环。
+
+##### 31.请解释事件代理 (event delegation)or事件委托。
+
+**引出事件代理的原因**
+
+在传统的事件处理中，你按照需要为每一个元素添加或者是删除事件处理器。然而，事件处理器将有可能导致内存泄露或者是性能下降——你用得越多这种风险就越大。如下：
+
+```
+<ul id="parent-list">
+  <li id="post-1">Item 1</li>
+  <li id="post-2">Item 2</li>
+  <li id="post-3">Item 3</li>
+  <li id="post-4">Item 4</li>
+  <li id="post-5">Item 5</li>
+  <li id="post-6">Item 6</li>
+</ul>
+
+//给每个li标签都添加了事件，这样可能导致内存泄漏
+function addListeners4Li(liNode){
+    liNode.onclick = function clickHandler(){...};
+    liNode.onmouseover = function mouseOverHandler(){...}
+}
+window.onload = function(){
+    var ulNode = document.getElementById("parent-list");
+    var liNodes = ulNode.getElementByTagName("Li");
+    for(var i=0, l = liNodes.length; i < l; i++){
+        addListeners4Li(liNodes[i]);
+    }   
+}
+```
+
+**事件代理**
+
+优点：
+
+1.管理的函数变少了。可以把事件处理器添加到一个父级元素上，这样就避免了把事件处理器添加到多个子级元素上。(这样可以得益于事件冒泡)创建的以及驻留在内存中的事件处理器少了，这样我们就提高了性能，并降低了崩溃的风险。
+
+2.可以方便地动态添加和修改元素，不需要因为元素的改动而修改事件绑定。
+
+```
+<ul id="parent-list">
+  <li id="post-1">Item 1</li>
+  <li id="post-2">Item 2</li>
+  <li id="post-3">Item 3</li>
+  <li id="post-4">Item 4</li>
+  <li id="post-5">Item 5</li>
+  <li id="post-6">Item 6</li>
+</ul>
+
+window.onload = function() {
+    var ul = document.getElementById("parent-list");
+
+    ul.addEventListener("click",function(e){
+        // 检查事件源e.targe是否为Li
+        if(e.target && e.target.nodeName.toUpperName === "LI") {
+            console.log("List item ",e.target.id.replace("post-")," was clicked!");
+        }
+    });
+}
+```
+
+##### 32.请指出 document load 和 document DOMContentLoaded 两个事件的区别。
+
 http://www.jianshu.com/p/d851db5f2f30
 
 为何你会使用 load 之类的事件 (event)？此事件有缺点吗？你是否知道其他替代品，以及为何使用它们？
-什么是事件循环 (event loop)？
-http://www.ruanyifeng.com/blog/2013/10/event_loop.html
-http://www.jb51.net/article/56022.htm
-https://segmentfault.com/a/1190000004322358
-请解释事件代理 (event delegation)。
-http://www.w3cfuns.com/notes/16089/d39e28ecce8b2384e672b73668735e78.html
-http://www.makaidong.com/%E5%8D%9A%E5%AE%A2%E5%9B%AD%E6%96%87/33592.shtml
-##### 26.同步和异步的区别?
-请解释同步 (synchronous) 和异步 (asynchronous) 函数的区别。
-同步：浏览器访问服务器请求，用户看得到页面刷新，重新发请求,等请求完，页面刷新，新内容出现，用户看到新内容,j进行下一步操作。
 
-异步：浏览器访问服务器请求，用户正常操作，浏览器后端进行请求。等请求完，页面不刷新，新内容也会出现，用户看到新内容。
+
+
+
+
+
+
+
 
 
 
@@ -3272,7 +3379,19 @@ javaScript中hasOwnProperty函数方法是返回一个布尔值，指出一个�
 
 
 ##### 74.什么是“前端路由”?什么时候适合使用“前端路由”? “前端路由”有哪些优点和缺点?
+1，什么是前端路由？
+路由是根据不同的 url 地址展示不同的内容或页面
+前端路由就是把不同路由对应不同的内容或页面的任务交给前端来做，之前是通过服务端根据 url 的不同返回不同的页面实现的。
 
+2，什么时候使用前端路由？
+在单页面应用，大部分页面结构不变，只改变部分内容的使用
+
+3，前端路由有什么优点和缺点？
+优点：
+用户体验好，不需要每次都从服务器全部获取，快速展现给用户
+缺点：
+使用浏览器的前进，后退键的时候会重新发送请求，没有合理地利用缓存
+单页面无法记住之前滚动的位置，无法在前进，后退的时候记住滚动的位置
 
 ##### 75.知道什么是webkit么? 知道怎么用浏览器的各种工具来调试和debug代码么?
 
@@ -3302,7 +3421,7 @@ javaScript中hasOwnProperty函数方法是返回一个布尔值，指出一个�
 
 你怎么看 AMD vs. CommonJS？
 请举出一个匿名函数的典型用例？
-请指出 JavaScript 宿主对象 (host objects) 和原生对象 (native objects) 的区别？
+
 在什么时候你会使用 document.write()？
 请指出浏览器特性检测，特性推断和浏览器 UA 字符串嗅探的区别？
 请尽可能详尽的解释 Ajax 的工作原理。
@@ -3311,7 +3430,6 @@ javaScript中hasOwnProperty函数方法是返回一个布尔值，指出一个�
 你使用过 JavaScript 模板系统吗？
 如有使用过，请谈谈你都使用过哪些库？
 
-为什么扩展 JavaScript 内置对象不是好的做法？
 
 请解释 JavaScript 的同源策略 (same-origin policy)。
 什么是三元表达式 (Ternary expression)？“三元 (Ternary)” 表示什么意思？
