@@ -615,13 +615,29 @@ Goodbye Jack
 注意js的var hoisting变量声明提升，虽然声明提升，但是初始化并不提升
 则上述代码相当于
 
-##### 7.介绍js有哪些内置对象？
+##### 7.介绍js有哪些内置对象？内置对象(build-in objects),原生对象(native objects),宿主对象(host bojects)的区别？
 
+基本数据类型：null，undefined，boolean，number，string
+引用数据类型：object，function
+typeof的返回值：undefined，boolean，number，string，object，function
 
-请指出 JavaScript 宿主对象 (host objects) 和原生对象 (native objects) 的区别？
-为什么扩展 JavaScript 内置对象不是好的做法？
+**内置对象** -- (不要NEW就是不可以实例化,直接引用——只有MATH  GLOBAL)
 
-引用类型：
+“由 ECMAScript 实现提供的、独立于宿主环境的所有对象，在 ECMAScript 程序开始执行时出现”。这意味着开发者不必明确实例化内置对象，它已被实例化了。
+
+**原生对象** -- (本地对象，要NEW也就是可以实例化)
+
+为“独立于宿主环境的 ECMAScript 实现提供的对象”，需要new，Object、Function、Array、String、Boolean、Number、Date、RegExp、Error、EvalError、RangeError、ReferenceError、SyntaxError、TypeError、URIError、ActiveXObject(服务器方面)、Enumerator(集合遍历类)、RegExp（正则表达式）---本地对象就是 ECMA-262 定义的类（引用类型）。
+
+**宿主对象** -- (BOM  DOM  &  自定义对象)
+
+ ECMAScript中的“宿主”当然就是我们网页的运行环境，即“操作系统”和“浏览器”。所有非本地对象都是宿主对象（host object），即由 ECMAScript 实现的宿主环境提供的对象。你自己构建的对象和所有的BOM和DOM对象都是宿主对象。
+
+**为什么扩展 JavaScript 内置对象不是好的做法？**
+
+因为扩展内置对象会影响整个程序中所使用到的该内置对象的原型属性.浏览器或javascript本身就会实现这个方法，而且和你扩展的实现有不一致的表现。到时候你的javascript代码可能已经在无数个页面中执行了数年，而浏览器的实现导致所有使用扩展原型的代码都崩溃了。
+
+**引用类型**
 
 **Array对象**
 
@@ -2903,7 +2919,7 @@ while(node != null) {
 
 事件捕获机制：当触发目标元素时，会从目标元素的最顶层的祖先元素事件往下执行到目标元素为止。
 
-事件流的三个阶段：事件捕获阶段，处于目标阶段，事件冒泡阶段(无论是冒泡事件还是捕获事件，元素都会先执行捕获阶段 )
+“DOM2级事件”规定的事件流的三个阶段：事件捕获阶段，处于目标阶段，事件冒泡阶段(无论是冒泡事件还是捕获事件，元素都会先执行捕获阶段 )
 
 **所有事件的顺序是**(注意本元素代码的顺序执行)
 
@@ -3058,14 +3074,245 @@ alert('four');
 },true);
 ```
 
-##### 29.写一个通用的事件侦听器函数(机试题)。
+##### 29.事件处理程序(HTML事件处理程序，DOM0事件处理程序，DOM2事件处理程序，IE事件处理程序，跨浏览器事件处理程序)
 
-http://www.nowcoder.com/questionTerminal/7d77ad3467b34ca79bcf6383fca0c7b6?pos=99&orderByHotValue=1
-http://blog.csdn.net/u011127925/article/details/47150435
+在以下几点进行对比和了解：
+1.各种事件处理程序的添加和删除
+2.在捕获阶段或者是冒泡阶段执行事件处理程序
+3.是否可以添加多个事件处理程序
 
+**HTML事件处理程序**
 
+**DOM0级事件处理程序**  
 
-##### 30.js是单线程的？什么是同步异步？什么同步异步函数？什么是异步过程？什么是消息队列和事件循环 (event loop)？
+1.=null就是事件的删除
+
+2.这种事件处理程序会在事件流的冒泡阶段被处理
+
+3.DOM0级对每个事件只支持一个事件处理程序
+```
+// 添加事件处理程序
+var btn = document.getElementById("myBtn");
+btn.onclick = function() {
+    alert(this.id); //"myBtn"
+};
+//删除事件处理程序
+btn.onclick = null;
+```
+
+**DOM2级事件处理程序**
+
+DOM2级方法添加事件处理程序主要好处是可以添加多个事件处理程序，并按照他们的顺序触发
+
+```
+var btn = document.getElementById("myBtn");
+
+btn.addEventListener("click",function() {
+    alert(this.id);
+},false);
+btn.addEventListener("click",function() {
+    alert("Hello World!");
+},false);
+```
+
+attention:通过addEventListener和removeEventListener来添加和删除事件处理程序，但是移除和添加处理程序的时候参数必须相同，这意味着addEventListener添加的匿名函数将无法移除
+
+//错误的写法
+```
+var btn = document.getElementById("myBtn");
+
+btn.addEventListener("click",function() {
+    alert(this.id);
+},false);
+
+// 这个和addEventListener的函数完全不是同一个函数，匿名函数无法移除
+btn.removeEventListener("click",function() {
+    alert(this.id);
+},false);
+```
+//正确的写法
+```
+var btn = document.getElementById("myBtn"),
+    handler = function() {
+        alert(this.id);
+    };
+
+btn.addEventListener("click",handler,false);
+
+// 这样就删除掉了
+btn.removeEventListener("click",handler,false);
+```
+
+**IE事件处理程序**
+
+1.增加删除事件处理程序attachEvent()和detachEvent()
+
+2.IE只支持冒泡，因此由attachEvent()添加的事件处理程序会被添加到冒泡阶段
+
+3.attachEvent()方法也可以为一个元素添加多个事件处理程序
+
+```
+var btn = document.getElementById("myBtn");
+btn.attachEvent("onclick",function(){
+    alert("Clicked");
+});
+```
+
+**跨浏览器事件处理程序**
+
+```
+var EventUtil = {
+    //根据情况分别使用dom2 || IE || dom0方式 来添加事件
+    addHandler:function(element,type,handler) {
+        if(element.addEventListener) {
+            element.addEventListener(type,handler,false);
+        } else if(element.attachEvent) {
+            element.attachEvent("on" + type,handler);
+        } else {
+            element["on" + type] = handler;
+        }
+    },
+    //根据情况分别使用dom2 || IE || dom0方式 来删除事件
+    removeHandler:function(element,type,handler){
+        if(element.removeHandler) {
+            element.removeEventListener(type,handler,false);
+        } else if(element.detachEvent) {
+            element.detachEvent("on" + type,handler);
+        } else {
+            element["on" + type] = null;
+        }
+    }
+}
+
+var btn = document.getElementById("myBtn"),
+    handler = function () {
+        alert("Clicked");
+    };
+
+EventUtil.addHandler(btn,"click",handler);
+EventUtil.removeHandler(btn,"click",handler);
+```
+##### 30.事件对象
+
+触发DOM上的某个对象时，会产生一个事件对象event
+
+**DOM0级事件对象**
+
+无论指定事件处理程序时使用什么方法(DOM0级和DOM2级)，都传入event对象
+
+阻止特定事件的默认行为，就是使用preventDefault();
+
+阻止进一步事件的事件捕获或冒泡，就是使用stopPropagation()
+
+**IE中的事件对象**
+
+目标：srcElement
+
+阻止特定事件的默认行为，就是使用returnValue
+
+阻止进一步事件的事件捕获或冒泡，就是使用cancelBubble
+
+**跨浏览器的事件对象**
+
+```
+var EventUtil = {
+
+    //根据情况分别获取DOM或者IE中的事件对象，事件目标，阻止事件的默认行为
+    getEvent: function(event) {
+        return event ? event : window.event;
+    },
+    getTarget: function(event) {
+        return event.target || event.srcElement;
+    },
+    preventDefault: function(event) {
+        if(event.preventDefault) {
+            event.preventDefault();
+        } else {
+            event.returnValue = false;
+        }
+    },
+
+    //根据情况分别取消DOM或者IE中事件冒泡
+    stopPropagation: function(event) {
+        if (event.stopPropagation) {
+            event.stopPropagation();
+        } else {
+            event.cancelBubble = true;
+        }
+    }
+}
+
+var btn = document.getElementById("myBtn");
+
+btn.onclick = function(event) {
+    event = EventUtil.getEvent(event);
+    var target = EventUtil.getTarget(event);
+    EventUtil.preventDefault(event);
+    EventUtil.stopPropagation(event);
+}
+```
+
+##### 31.写一个通用的事件侦听器函数(机试题)。
+
+```
+var EventUtil = {
+    //根据情况分别使用dom2 || IE || dom0方式 来添加事件
+    addHandler: function(element,type,handler) {
+        if(element.addEventListener) {
+            element.addEventListener(type,handler,false);
+        } else if(element.attachEvent) {
+            element.attachEvent("on" + type,handler);
+        } else {
+            element["on" + type] = handler;
+        }
+    },
+
+    //根据情况分别获取DOM或者IE中的事件对象，事件目标，阻止事件的默认行为
+    getEvent: function(event) {
+        return event ? event: window.event;
+    },
+    getTarget: function(event) {
+        return event.target || event.srcElement;
+    },
+    preventDefault: function(event) {
+        if(event.preventDefault) {
+            event.preventDefault();
+        } else {
+            event.returnValue = false;
+        }
+    }
+
+    //根据情况分别使用dom2 || IE || dom0方式 来删除事件
+    removeHandler: function(element,type,handler){
+        if(element.removeHandler) {
+            element.removeEventListener(type,handler,false);
+        } else if(element.detachEvent) {
+            element.detachEvent("on" + type,handler);
+        } else {
+            element["on" + type] = null;
+        }
+    }
+
+    //根据情况分别取消DOM或者IE中事件冒泡
+    stopPropagation: function(event) {
+        if (event.stopPropagation) {
+            event.stopPropagation();
+        } else {
+            event.cancelBubble = true;
+        }
+    }
+}
+
+var btn = document.getElementById("myBtn"),
+    handler = function () {
+        alert("Clicked");
+    };
+
+EventUtil.addHandler(btn,"click",handler);
+EventUtil.removeHandler(btn,"click",handler);
+```
+
+##### 32.js是单线程的？什么是同步异步？什么同步异步函数？什么是异步过程？什么是消息队列和事件循环 (event loop)？
 
 事件循环是js的运行机制
 
@@ -3108,10 +3355,13 @@ eg：setTimeout(fn, 1000);其中的setTimeout就是异步过程的发起函数�
 
 事件循环：主线程通过事件循环过程去取消息（消息队列中的每条消息实际上都对应着一个事件。），事件循环是指主线程重复从消息队列中取消息、执行的过程。实际上，主线程只会做一件事情，就是从消息队列里面取消息、执行消息，再取消息、再执行。当消息队列为空时，就会等待直到消息队列变成非空。而且主线程只有在将当前的消息执行完成后，才会去取下一个消息。这种机制就叫做事件循环机制，取一个消息并执行的过程叫做一次循环。
 
-##### 31.请解释事件代理 (event delegation)or事件委托。
+##### 33.请解释事件代理 (event delegation)or事件委托。
+
+事件委托和移除事件处理程序都是考虑到了----内存和性能。
 
 **引出事件代理的原因**
 
+对于“事件处理程序过多”问题的解决方案就是事件代理或者说事事件委托。
 在传统的事件处理中，你按照需要为每一个元素添加或者是删除事件处理器。然而，事件处理器将有可能导致内存泄露或者是性能下降——你用得越多这种风险就越大。如下：
 
 ```
@@ -3125,15 +3375,13 @@ eg：setTimeout(fn, 1000);其中的setTimeout就是异步过程的发起函数�
 </ul>
 
 //给每个li标签都添加了事件，这样可能导致内存泄漏
-function addListeners4Li(liNode){
-    liNode.onclick = function clickHandler(){...};
-    liNode.onmouseover = function mouseOverHandler(){...}
-}
 window.onload = function(){
     var ulNode = document.getElementById("parent-list");
     var liNodes = ulNode.getElementByTagName("Li");
     for(var i=0, l = liNodes.length; i < l; i++){
-        addListeners4Li(liNodes[i]);
+        EventUtil.addHandler(liNodes[i],"click",function(event) {
+
+        });
     }   
 }
 ```
@@ -3159,16 +3407,20 @@ window.onload = function(){
 window.onload = function() {
     var ul = document.getElementById("parent-list");
 
-    ul.addEventListener("click",function(e){
+    EventUtil.addHandler(ul,"click",function(event) {
+        event = EventUtil.getEvent(event);
+        var target = EventUtil.getTarget(event);
+
         // 检查事件源e.targe是否为Li
-        if(e.target && e.target.nodeName.toUpperName === "LI") {
-            console.log("List item ",e.target.id.replace("post-")," was clicked!");
+        if(target && target.nodeName.toUpperName === "LI") {
+            console.log("List item ",target.id.replace("post-")," was clicked!");
         }
     });
+
 }
 ```
 
-##### 32.请指出 document load 和 document DOMContentLoaded 两个事件的区别。
+##### 34.请指出 document load 和 document DOMContentLoaded 两个事件的区别。
 
 http://www.jianshu.com/p/d851db5f2f30
 
@@ -3312,6 +3564,7 @@ requireJS就是模块化的管理和生成，且定义无依赖和有依赖的�
 (3) 创建script，插入到DOM中，加载完毕后callBack
 
 ##### 35.documen.write和 innerHTML的区别?
+在什么时候你会使用 document.write()？
 
 document.write是重写这个document也就是重写页面，写入内容是字符串的html
 
@@ -3414,33 +3667,26 @@ javaScript中hasOwnProperty函数方法是返回一个布尔值，指出一个�
 ##### 81.检测浏览器版本版本有哪些方式？
 
 ##### 82.What is a Polyfill?
-
+What is the extent of your experience with Promises and/or their polyfills?
 
 ##### 83.做的项目中，有没有用过或自己实现一些 polyfill 方案（兼容性处理方案）？
 
 
 你怎么看 AMD vs. CommonJS？
 请举出一个匿名函数的典型用例？
-
-在什么时候你会使用 document.write()？
 请指出浏览器特性检测，特性推断和浏览器 UA 字符串嗅探的区别？
 请尽可能详尽的解释 Ajax 的工作原理。
 使用 Ajax 都有哪些优劣？
 请解释 JSONP 的工作原理，以及它为什么不是真正的 Ajax。
 你使用过 JavaScript 模板系统吗？
 如有使用过，请谈谈你都使用过哪些库？
-
-
 请解释 JavaScript 的同源策略 (same-origin policy)。
 什么是三元表达式 (Ternary expression)？“三元 (Ternary)” 表示什么意思？
 为何通常会认为保留网站现有的全局作用域 (global scope) 不去改变它，是较好的选择？
-
 请解释什么是单页应用 (single page app), 以及如何使其对搜索引擎友好 (SEO-friendly)。
-What is the extent of your experience with Promises and/or their polyfills?
 使用 Promises 而非回调 (callbacks) 优缺点是什么？
 使用一种可以编译成 JavaScript 的语言来写 JavaScript 代码有哪些优缺点？
 你使用哪些工具和技术来调试 JavaScript 代码？
-你会使用怎样的语言结构来遍历对象属性 (object properties) 和数组内容？
 请解释可变 (mutable) 和不变 (immutable) 对象的区别。
 请举出 JavaScript 中一个不变性对象 (immutable object) 的例子？
 不变性 (immutability) 有哪些优缺点？
