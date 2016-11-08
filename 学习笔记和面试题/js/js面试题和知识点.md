@@ -3359,6 +3359,8 @@ eg：setTimeout(fn, 1000);其中的setTimeout就是异步过程的发起函数�
 
 事件委托和移除事件处理程序都是考虑到了----内存和性能。
 
+事件委托技术是建立在事件冒泡机制之上的。
+
 **引出事件代理的原因**
 
 对于“事件处理程序过多”问题的解决方案就是事件代理或者说事事件委托。
@@ -3428,15 +3430,7 @@ http://www.jianshu.com/p/d851db5f2f30
 
 
 
-
-
-
-
-
-
-
-
-##### 21.javascript 代码中的"use strict";是什么意思 ? 使用它区别是什么？
+##### 35.javascript 代码中的"use strict";是什么意思 ? 使用它区别是什么？
 
 **use strict**：严格模式
 
@@ -3477,11 +3471,11 @@ function f(){
 4.为未来新版本的Javascript做好铺垫
 
 
-##### 22.如何判断一个对象是否属于某个类？
+##### 36.如何判断一个对象是否属于某个类？
 
 object instanceof construtor
 
-##### 23.new操作符具体干了什么呢?
+##### 37.new操作符具体干了什么呢?
 
 new操作符：
 
@@ -3509,11 +3503,196 @@ Function.prototype._new_ = function() {
 };
 ```
 
-##### 24.js延迟加载的方式有哪些？
+##### 38.js延迟加载的方式有哪些？异步加载的方式？
 
 defer和async、动态创建DOM方式（用得最多）、按需异步载入js
 
-##### 25.Ajax 是什么? 如何创建一个Ajax？
+**异步加载的方式**
+
+(1) defer，只支持IE
+
+(2) async：
+
+(3) 创建script，插入到DOM中，加载完毕后callBack
+
+##### 39.对JSON的了解？
+
+###### 1.什么是JSON
+
+JSON:JavaScript Object Notation，javascript对象表示法；
+JSON利用javascript的模式来表示结构化数据，但JSON不从属于javascript，只是一种数据格式，很多语言都有针对JSON的解析器和序列化器
+**JSON流行的原因**
+1.和js语法类似，容易理解
+2.可以将JSON数据结构解析成有用的js对象
+
+###### 2.JSON语法
+
+**JSON的语法可以表示以下三种类型的值：**
+简单值：字符串、数值、布尔值、null，但不支持js的undefined
+对象：表示一组无序的键值对儿
+数组：有序的值得列表
+JSON不支持变量，函数，对象实例，只是一种表示结构化数据的格式
+**JSON的对象**
+
+```
+{
+	"name":"wanghuan",
+	"age":29,
+	"school":{
+		"name":"bupt",//虽有两个name，但是在不同对象中不影响
+		"location":"beijing"
+	}
+}
+```
+与js对象字面量的不同：
+1.对象属性必须加上""
+2.无末尾的分号；
+3.没有声明变量（json只是数据结构，没有变量的概念）
+**JSON的数组**
+[23,"wanghuan",true]
+与js数组字面量的不同：
+1.无声明变量
+2.无分号
+
+```
+//数组和对象结合出更复杂的数据集合
+[
+	{
+		"title":"bupt",
+		"author":"wanghuan",
+		"year":2011
+	},
+	{
+		"title":"bupt",
+		"author":"wanghuan",
+		"year":2011
+	},
+	{
+		"title":"bupt",
+		"author":"wanghuan",
+		"year":2011
+	}
+]
+```
+
+###### 3.序列化
+
+JSON对象的方法：
+**stringify()**
+用于把js对象序列化为JSON字符串,默认情况下，此函数输出的JSON字符串不包含任何空格字符或缩进，同时会忽略js对象的函数和原型对象。
+参数1：js对象
+```
+var book = {
+	title:"bupt",
+	author:["wanghuan"],
+	year:2011
+};
+var jsonText = JSON.stringify(book);
+//{"title":"bupt","author":["wanghuan"],"year":2011}
+```
+参数2：过滤器（可以是数组，也可以是函数），可选
+
+```
+var book = {
+	title:"bupt",
+	author:["wanghuan"],
+	year:2011
+};
+var jsonText = JSON.stringify(book,["title","author"]);
+//{"title":"bupt","author":["wanghuan"]}
+```
+
+```
+var book = {
+	title:"bupt",
+	author:["wanghuan"],
+	year:2011,
+	edition:3
+};
+var jsonText = JSON.stringify(book,function(key,value) {
+	switch(key){
+		case "author":
+			return value.join(",");//key为数组连接成一个字符串
+		case "year":
+			return 5000;
+		case "edition":
+			return undefined;//返回undefined删除此属性
+		default:
+			return value;//其他值正常显示
+	}
+});
+//{"title":"bupt","author":"wanghuan","year":5000}
+```
+参数3：字符串缩进（可以是数值等），可选
+
+```
+var book = {
+	title:"bupt",
+	author:["wanghuan"],
+	year:2011
+};
+var jsonText = JSON.stringify(book,null,4);
+//jsonText为，缩进4个空格（自动包含换行符），最大缩进值是10个字符
+{
+	"title":"bupt",
+	"author":["wanghuan"],
+	"year":2011
+}
+```
+**toJSON()方法**--对过滤器的补充
+JSON.stringify()有时不能满足某些对象进行自定义序列化的需求，则给对象定义toJSON()方法
+```
+var book = {
+	title:"bupt",
+	author:["wanghuan"],
+	year:2011,
+	toJSON:function(){
+		return this.title;
+	}
+};
+var jsonText = JSON.stringify(book);
+```
+**序列化对象的顺序**
+1.若存在toJSON()方法而且能通过它取得有效的值，则调用这个方法。否则，返回对象本身
+2.如果提供了第二个参数，应用此函数过滤器。传入函数过滤器的值是第1步返回的值
+3.对第2步返回的每个值进行相应的序列化
+4.如果提供了第三个参数，执行相应的格式化
+
+###### 4.解析
+
+**parse()**
+把JSON字符串解析成原生js值
+参数1：js对象
+```
+var bookCopy = JSON.parse(jsonText);
+//book与bookCopy有相同属性，但是没关系的对象
+```
+参数2：函数，可选，将在每个键值对上调用
+```
+var book = {
+	title:"bupt",
+	author:["wanghuan"],
+	year:2011,
+	//此属性保存了一个Date对象
+	releaseDate:new Date(2011,11,1)
+};
+//Date对象在序列化之后变成了有效的JSON字符串
+var jsonText = JSON.stringify(book);
+
+var bookCopy = JSON.parse(jsonText,function(key,value){
+	//解析在bookCopy中还原了一个Date对象，则bookCopy.releaseDate()属性中会保存一个Date对象
+	if(key == "releaseDate") {
+		return new Date(value);
+	} else {
+		return value;
+	}
+});
+//因为已经是一个Date对象，可以调用getFullYear()
+alert(bookCopy.releaseDate.getFullYear());
+```
+
+##### 40.Ajax 是什么? 如何创建一个Ajax？请尽可能详尽的解释 Ajax 的工作原理？使用 Ajax 都有哪些优劣？
+
 
 ajax的全称：Asynchronous Javascript And XML。
 
@@ -3528,6 +3707,12 @@ ajax的全称：Asynchronous Javascript And XML。
 (5)获取异步调用返回的数据
 
 (6)使用JavaScript和DOM实现局部刷新
+
+##### 41.请解释 JSONP 的工作原理，以及它为什么不是真正的 Ajax。
+
+
+
+
 
 
 
@@ -3555,14 +3740,6 @@ requireJS就是模块化的管理和生成，且定义无依赖和有依赖的�
 ##### 33.ECMAScript6 怎么写class，为什么会出现class这种东西?
 
 
-##### 34.异步加载的方式有哪些？
-
-(1) defer，只支持IE
-
-(2) async：
-
-(3) 创建script，插入到DOM中，加载完毕后callBack
-
 ##### 35.documen.write和 innerHTML的区别?
 在什么时候你会使用 document.write()？
 
@@ -3580,9 +3757,6 @@ innerHTML允许更精确的控制刷新某个页面的某个部分，所以优�
 hasOwnProperty
 
 javaScript中hasOwnProperty函数方法是返回一个布尔值，指出一个对象是否具有指定名称的属性。此方法无法检查该对象的原型链中是否具有该属性；该属性必须是对象本身的一个成员。
-
-##### 22.对JSON的了解？
-
 
 ##### 23. [].forEach.call($$("*"),function(a){ a.style.outline="1px solid #"+(~~(Math.random()*(1<<24))).toString(16) })  能解释一下这段代码的意思吗？
 
@@ -3675,9 +3849,6 @@ What is the extent of your experience with Promises and/or their polyfills?
 你怎么看 AMD vs. CommonJS？
 请举出一个匿名函数的典型用例？
 请指出浏览器特性检测，特性推断和浏览器 UA 字符串嗅探的区别？
-请尽可能详尽的解释 Ajax 的工作原理。
-使用 Ajax 都有哪些优劣？
-请解释 JSONP 的工作原理，以及它为什么不是真正的 Ajax。
 你使用过 JavaScript 模板系统吗？
 如有使用过，请谈谈你都使用过哪些库？
 请解释 JavaScript 的同源策略 (same-origin policy)。
