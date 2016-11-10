@@ -2937,13 +2937,14 @@ IE是事件冒泡、firefox支持事件冒泡和事件捕获模型
 3、 preventDefault（HTML DOM Event 对象方法）通知浏览器不要执行与事件关联的默认动作。
 
 ```
-function stopBubble(e)  
-{  
-    if (e && e.stopPropagation)  
-        e.stopPropagation()  
-    else
-        window.event.cancelBubble=true
-}  
+//根据情况分别取消DOM或者IE中事件冒泡
+stopPropagation: function(event) {
+    if (event.stopPropagation) {
+        event.stopPropagation();
+    } else {
+        event.cancelBubble = true;
+    }
+}
 
 把这个stopBubble(e)函数放到你想要的阻止事件冒泡函数里面就可以阻止事件冒泡了
 ```
@@ -3407,9 +3408,9 @@ window.onload = function(){
 </ul>
 
 window.onload = function() {
-    var ul = document.getElementById("parent-list");
+    var ulNode = document.getElementById("parent-list");
 
-    EventUtil.addHandler(ul,"click",function(event) {
+    EventUtil.addHandler(ulNode,"click",function(event) {
         event = EventUtil.getEvent(event);
         var target = EventUtil.getTarget(event);
 
@@ -3422,13 +3423,89 @@ window.onload = function() {
 }
 ```
 
+##### 34.表单字段，表单字段属性、方法、和事件
+
+取得所有的表单：document.forms
+取得表单的所有字段：form.elements--比如<input><textarea><button><fieldset>
+
+共有的表单字段属性：type value name form disabled readOnly
+
+共有的表单字段方法：focus() blur()
+
+共有的表单字段事件：onfocus onblur onchange
+
+**js防止form表单重复提交**
+
+1.第一个提交表单后禁用提交按钮
+```
+//要用submit事件来禁用按钮，不要用click，因为click和submit在不同浏览器的出发先后顺序不同，有的浏览器先出发click，后出发submit，则谁提交之前禁用按钮
+var form = document.getElementById("myForm");
+
+EventUtil.addHandler(form,"submit",function(event) {
+    event = EventUtil.getEvent(event);
+    var target = EventUtil.getTarget(event);
+    //取得提交按钮
+    var btn = target.elements["submit-btn"];
+    //禁用他
+    btn.disabled = true;
+});
+```
+2.用一个全局变量控制
+
+
+**加载完页面之后自动聚焦**
+
+共有的表单字段方法：focus() blur()
+
+```
+EventUtil.addHandler(window,"load",function() {
+    document.forms[0].elements[0].focus();
+});
+```
+
+**某字段聚焦之后，失去焦点为空，改变内容为空时则变色等**
+共有的表单字段事件：onfocus onblur onchange
+
+```
+var textbox = document.forms[0].elements[0];
+
+EventUtil.addHandler(textbox,"focus",function(event){
+    event = EventUtil.getEvent(event);
+    var target = EventUtil.getTarget(event);
+
+    if(target.style.backgroundColor != "red") {
+        target.style.backgroundColor = "yellow";
+    }
+});
+EventUtil.addHandler(textbox,"blur",function(event){
+    event = EventUtil.getEvent(event);
+    var target = EventUtil.getTarget(event);
+
+    if(/[]/) {
+        target.style.backgroundColor = "yellow";
+    }
+});
+EventUtil.addHandler(textbox,"focus",function(event){
+    event = EventUtil.getEvent(event);
+    var target = EventUtil.getTarget(event);
+
+
+});
+```
+
+
+
+
+
+
+
+
+
 ##### 34.请指出 document load 和 document DOMContentLoaded 两个事件的区别。
 
 http://www.jianshu.com/p/d851db5f2f30
 
 为何你会使用 load 之类的事件 (event)？此事件有缺点吗？你是否知道其他替代品，以及为何使用它们？
-
-
 
 ##### 35.javascript 代码中的"use strict";是什么意思 ? 使用它区别是什么？
 

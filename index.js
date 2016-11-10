@@ -1,13 +1,6 @@
-var x = 10;
-foo();
+var form = document.getElementById("myForm"),
+    colorFields = form.elements["color"],
+    colorFirst = colorFields[0];
 
-function foo() {
-
-  var x = 20;
-  var y = 30;
-
-  var bar = new Function('console.log(x); console.log(y);');
-
-  bar(); // 10, "y" 未定义
-
-}
+alert(form.elements[0] === colorFirst);
+alert(form.elements[0].nodeName);

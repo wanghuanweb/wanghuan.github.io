@@ -6,6 +6,20 @@
 
 </head>
 <body>
-    <script type="text/javascript" src="index.js"></script>
+    <form id="myForm">
+        <ul>
+            <li><input type="radio" name="color" value="red">Red</li>
+            <li><input type="radio" name="color" value="blue">blue</li>
+            <li><input type="radio" name="color" value="black">black</li>
+        </ul>
+    </form>
+    <script type="text/javascript">
+        var form = document.getElementById("myForm"),
+            colorFields = form.elements["color"],
+            colorFirst = colorFields[0];
+
+        alert(form.elements[0] === colorFirst);
+        alert(form.elements[0].nodeName);
+    </script>
 </body>
 </html>
