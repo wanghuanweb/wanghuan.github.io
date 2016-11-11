@@ -2775,11 +2775,11 @@ myIntro.innerHTML += '... some more content...';
 
 （2）添加、移除、替换、插入
 
-       appendChild()
+       appendChild()--在已有的节点最后插入一个新的子节点，此方法传入一个文档中的一个已有元素，那么就是从这个元素的父节点移除它，再把它添加到指定的位置。
 
        replaceChild()
 
-       insertBefore() //在已有的子节点前插入一个新的子节点
+       insertBefore() //在已有的子节点前插入一个新的子节点，若此方法传入一个文档中的一个已有元素，那么就是从这个元素的父节点移除它，再把它添加到指定的位置。
 
        removeChild()
 
@@ -3426,6 +3426,7 @@ window.onload = function() {
 ##### 34.表单字段，表单字段属性、方法、和事件
 
 取得所有的表单：document.forms
+
 取得表单的所有字段：form.elements--比如<input><textarea><button><fieldset>
 
 共有的表单字段属性：type value name form disabled readOnly
@@ -3481,20 +3482,221 @@ EventUtil.addHandler(textbox,"blur",function(event){
     event = EventUtil.getEvent(event);
     var target = EventUtil.getTarget(event);
 
-    if(/[]/) {
-        target.style.backgroundColor = "yellow";
+    if(/[^\d]/.test(target.value)) {
+        target.style.backgroundColor = "red";
+    } else {
+        target.style.backgroundColor = "";
     }
 });
 EventUtil.addHandler(textbox,"focus",function(event){
     event = EventUtil.getEvent(event);
     var target = EventUtil.getTarget(event);
 
+    if(/[^\d]/.test(target.value)) {
+        target.style.backgroundColor = "red";
+    } else {
+        target.style.backgroundColor = "";
+    }
 
 });
 ```
 
+##### 35.文本框脚本
 
+<input>和<textarea>两种方式表现文本框--input是单行文本框，textarea是多行文本框
 
+<input>--属性(value,size,maxLength)
+value设置文本框的初始值;size指定文本框中能够显示的字符数;maxLength特性则用于指定文本框可以接受的最大字符数
+
+<textarea>--属性(rows,cols)
+
+**选择文本**
+
+**过滤输入**
+
+**自动切换焦点**
+
+**HTML5约束验证API**
+
+##### 36.选择框脚本
+
+选择框由<select>和<option>元素创建
+
+除了所有表单字段的所有属性和方法type,name,value,form,disabled,readOnly,focus(),blur()
+
+**HTMLSelectElement类型还有这些属性和方法**
+
+options,add(newOption,relOption),remove(index),selectedIndex,multiple--是否允许多项选择
+
+**HTMLOptionElement类型还有这些属性和方法**
+
+text,value,index,selected,label
+
+**选择选项**
+
+```
+//只有一个选中项方法
+var selectbox = document.getElementById("selectExam"),
+    selectIndex = selectbox.selectedIndex,
+    selectedOption = selectbox.options[selectIndex];
+
+alert(selectedIndex + selectedOption.text + selectedOption.value);
+```
+
+```
+
+//一个或者多个选中项，取得所有选中项的值
+
+function getSelectedOptions(selectbox) {
+
+    var result = new Array(),
+        option = null;
+
+    for(var i = 0,len = selectbox.length;i < len;i++) {
+        option = selectbox.options[i];
+        if(option.selected) {
+            result.push(option);
+        }
+    }
+
+    return result;
+}
+
+var selectbox = document.getElementById("selectExam"),
+    selectedOptions = getSelectedOptions(selectbox),
+    message = "";
+
+for(var i = 0,len = selectedOptions.length;i < len;i++) {
+    message += selectedIndex + selectedOption.text + selectedOption.value;
+}
+alert(message);
+```
+
+```
+//一个敲击之后的实例
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>test</title>
+
+</head>
+<body>
+    <form id="myForm">
+
+        <select id="selectExam">
+            <option value="1">a</option>
+            <option value="2">b</option>
+            <option value="3">c</option>
+        </select>
+    </form>
+    <script type="text/javascript">
+        var EventUtil = {
+            addHandler:function(element,type,handler) {
+                if(element.addEventListener) {
+                    element.addEventListener(type,handler,false);
+                } else if(element.attachEvent) {
+                    element.attachEvent("on" + type,handler);
+                } else {
+                    element["on" + type] = handler;
+                }
+            }
+        };
+
+        function getSelectedOptions() {
+            var result = new Array(),
+                option = null,
+                message = "";
+
+            var selectbox = document.getElementById("selectExam");
+
+            for(var i = 0,len = selectbox.length;i < len;i++) {
+
+                option = selectbox.options[i];
+                console.log(option.text);
+                if(option.selected) {
+                    result.push(option);
+                }
+            }
+
+            for(var i = 0,len = result.length;i < len;i++) {
+                message += result[i].index + result[i].text + result[i].value;
+            }
+
+            alert(message);
+        }
+
+        var selectbox = document.getElementById("selectExam");
+        EventUtil.addHandler(selectbox,"change",getSelectedOptions);
+    </script>
+</body>
+</html>
+```
+
+**添加选项**
+
+以下三种方法，都是添加新选项到最后一个，若不是添加到最后一个，就应该用DOM技术和insertBefore()
+
+方法一：使用DOM方法
+```
+var newOption = document.createElement("option");
+newOption.appendChild(document.createTextNode("Option text"));
+newOption.setAttribute("value","Option value");
+
+selectbox.appendChild(newOption);
+```
+
+方法二：使用Option构造函数--构造函数接收参数text和value
+```
+var newOption = new Option("Option text","Option value");
+selectbox.appendChild(newOption);
+```
+
+方法三：使用选择框的add方法
+```
+var newOption = new Option("Option text","Option value");
+selectbox.add(newOption,undefined);
+```
+
+**移除选项**
+
+方法一：使用DOM方法
+```
+selectbox.removeChild(selectbox.options[0]);
+```
+
+方法二：使用DOM浏览器
+
+```
+selectbox.options[0] = null;
+```
+
+方法三：使用选择框的remove方法
+```
+selectbox.remove(0);
+```
+
+```
+function clearSelectbox(selectbox) {
+    for(var i = 0,len = selectbox.length;i < len;i++) {
+        selectbox.remove(i);
+    }
+}
+```
+**移动和重排选项**
+
+```
+var select1 = document.getElementById("selectExam"),
+    select2 = document.getElementById("selectExam2");
+
+select2.appendChild(select1.options[0]);
+```
+
+```
+//选择框向前移动一个选项的位置
+var optionToMove = selectbox.options[1];
+selectbox.insertBefore(optionToMove,selectbox.options[optionToMove.index-1]);
+```
 
 
 

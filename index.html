@@ -7,19 +7,26 @@
 </head>
 <body>
     <form id="myForm">
-        <ul>
-            <li><input type="radio" name="color" value="red">Red</li>
-            <li><input type="radio" name="color" value="blue">blue</li>
-            <li><input type="radio" name="color" value="black">black</li>
-        </ul>
+
+        <select id="selectExam">
+            <option value="1">a</option>
+            <option value="2">b</option>
+            <option value="3">c</option>
+        </select>
+
+        <select id="selectExam2">
+            <option value="1">d</option>
+            <option value="2">e</option>
+            <option value="3">f</option>
+        </select>
+
+        <input type="text" size="1" maxlength="50" value="天啊撸傻傻的"></input>
     </form>
     <script type="text/javascript">
-        var form = document.getElementById("myForm"),
-            colorFields = form.elements["color"],
-            colorFirst = colorFields[0];
+        var select1 = document.getElementById("selectExam"),
+            select2 = document.getElementById("selectExam2");
 
-        alert(form.elements[0] === colorFirst);
-        alert(form.elements[0].nodeName);
+        select2.appendChild(select1.options[0]);
     </script>
 </body>
 </html>
