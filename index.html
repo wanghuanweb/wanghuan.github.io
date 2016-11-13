@@ -7,26 +7,61 @@
 </head>
 <body>
     <form id="myForm">
-
-        <select id="selectExam">
-            <option value="1">a</option>
-            <option value="2">b</option>
-            <option value="3">c</option>
-        </select>
-
-        <select id="selectExam2">
-            <option value="1">d</option>
-            <option value="2">e</option>
-            <option value="3">f</option>
-        </select>
-
-        <input type="text" size="1" maxlength="50" value="天啊撸傻傻的"></input>
+        <input name="tel1" type="text" maxlength="3" class="tel">
+        <input name="tel2" type="text" maxlength="4" class="tel">
+        <input name="tel3" type="text" maxlength="5" class="tel">
     </form>
     <script type="text/javascript">
-        var select1 = document.getElementById("selectExam"),
-            select2 = document.getElementById("selectExam2");
+        var EventUtil = {
+            addHandler: function(element,type,handler) {
+                if (element.addEventListener) {
+                    element.addEventListener(type,handler,false);
+                } else if (element.attachEvent) {
+                    element.attachEvent("on" + type,handler);
+                } else {
+                    element["on" + type] = handler;
+                }
+            },
 
-        select2.appendChild(select1.options[0]);
+            getEvent: function(event) {
+                return event ? event : window.event;
+            },
+            getTarget: function(event) {
+                return event.target || event.srcElement;
+            },
+            preventDefault:function(event) {
+                if(event.preventDefault) {
+                    event.preventDefault();
+                } else {
+                    event.returnValue = false;
+                }
+            }
+        };
+
+        function tabForward(event) {
+            event = EventUtil.getEvent(event);
+            var target = EventUtil.getTarget(event);
+
+            if(target && target.nodeName.toUpperCase() === "INPUT") {
+                if(target.value.length == target.maxLength) {
+                    console.log("tab");
+                    var form = target.form;
+
+                    for(var i = 0 ,len = form.length;i < len;i++) {
+                        if(form.elements[i] == target) {
+                            if(form.elements[i+1]) {
+                                form.elements[i+1].focus();
+                            }
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+
+        // var tele = document.getElementByClassName("tel");
+        var form = document.getElementById('myForm');
+        EventUtil.addHandler(form,"keyup",tabForward);
     </script>
 </body>
 </html>

@@ -3415,7 +3415,7 @@ window.onload = function() {
         var target = EventUtil.getTarget(event);
 
         // 检查事件源e.targe是否为Li
-        if(target && target.nodeName.toUpperName === "LI") {
+        if(target && target.nodeName.toUpperCase() === "LI") {
             console.log("List item ",target.id.replace("post-")," was clicked!");
         }
     });
@@ -3503,6 +3503,25 @@ EventUtil.addHandler(textbox,"focus",function(event){
 
 ##### 35.文本框脚本
 
+输入文本框输入文本的常用到keydown，keypress，keyup，textInput事件
+
+keydown：用户按下任意键时触发
+keypress：用户按下字符键时触发
+keyup：用户释放键盘上的键时触发
+
+```
+//触发keypress的时候，charCode会包含按下的键的ASCII编码，IE8之前版本和Opera则是keyCode中保存字符的ASCII编码,所以得到字符编码的方法如下
+var EventUtil = {
+    getCharCode: function(event) {
+        if(typeof event.charCode == "number") {
+            return event.charCode;
+        } else {
+            return event.keyCode;
+        }
+    }
+};
+```
+
 <input>和<textarea>两种方式表现文本框--input是单行文本框，textarea是多行文本框
 
 <input>--属性(value,size,maxLength)
@@ -3514,8 +3533,191 @@ value设置文本框的初始值;size指定文本框中能够显示的字符数;
 
 **过滤输入**
 
+1.屏蔽字符
+
+```
+//1.屏蔽不是数值的字符
+//2.因为有些浏览器按下非字符的话，也可能会触发keypress事件，避免屏蔽极为常用和必要的键，不同浏览器非字符串触发的keypress事件对应的字符编码都小于10
+//3.复制，粘粘，等操作会用到ctrl或者ctrl的组合键，所以就是要检测用户是否按下ctrl键
+EventUtil.addHandler(tele,"keypress",function(event) {
+    event = EventUtil.getEvent(event);
+    var target = EventUtil.getTarget(event);
+    var charCode = EventUtil.getCharCode(event);
+
+    if(!/\d/.test(String.fromCharCode(charCode))  && charCode > 9 && !event.ctrlKey) {
+        EventUtil.preventDefault(event);
+    }
+
+});
+```
+
+```
+//完整代码
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>test</title>
+
+</head>
+<body>
+    <form id="myForm">
+        <input id="tel" type="text" maxlength="50">
+    </form>
+    <script type="text/javascript">
+        var EventUtil = {
+            addHandler: function(element,type,handler) {
+                if (element.addEventListener) {
+                    element.addEventListener(type,handler,false);
+                } else if (element.attachEvent) {
+                    element.attachEvent("on" + type,handler);
+                } else {
+                    element["on" + type] = handler;
+                }
+            },
+
+            getEvent: function(event) {
+                return event ? event : window.event;
+            },
+            getTarget: function(event) {
+                return event.target || event.srcElement;
+            },
+            preventDefault:function(event) {
+                if(event.preventDefault) {
+                    event.preventDefault();
+                } else {
+                    event.returnValue = false;
+                }
+            },
+
+            getCharCode: function(event) {
+                if(typeof event.charCode == "number") {
+                    return event.charCode;
+                } else {
+                    return event.keyCode;
+                }
+            }
+        };
+
+        var tele = document.getElementById("tel");
+        EventUtil.addHandler(tele,"keypress",function(event) {
+            event = EventUtil.getEvent(event);
+            var target = EventUtil.getTarget(event);
+            var charCode = EventUtil.getCharCode(event);
+
+            if(!/\d/.test(String.fromCharCode(charCode))  && charCode > 9 && !event.ctrlKey) {
+                EventUtil.preventDefault(event);
+            }
+
+        });
+    </script>
+</body>
+</html>
+
+```
+
+2.操作剪贴板
+
+```
+var EventUtil = {
+    getClipboardText: function(event) {
+        var clipboardData = (event.clipboardData || window.clipboardData);
+        return clipboardData.getData("text");
+    },
+
+    setClipboardText: function(event,value) {
+        if (event.clipboardData) {
+            return event.clipboardData.setData("text/plain",value);
+        } else if (window.clipboardData) {
+            return window.clipboardData.setData("text",value);
+        }
+    }
+};
+
+EventUtil.addHandler(textbox,"paste",function(event) {
+    event = EventUtil.getEvent(event);
+    var text = EventUtil.getClipboardText(event);
+
+    if(!/^\d*$/.test(text)) {
+        EventUtil.preventDefault(event);
+    }
+});
+```
+
 **自动切换焦点**
 
+在前一个文本框中的字符数达到最大数量的时候，自动将焦点切换到下一个文本框
+
+```
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>test</title>
+
+</head>
+<body>
+    <form id="myForm">
+        <input name="tel1" type="text" maxlength="3" class="tel">
+        <input name="tel2" type="text" maxlength="4" class="tel">
+        <input name="tel3" type="text" maxlength="5" class="tel">
+    </form>
+    <script type="text/javascript">
+        var EventUtil = {
+            addHandler: function(element,type,handler) {
+                if (element.addEventListener) {
+                    element.addEventListener(type,handler,false);
+                } else if (element.attachEvent) {
+                    element.attachEvent("on" + type,handler);
+                } else {
+                    element["on" + type] = handler;
+                }
+            },
+
+            getEvent: function(event) {
+                return event ? event : window.event;
+            },
+            getTarget: function(event) {
+                return event.target || event.srcElement;
+            },
+            preventDefault:function(event) {
+                if(event.preventDefault) {
+                    event.preventDefault();
+                } else {
+                    event.returnValue = false;
+                }
+            }
+        };
+
+        function tabForward(event) {
+            event = EventUtil.getEvent(event);
+            var target = EventUtil.getTarget(event);
+
+            //检测到目标元素且目标还有下一个元素的时候，则focus在下一个元素
+            if(target && target.nodeName.toUpperCase() === "INPUT") {
+                if(target.value.length == target.maxLength) {
+                    console.log("tab");
+                    var form = target.form;
+
+                    for(var i = 0 ,len = form.length;i < len;i++) {
+                        if(form.elements[i] == target) {
+                            if(form.elements[i+1]) {
+                                form.elements[i+1].focus();
+                            }
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+
+        // 用事件代理，减少事件的绑定，减少内存的占用
+        var form = document.getElementById('myForm');
+        EventUtil.addHandler(form,"keyup",tabForward);
+    </script>
+</body>
+</html>
+```
 **HTML5约束验证API**
 
 ##### 36.选择框脚本
