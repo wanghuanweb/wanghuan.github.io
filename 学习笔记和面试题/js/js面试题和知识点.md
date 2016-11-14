@@ -2934,7 +2934,7 @@ IE是事件冒泡、firefox支持事件冒泡和事件捕获模型
 1、cancelBubble（HTML DOM Event 对象属性） ：如果事件句柄想阻止事件传播到包容对象，必须把该属性设为 true。
 注意旧ie的方法：ev.cancelBubble = true;（IE）
 2、stopPropagation（HTML DOM Event 对象方法）：（Firefox）终止事件在传播过程的捕获、目标处理或起泡阶段进一步传播。调用该方法后，该节点上处理该事件的处理程序将被调用，事件不再被分派到其他节点。
-3、 preventDefault（HTML DOM Event 对象方法）通知浏览器不要执行与事件关联的默认动作。
+3、preventDefault（HTML DOM Event 对象方法）通知浏览器不要执行与事件关联的默认动作。
 
 ```
 //根据情况分别取消DOM或者IE中事件冒泡
@@ -3302,6 +3302,52 @@ var EventUtil = {
             event.cancelBubble = true;
         }
     }
+
+    //键盘事件的相关跨浏览器解决方法
+    //触发keypress的时候，charCode会包含按下的键的ASCII编码，IE8之前版本和Opera则是keyCode中保存字符的ASCII编码,所以得到字符编码的方法如下
+    getCharCode: function(event) {
+        if(typeof event.charCode == "number") {
+            return event.charCode;
+        } else {
+            return event.keyCode;
+        }
+    }
+    getClipboardText: function(event) {
+        var clipboardData = (event.clipboardData || window.clipboardData);
+        return clipboardData.getData("text");
+    },
+
+    setClipboardText: function(event,value) {
+        if (event.clipboardData) {
+            return event.clipboardData.setData("text/plain",value);
+        } else if (window.clipboardData) {
+            return window.clipboardData.setData("text",value);
+        }
+    },
+
+    //鼠标按钮的相关事件
+    //event对象的relatedTarget属性提供了相关元素的信息，整个属性只对于mouseover和mouseout事件才有包含值，对于其他时间，整个属性值是null
+    //ie8及之前不支持relatedElement，mouseover触发时IE中的fromElement保存了相关元素，mouseout触发时IE中toElement属性保存着相关元素
+    getRelatedTarget: function(event) {
+        if (event.relatedTarget) {
+            return event.relatedTarget;
+        } else if (event.toElement) {
+            return event.toElement;
+        } else if (event.fromElement) {
+            return event.fromElement;
+        } else {
+            return null;
+        }
+    },
+    //一个取得鼠标滚轮增值量
+    //opra9.5之前的版本，wheelDelta正负号是颠覆的，是120倍数；firefox触发类似事件，鼠标滚动信息保存在detail事件中，向前滚动鼠标滚轮时，属性是-3倍数
+    getWheelDelta: function(event) {
+        if (event.wheelDelta) {
+            return (client.engine.opera && client.engine.opera < 9.5) ? -event.wheelDelta : event.wheelDelta;
+        } else {
+            return -event.detail * 40;
+        }
+    }
 }
 
 var btn = document.getElementById("myBtn"),
@@ -3312,8 +3358,95 @@ var btn = document.getElementById("myBtn"),
 EventUtil.addHandler(btn,"click",handler);
 EventUtil.removeHandler(btn,"click",handler);
 ```
+##### 32.事件类型
 
-##### 32.js是单线程的？什么是同步异步？什么同步异步函数？什么是异步过程？什么是消息队列和事件循环 (event loop)？
+**鼠标与滚轮事件**
+
+mousedown,mouseup,click,dblclick,mouseenter,mouseleave,mousemove,mouseout,mouseover
+
+双击触发事件的顺序
+(1)mousedown
+(2)mouseup
+(3)click
+(4)mousedown
+(5)mouseup
+(6)click
+(7)dblclick
+
+鼠标事件涉及的一些属性(clientX,clientY,pageX,pageY,screenX,scrennY)：
+
+客户区坐标位置(clientX,clientY)---浏览器视口中的特定位置，也就是不包含页面滚动的距离
+页面坐标位置(pageX,pageY)---页面本身而非视口的左边和顶边计算的
+屏幕坐标位置(screenX,screenY)---鼠标相对于整个电脑屏幕的位置
+```
+//ie8以及更早版本不支持事件对象上的页面坐标pageX和pageY，不过可以使用客户区和滚动信息计算出来
+//另外混杂模式用document.body,标准模式用document.documentElement
+
+var div = document.getElementByID("myDiv");
+
+EventUtil.addHandler(div,"click",function(event) {
+    event = EventUtil.getEvent(event);
+    var pageX = event.pageX,
+        pageY = event.pageY;
+
+    if(pageX == undefined) {
+        pageX = event.clientX + (document.body.scrollLeft || document.documentElement.scrollLeft);
+    }
+    if(pageY == undefined) {
+        pageY = event.clientY + (document.body.scrollTop || document.documentElement.scrollTop);
+    }
+};
+```
+
+mouseout,mouseover两个事件有属性relatedTarget
+```
+//event对象的relatedTarget属性提供了相关元素的信息，整个属性只对于mouseover和mouseout事件才有包含值，对于其他时间，整个属性值是null
+//ie8及之前不支持relatedElement，mouseover触发时IE中的fromElement保存了相关元素，mouseout触发时IE中toElement属性保存着相关元素
+getRelatedTarget: function(event) {
+    if (event.relatedTarget) {
+        return event.relatedTarget;
+    } else if (event.toElement) {
+        return event.toElement;
+    } else if (event.fromElement) {
+        return event.fromElement;
+    } else {
+        return null;
+    }
+}
+```
+```
+//一个取得鼠标滚轮增值量
+//opra9.5之前的版本，wheelDelta正负号是颠覆的，是120倍数；firefox触发类似事件，鼠标滚动信息保存在detail事件中，向前滚动鼠标滚轮时，属性是-3倍数
+getWheelDelta: function(event) {
+    if (event.wheelDelta) {
+        return (client.engine.opera && client.engine.opera < 9.5) ? -event.wheelDelta : event.wheelDelta;
+    } else {
+        return -event.detail * 40;
+    }
+}
+```
+
+**键盘事件**
+
+keydown：用户按下任意键时触发
+keypress：用户按下字符键时触发
+keyup：用户释放键盘上的键时触发
+
+```
+var EventUtil = {
+    //触发keypress的时候，charCode会包含按下的键的ASCII编码，IE8之前版本和Opera则是keyCode中保存字符的ASCII编码,所以得到字符编码的方法如下
+    getCharCode: function(event) {
+        if(typeof event.charCode == "number") {
+            return event.charCode;
+        } else {
+            return event.keyCode;
+        }
+    }
+};
+```
+
+**设备事件**
+##### 33.js是单线程的？什么是同步异步？什么同步异步函数？什么是异步过程？什么是消息队列和事件循环 (event loop)？
 
 事件循环是js的运行机制
 
@@ -3356,7 +3489,7 @@ eg：setTimeout(fn, 1000);其中的setTimeout就是异步过程的发起函数�
 
 事件循环：主线程通过事件循环过程去取消息（消息队列中的每条消息实际上都对应着一个事件。），事件循环是指主线程重复从消息队列中取消息、执行的过程。实际上，主线程只会做一件事情，就是从消息队列里面取消息、执行消息，再取消息、再执行。当消息队列为空时，就会等待直到消息队列变成非空。而且主线程只有在将当前的消息执行完成后，才会去取下一个消息。这种机制就叫做事件循环机制，取一个消息并执行的过程叫做一次循环。
 
-##### 33.请解释事件代理 (event delegation)or事件委托。
+##### 34.请解释事件代理 (event delegation)or事件委托。
 
 事件委托和移除事件处理程序都是考虑到了----内存和性能。
 
@@ -3423,7 +3556,7 @@ window.onload = function() {
 }
 ```
 
-##### 34.表单字段，表单字段属性、方法、和事件
+##### 35.表单字段，表单字段属性、方法、和事件
 
 取得所有的表单：document.forms
 
@@ -3501,7 +3634,7 @@ EventUtil.addHandler(textbox,"focus",function(event){
 });
 ```
 
-##### 35.文本框脚本
+##### 36.文本框脚本
 
 输入文本框输入文本的常用到keydown，keypress，keyup，textInput事件
 
@@ -3510,8 +3643,8 @@ keypress：用户按下字符键时触发
 keyup：用户释放键盘上的键时触发
 
 ```
-//触发keypress的时候，charCode会包含按下的键的ASCII编码，IE8之前版本和Opera则是keyCode中保存字符的ASCII编码,所以得到字符编码的方法如下
 var EventUtil = {
+    //触发keypress的时候，charCode会包含按下的键的ASCII编码，IE8之前版本和Opera则是keyCode中保存字符的ASCII编码,所以得到字符编码的方法如下
     getCharCode: function(event) {
         if(typeof event.charCode == "number") {
             return event.charCode;
@@ -3720,7 +3853,7 @@ EventUtil.addHandler(textbox,"paste",function(event) {
 ```
 **HTML5约束验证API**
 
-##### 36.选择框脚本
+##### 37.选择框脚本
 
 选择框由<select>和<option>元素创建
 
@@ -3899,6 +4032,7 @@ select2.appendChild(select1.options[0]);
 var optionToMove = selectbox.options[1];
 selectbox.insertBefore(optionToMove,selectbox.options[optionToMove.index-1]);
 ```
+
 
 
 
