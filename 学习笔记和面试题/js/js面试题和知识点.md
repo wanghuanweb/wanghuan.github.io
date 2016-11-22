@@ -4033,19 +4033,247 @@ var optionToMove = selectbox.options[1];
 selectbox.insertBefore(optionToMove,selectbox.options[optionToMove.index-1]);
 ```
 
+##### 38.BOM
+window对象
+location对象
+navigator对象
+screen对象
+history对象
+##### 39.如何进行客户端检测？检测浏览器版本版本有哪些方式？
+
+**客户端检测**--客户端检测的三种方法：能力检测，怪癖检测，用户代理检测。
+
+浏览器普遍存在的不一致性问题，用各种客户端检测方法，来突破或者规避种种局限性。但是，只要能找到更通用的方法，就应该采用。不到万不得已，不要使用客户端检测。
 
 
+**能力检测**--人们广泛接受的客户端检测形式就是能力检测
 
+不是识别特定的浏览器，是识别浏览器的能力。
 
+1.先检测达成目的最常用的特性，可以保证代码最优 2.测试实际要用到的特性，而不是测试这个用那个
 
+```
+// 基本模式
+if (object.propertyInQuestion) {
+    // 使用object.propertyInQuestion
+}
+// IE5.0前不支持document.getElementById()
+function getElement(id) {
+    if(document.getElementById) {
+        return document.getElementById(id);
+    } else if(document.all) {
+        return document.all[id];
+    } else {
+        throw new Error("No way to retrieve element!");
+    }
+}
+```
 
-##### 34.请指出 document load 和 document DOMContentLoaded 两个事件的区别。
+**怪癖检测**
 
-http://www.jianshu.com/p/d851db5f2f30
+怪癖检测是识别浏览器的特殊行为，也就是不是看浏览器的能力而是看浏览器存在的缺陷。
 
-为何你会使用 load 之类的事件 (event)？此事件有缺点吗？你是否知道其他替代品，以及为何使用它们？
+**用户代理检测**
 
-##### 35.javascript 代码中的"use strict";是什么意思 ? 使用它区别是什么？
+用户代理检测通过检测用户代理字符串来确定实际使用的浏览器。这个字符串可以通过navigator.userAgent来访问
+
+引擎和浏览器考虑顺序：opera--webkit(chrome和safari)--khtml--gecko(firefox)--ie
+```
+var client = function(){  
+
+    var engine = {  
+
+        //呈现引擎  
+        ie : 0,  
+        gecko : 0,  
+        webkit : 0,  
+        khtml : 0,  
+        opera : 0,  
+
+        //完整的版本号
+        ver : null  
+    }; 
+ 
+    //浏览器  
+    var browser = {  
+
+        //主要浏览器  
+        ie : 0,  
+        firefox : 0,  
+        konq : 0,  
+        opera : 0,  
+        chrome : 0,  
+        safari : 0,  
+
+        //具体的版本号  
+        ver : null  
+    };  
+
+    //平台、设备和操作系统
+    var system = {  
+        win : false,  
+        mac : false,  
+        x11 : false,  //unix系统
+
+        //移动设备  
+        iphone : false,  
+        ipod : false,  
+        nokiaN  : false,  
+        winMobile : false,  
+        macMobile : false,  
+
+        //游戏系统  
+        wii : false,  
+        ps　:false  
+    };  
+      
+      
+    //检测呈现引擎和浏览器  
+    var ua  = navigator.userAgent; 
+
+    //第一位检测到的是opera，opera的用户代理字符串不会将自己标识为opera，所以优先考虑opera
+    if(window.opera){  
+        engine.ver = browser.ver = window.opera.version();  
+        engine.opera = browser.opera = parseFloat(engine.ver);  
+    }
+    //第二位考虑的引擎是webkit，因为webkit的用户代理字符串中包含Gecko和KHTML字符串
+    else if(/AppleWebKit\/(\S+)/.test(ua)){  
+        //RegExp["$1"]是第一个子匹配
+        engine.ver = RegExp["$1"];  
+        engine.webkit = parseFloat(engine.ver);  
+
+        //确定是chrome还是safari
+        if(/Chrome\/(\S+)/.test(ua)){  
+            browser.ver = RegExp["$1"];  
+            browser.chrome = parseFloat(browser.ver);  
+        }else if(/Version\/(\S+)/.test(ua)){  
+            browser.ver = RegExp["$1"];  
+            browser.safari = parseFloat(browser.ver);  
+        }else{  
+            var safariVersion = 1;  
+            if(engine.webkit < 100){  
+                safariVersion = 1;  
+            }else if(engine.webkit < 312){  
+                safariVersion = 1.2;  
+            }else if(engine.webkit < 412){  
+                safariVersion = 1.3;  
+            }else{  
+                safariVersion = 2;  
+            }  
+            browser.safari = browser.ver = safariVersion;  
+        }  
+    }
+
+    //第三位考虑的是KHTML，因为ktml的用户代理字符串中也包含“Gecko”
+    else if(/KHTML\/(\S+)/.test(ua) || /Konqueror\/([^;]+)/.test(ua)){  
+        engine.ver = browser.ver = RegExp["$1"];  
+        engine.khtml = parseFloat(engine.ver);  
+    }
+
+    //第四位考虑的是Gecko，([^\)]+)这个是表示是除了)开头的其他字符
+    else if(/rv:([^\)]+)\) Gecko\/\d{8}/.test(ua)){  
+        engine.ver = browser.ver = RegExp["$1"];  
+        engine.gecko = parseFloat(engine.ver);  
+          
+        //确定是不是Firefox，检测firefox也是先找到firefox这个关键字
+        if(/Firefox\/(\S+)/.test(ua)){  
+            browser.ver = RegExp["$1"];  
+            browser.firefox = parseFloat(browser.ver);  
+        }  
+    }
+
+    //第五位考虑的是ie
+    else if(/MSIE ([^;]+)/.test(ua)){  
+        engine.ver = browser.ver = RegExp["$1"];  
+        engine.ie = browser.ie = parseFloat(browser.ver);  
+    }  
+
+    //检测浏览器
+    browser.ie = engine.ie;  
+    browser.opera = engine.opera;  
+      
+    //检测平台        
+    var p = navigator.platform;  
+    system.win = p.indexOf("Win") == 0;  
+    system.mac = p.indexOf("Mac") == 0;  
+    system.x11 = (p == "x11") || (p.indexOf("Linux") == 0);  
+      
+    //检测windows操作系统
+    if(system.win){  
+        if(/Win(?:dows )?([^do]{2})\s?(\d+\.\d+)?/.test(ua)){  
+            if(RegExp["$1"] == "NT"){  
+                switch(RegExp["$2"]){  
+                    case "5.0" :   
+                        system.win = "2000";  
+                        break;  
+                    case "5.1" :  
+                        system.win = "XP";  
+                        break;  
+                    case "6.0" :   
+                        system.win = "Vista";  
+                        break;  
+                    default :  
+                        system.win = "NT";  
+                        break;                            
+                }  
+            }else if(RegExp["$1"] == "9x"){  
+                system.win = "ME";  
+            }else{  
+                system.win = RegExp["$1"];  
+            }  
+        }  
+    }  
+
+    //移动设备
+    system.iphone = ua.indexOf("iPhone") > -1;  
+    system.ipod = ua.indexOf("iPod") > -1;  
+    system.ipad = ua.indexOf("iPad") > -1;  
+    system.nokiaN = ua.indexOf("nokiaN") > -1;  
+
+    //windows mobile
+    if(system.win == "CE") {
+        system.winMobile = system.win;
+    } else if (system.win == "Ph") {
+        if(/Windows Phone OS (\d+.\d+)/.test(ua)) {
+            ;
+            system.win = "Phone";
+            system.winMobile = parseFloat(RegExp["$1"]);
+        }
+    }
+
+    //检测ios版本
+    if (system.mac && ua.indexOf("Mobile") > -1) {
+        if(/CPU (?:iphone)?OS (\d+_\d+)/.test(ua)) {
+            system.ios = parseFloat(RegExp.$1.replace("_","."));
+        } else {
+            system.ios = 2;//不能真正检测出来，所以只能猜测
+        }
+    }
+
+    //检测Android版本
+    if(/Android (\d+\.\d+)/.test(ua)) {
+        system.android = parseFloat(RegExp.$1);
+    }
+
+    //游戏系统
+    system.wii = ua.indexOf("Wii") > -1;  
+    system.ps = /playstation/i.test(ua);  
+
+    //返回这些对象    
+    return {  
+        engine : engine,  
+        browser : browser,  
+        system : system  
+    };  
+}();   
+```
+##### 40.知道什么是webkit么? 知道怎么用浏览器的各种工具来调试和debug代码么?你使用哪些工具和技术来调试 JavaScript 代码？
+
+浏览器引擎和浏览器：opera--webkit(chrome和safari)--khtml--gecko(firefox)--ie
+
+webkit是一个引擎，此引擎的主要的使用者有Safari，Chrome。
+
+##### 41.javascript 代码中的"use strict";是什么意思 ? 使用它区别是什么？
 
 **use strict**：严格模式
 
@@ -4086,11 +4314,11 @@ function f(){
 4.为未来新版本的Javascript做好铺垫
 
 
-##### 36.如何判断一个对象是否属于某个类？
+##### 42.如何判断一个对象是否属于某个类？
 
 object instanceof construtor
 
-##### 37.new操作符具体干了什么呢?
+##### 43.new操作符具体干了什么呢?
 
 new操作符：
 
@@ -4117,6 +4345,36 @@ Function.prototype._new_ = function() {
     return (typeof resultObj === "object" && resultObj) || newObj;
 };
 ```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+##### 34.请指出 document load 和 document DOMContentLoaded 两个事件的区别。
+
+http://www.jianshu.com/p/d851db5f2f30
+
+为何你会使用 load 之类的事件 (event)？此事件有缺点吗？你是否知道其他替代品，以及为何使用它们？
+
+
 
 ##### 38.js延迟加载的方式有哪些？异步加载的方式？
 
@@ -4435,8 +4693,6 @@ javaScript中hasOwnProperty函数方法是返回一个布尔值，指出一个�
 使用浏览器的前进，后退键的时候会重新发送请求，没有合理地利用缓存
 单页面无法记住之前滚动的位置，无法在前进，后退的时候记住滚动的位置
 
-##### 75.知道什么是webkit么? 知道怎么用浏览器的各种工具来调试和debug代码么?
-
 
 ##### 76.如何测试前端代码么? 知道BDD, TDD, Unit Test么? 知道怎么测试你的前端工程么(mocha, sinon, jasmin, qUnit..)?
 
@@ -4452,8 +4708,6 @@ javaScript中hasOwnProperty函数方法是返回一个布尔值，指出一个�
 
 ##### 80.用js实现千位分隔符?(来源：前端农民工，提示：正则+replace)
 
-
-##### 81.检测浏览器版本版本有哪些方式？
 
 ##### 82.What is a Polyfill?
 What is the extent of your experience with Promises and/or their polyfills?
@@ -4472,7 +4726,6 @@ What is the extent of your experience with Promises and/or their polyfills?
 请解释什么是单页应用 (single page app), 以及如何使其对搜索引擎友好 (SEO-friendly)。
 使用 Promises 而非回调 (callbacks) 优缺点是什么？
 使用一种可以编译成 JavaScript 的语言来写 JavaScript 代码有哪些优缺点？
-你使用哪些工具和技术来调试 JavaScript 代码？
 请解释可变 (mutable) 和不变 (immutable) 对象的区别。
 请举出 JavaScript 中一个不变性对象 (immutable object) 的例子？
 不变性 (immutability) 有哪些优缺点？
