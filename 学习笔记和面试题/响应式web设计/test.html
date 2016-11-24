@@ -5,26 +5,75 @@
     <title>test</title>
 </head>
 <body>
-    <p class="text">erer sdg hgfgj</p>
-    <div class="img-wrap">
-        <img src="robots.jpg" alt="" class="responsive">
-        <p>erer sdg hgfgj</p>
+
+    <div class="small-menu">
+        <form>
+            <select name="list" onchange = "window.location.href = this.form.list.options[this.form.list.selectedIndex].value">
+                <option value = "http://www.baidu.com">百度</option>
+                <option value = "http://v.qq.com/">腾讯</option>
+                <option value = "https://www.aliyun.com/?utm_medium=text&utm_source=baidu&utm_campaign=yzj&utm_content=se_76074">阿里</option>
+            </select>
+        </form>
+    </div>
+
+    <div class="big-menu">
+        <ul>
+            <li>
+                <a href="http://www.baidu.com">百度</a>
+            </li>
+            <li>
+                <a href="http://v.qq.com">腾讯</a>
+            </li>
+            <li>
+                <a href="https://www.aliyun.com/?utm_medium=text&utm_source=baidu&utm_campaign=yzj&utm_content=se_76074">阿里</a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="content">
+        <p>wersdgsdfgbxdfgsftergdfzvas大法师提供任何风格和是分厂V型才刚毕业儿童二塔问题儿童而已差不多发给是否儿童水电费三个人图一uyiuyioo</p>
     </div>
 
     <style>
-    /*但此时图片还是静态的，一直宽度不变*/
-        p.text{
-            float: left;
-            width: 60%;
+        @media screen and (max-width: 800px) {
+            .small-menu {
+                display: inline;
+            }
+            .big-menu {
+                display: none;
+            }
         }
-        div.img-wrap{
-            float: right;
-            width: 40%;
+        @media screen and (min-width: 801px) and (max-width:1024px){
+            .small-menu {
+                display: none;
+            }
+            .big-menu {
+                display: inline;
+                width: 100%;
+            }
+            .big-menu ul {
+                list-style-type: none;
+            }
+            .big-menu ul li {
+                display: inline;
+            }
+            .content{
+                width: 100%;
+            }
         }
-        /*实现方法----可以适应浏览器的窗口的大小了*/
-        img.responsive{
-            max-width: 100%;
-            height: auto;
+        @media screen and (min-width: 1025px) {
+            .small-menu {
+                display: none;
+            }
+            .big-menu {
+                display: inline;
+                width: 20%;
+                float: left;
+            }
+            .content{
+                float: right;
+                width: 80%;
+            }
         }
     </style>
 </body>

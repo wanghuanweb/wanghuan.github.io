@@ -1460,6 +1460,25 @@ Document类型表示文档。document对象是Document的一个实例，表示�
 
 http://www.w3school.com.cn/jsref/dom_obj_document.asp
 
+window(BOM对象)和document(DOM对象)都可以访问窗口大小：
+
+窗口大小window.innerWidth,window.innerHeight,window.outerWidth,window.outerHeight
+窗口大小document.documentElement.clientWidth,document.body.clientWidth
+```
+var pageWidth = window.innerWidth,
+    pageHeight = window.innerHeight;
+//IE8更早版本中没提供取得当前浏览器窗口尺寸的属性，但可以通过DOM提供了页面可见区域的相关信息
+if (typeof pageWidth != "number") {
+    //判断是否是标准模式，标准模式则用document.documentElement
+    if(document.compatMode == "CSS1Compat") {
+        pageWidth = document.documentElement.clientWidth;
+        pageHeight = document.documentElement.clientHeight;
+    } else {
+        pageWidth = document.body.clientWidth;
+        pageHeight = document.body.clientHeight;
+    }
+}
+```
 
 ##### 15.null，undefined的区别？
 
@@ -4034,11 +4053,62 @@ selectbox.insertBefore(optionToMove,selectbox.options[optionToMove.index-1]);
 ```
 
 ##### 38.BOM
-window对象
-location对象
-navigator对象
-screen对象
-history对象
+**window对象**
+
+BOM就是浏览器窗口对象模型，顶级对象就是window，window对象表示浏览器中一个打开的窗口，也就是窗体，所有的全局对象和函数都属于window对象的属性和方法。
+
+1.窗口位置window.screenLeft,window.screenTop：
+
+IE,safari,chrome,opera用screenLeft和screenTop分别表示窗口相对于屏幕左边和屏幕上边的位置
+firefox用screenX和screenY分别表示窗口相对于屏幕左边和屏幕上边的位置
+```
+//跨浏览器
+var leftPos = (typeof window.screenLeft == "number") ? window.screenLeft : window.screenX,
+    topPos = (typeof window.screenTop == "number") > window.screenTop : window.screenY;
+```
+
+2.窗口大小window.innerWidth,window.innerHeight,window.outerWidth,window.outerHeight
+
+```
+var pageWidth = window.innerWidth,
+    pageHeight = window.innerHeight;
+//IE8更早版本中没提供取得当前浏览器窗口尺寸的属性，但可以通过DOM提供了页面可见区域的相关信息
+if (typeof pageWidth != "number") {
+    //判断是否是标准模式，标准模式则用document.documentElement
+    if(document.compatMode == "CSS1Compat") {
+        pageWidth = document.documentElement.clientWidth;
+        pageHeight = document.documentElement.clientHeight;
+    } else {
+        pageWidth = document.body.clientWidth;
+        pageHeight = document.body.clientHeight;
+    }
+}
+```
+
+3.导航和打开窗口
+
+open() 方法用于打开一个新的浏览器窗口或查找一个已命名的窗口。
+window.open(URL,name,features,replace)
+
+name：第二个参数是创建一个新窗口的名字，也可以是任何一个特殊的窗口名称：(self, parent, top, blank)
+
+**location对象**
+**navigator对象**
+**screen对象**
+
+screen对象是js中用处不大的对象之一。可以包含浏览器窗口外部的显示器的信息。
+screen.height screent.width
+
+**history对象**
+
+history对象保存了用户上网的历史激励吗，从窗口被打开的那一刻算起。
+```
+history.go(-1);//后退一页
+history.go(1);//前进一页
+history.go("wrox.com");//跳转到最近的wrox.com那个界面
+history.back();
+history.forward();
+```
 ##### 39.如何进行客户端检测？检测浏览器版本版本有哪些方式？
 
 **客户端检测**--客户端检测的三种方法：能力检测，怪癖检测，用户代理检测。
@@ -4346,49 +4416,13 @@ Function.prototype._new_ = function() {
 };
 ```
 
+##### 44.那些操作会造成内存泄漏？
 
+1.不规范的js代码
 
+比如意外的全局变量，不使用var来定义，js中如果不用 var 声明变量,该变量将被视为 window 对象(全局对象)的属性,也就是全局变量.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-##### 34.请指出 document load 和 document DOMContentLoaded 两个事件的区别。
-
-http://www.jianshu.com/p/d851db5f2f30
-
-为何你会使用 load 之类的事件 (event)？此事件有缺点吗？你是否知道其他替代品，以及为何使用它们？
-
-
-
-##### 38.js延迟加载的方式有哪些？异步加载的方式？
-
-defer和async、动态创建DOM方式（用得最多）、按需异步载入js
-
-**异步加载的方式**
-
-(1) defer，只支持IE
-
-(2) async：
-
-(3) 创建script，插入到DOM中，加载完毕后callBack
-
-##### 39.对JSON的了解？
+##### 45.对JSON的了解？
 
 ###### 1.什么是JSON
 
@@ -4564,7 +4598,7 @@ var bookCopy = JSON.parse(jsonText,function(key,value){
 alert(bookCopy.releaseDate.getFullYear());
 ```
 
-##### 40.Ajax 是什么? 如何创建一个Ajax？请尽可能详尽的解释 Ajax 的工作原理？使用 Ajax 都有哪些优劣？
+##### 46.Ajax 是什么? 如何创建一个Ajax？请尽可能详尽的解释 Ajax 的工作原理？使用 Ajax 都有哪些优劣？
 
 
 ajax的全称：Asynchronous Javascript And XML。
@@ -4581,7 +4615,7 @@ ajax的全称：Asynchronous Javascript And XML。
 
 (6)使用JavaScript和DOM实现局部刷新
 
-##### 41.请解释 JSONP 的工作原理，以及它为什么不是真正的 Ajax。
+##### 47.请解释 JSONP 的工作原理，以及它为什么不是真正的 Ajax。
 
 
 
@@ -4589,6 +4623,41 @@ ajax的全称：Asynchronous Javascript And XML。
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+##### 34.请指出 document load 和 document DOMContentLoaded 两个事件的区别。
+
+http://www.jianshu.com/p/d851db5f2f30
+
+为何你会使用 load 之类的事件 (event)？此事件有缺点吗？你是否知道其他替代品，以及为何使用它们？
+
+
+
+##### 38.js延迟加载的方式有哪些？异步加载的方式？
+
+defer和async、动态创建DOM方式（用得最多）、按需异步载入js
+
+**异步加载的方式**
+
+(1) defer，只支持IE
+
+(2) async：
+
+(3) 创建script，插入到DOM中，加载完毕后callBack
 
 ##### 27.如何解决跨域问题?
 
@@ -4633,19 +4702,8 @@ javaScript中hasOwnProperty函数方法是返回一个布尔值，指出一个�
 
 ##### 23. [].forEach.call($$("*"),function(a){ a.style.outline="1px solid #"+(~~(Math.random()*(1<<24))).toString(16) })  能解释一下这段代码的意思吗？
 
-##### 41.数组和对象有哪些原生方法，列举一下？
-
 
 ##### 42.JS 怎么实现一个类。怎么实例化这个类
-
-
-##### 42.那些操作会造成内存泄漏？
-
-1.不规范的js代码
-
-比如意外的全局变量，不使用var来定义，js中如果不用 var 声明变量,该变量将被视为 window 对象(全局对象)的属性,也就是全局变量.
-
-
 
 ##### 61.需求：实现一个页面操作不会整页刷新的网站，并且能在浏览器前进、后退时正确响应。给出你的技术实现方案？
 
