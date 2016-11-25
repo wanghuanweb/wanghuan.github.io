@@ -7,11 +7,13 @@
 
 /**
  * 2D上下文绘图：
- * 填充和描边属性：fillStyle和strokeStyle--属性值可以是字符串、渐变对象或模式对象
+ * 填充和描边属性：fillStyle填充和strokeStyle描边------属性值可以是字符串、渐变对象或模式对象
+ * 线宽lineWidth:context.lineWidth = value;
  * 1.矩形：矩阵是唯一一个可以直接在2D上下文绘制的图形，绘制矩形有关的方法：
  * 		fillRect()
  * 		strokeRect()
  * 		clearRect()
+ * 		三个方法接收4个参数：矩形x坐标，矩形y坐标，矩形宽度和矩形高度
  * 2.绘制路径：绘制路径之后用stroke(),fill()绘制图形
  *      绘制路径的方法：
  *      beginPath()--先调用此方法，才可绘制新的路径
