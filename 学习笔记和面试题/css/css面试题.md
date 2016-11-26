@@ -484,6 +484,11 @@ Vertical-align is similar. It also applies to table cells and it works with some
 
 **1.增加了border-raduis特性**
 
+border-top-left-radius
+border-top-right-radius
+border-bottom-right-raduis
+border-bottom-left-raduis
+
 **2.新增了选择器和伪类**
 
 新增的选择器：

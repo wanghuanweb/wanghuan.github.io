@@ -321,10 +321,338 @@ percent 注意100%是16px，也就是1em
     }
 </style>
 ```
-##### 2.5为字体添加阴影效果
-##### 2.6基于边框半径的圆角实现
+
 #### 3.响应式布局
 创建可实际应用到项目中的响应式布局。如何使用视窗和媒介查询，是的Web站点在不同视区大小和类型下变成响应式。
+
+##### 3.1基于min-width和max-width属性的响应式布局
+
+**准备工作**
+
+在极小的视窗限制下，把浮动元素的多个列合并显示成一个列。
+
+**实现方式**
+
+浏览器打开HTML页面，接下来页面布局平滑的从三列变成两列，最终变成只有单列的布局方式。
+
+```
+<body>
+    <article>
+        <h1>picture and article</h1>
+        <div class="one float">
+            <img src="robots.jpg">
+        </div>
+        <div class="two float">
+            <p>ewrwearqerwerty rtys et waR423 RTWERTERT EWR WERT</p>
+        </div>
+        <div class="three float">
+            <p>ewrwearXCVBHRGUY UJER QWE tuyui tuirtsy wea fdzfgWER YU FJFCH</p>
+        </div>
+    </article>
+
+    <style>
+        article {
+            width: 100%;
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+        h1{
+            text-align: center;
+        }
+        .one{
+            min-width: 500px;
+        }
+        img{
+            width: 100%;
+            height: auto;
+        }
+        .float{
+            max-width: 350px;
+            float: left;
+            border: 1px solid black;
+        }
+    </style>
+</body>
+```
+**工作原理**
+
+1.施加于列元素上的max-width属性使得列的宽度不是固定的，但是同时限定了最大值。相对于设置静态的宽度，该方法赋予布局更好的灵活性。
+2.图片所在列利用min-wdith属性，能够响应父元素宽度的变化，比如增加或收缩宽度。
+3.最终， 通过float属性，整个页面能够从三列的布局方式平滑的过渡到单列布局方式，一旦没有足够的空间并列容纳float，最后一个列元素将会从列布局中移除，并放置在新的一行中。
+
+##### 3.2基于相对内边距的布局控制
+
+**准备工作**
+
+比如为博客页面设计的一个简单布局，需要有评论和回复评论的功能。采用相对内边距的方法就能实现该边距。
+
+**实现方式**
+
+```
+<div class="content">
+    <h1>Control your layout with relative padding</h1>
+    <p>
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+        Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+        Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+    </p>
+
+    <div class="comments">
+        <h2>Comments</h2>
+
+        <div class="comment">
+            <p>
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+            </p>
+
+            <div class="comment">
+                <p>
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                    Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                </p>
+
+                <div class="comment">
+                    <p>
+                        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="comment">
+            <p>
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+            </p>
+        </div>
+
+        <div class="comment">
+            <p>
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+            </p>
+        </div>
+    </div>
+</div>
+
+<style>
+    .content {
+        padding: 0 5% 0 5%;
+        border: 1px solid black;
+    }
+    .comments {
+        padding: 0 10% 0 20%;
+        border: 1px solid black;
+    }
+    .comment {
+        padding: 0 0 0 10%;
+        border: 1px solid black;
+    }
+</style>
+```
+**工作原理**
+
+随着页面宽度的变化，相对内边距属性自适应的调整自身宽度值。
+
+```
+.content {
+    padding: 0 5% 0 5%;
+}
+.comments {
+    padding: 0 10% 0 20%;
+}
+.comment {
+    padding: 0 0 0 10%;
+}
+```
+##### 3.3为CSS添加媒介查询
+
+**准备工作**
+
+渲染的页面能够自适应于所有的设备和所有的可能场景。这样可以创建简单的web页面，页面可适用于不同窗口大小的浏览器、不同的设备以及其他可能呈现的方式。
+
+**实现方式**
+
+这条配置信息作用域多有的竖屏(横屏)显示设备,可以使得移动设备在横竖屏切换的时候显示出不同的效果。该设置对于桌面设备同样适用。
+```
+@media (orientation: portrait){ }
+```
+
+基于height以width的媒介查询允许设置针对特定大小屏幕的样式
+```
+@media (height: 500px){ }
+```
+
+给所有页面施加同样的样式，无论浏览器窗口大小是多少，以指定的大小在设备上渲染页面。
+```
+@media (device-width: 500px){ }
+```
+
+对此媒介查询用于对16/9比率的设备窗口(非print类型)进行样式设置。
+```
+@media screen and(device-aspect-ratio:16/9){ }
+```
+
+设定选项适用于采用电视作为视频输出的设备。
+```
+@media tv{ }
+```
+
+媒介查询中，min-width和max-width是最有用的两个。基于该媒介查询能为任何窗口大小的设备设置响应式杨思，其中包含哪些屏幕很小的移动设备。首先设置最小(即移动)设备的相关样式，接下来设置那些最常用大小屏幕的相关样式，最后通过min-wdith来适配最大尺寸的屏幕。
+```
+@media screen and (max-width:960px) { }
+@media screen and (min-width:961px) and (max-width:1280px) { }
+@media screen and (min-width:1281px) and (max-width:1336px) { }
+@media screen and (min-width:1336px) { }
+```
+
+创建了与项目显示设备相关的媒介查询后，通过给媒介查询设定不同的属性值进行样式的配置
+```
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>test</title>
+</head>
+<body>
+    <h1>Add Media Query to your CSS</h1>
+    <div>
+        <img src="robots.jpg"/>
+        <p>
+            easgtseryugykcvhnzdfysrtuydtiguhkzystrujnbvsdfgcvbzdftejyjk5f4yhrdtyJtjhshteasgtseryugykcvhnzdfys
+            rtuydtiguhkzystrujnbvsdfgcvbzdftejyjk5f4yhrdtyJtjhshteasgtseryugykcvhnzdfysrtuydtiguhkzystrujnbvsd
+            fgcvbzdftejyjk5f4yhrdtyJtjhsht
+        </p>
+    </div>
+    <style>
+        @media tv {
+            body {color: blue;}
+            h1 {
+                font-weight: bold;
+                font-size: 140%;
+            }
+            img {
+                border:  2px solid #ccc;
+
+                float: left;
+                width: 20%;
+                padding: 2%;
+                margin: 2%;
+            }
+            p {
+                width: 62%;
+                float: right;
+                font-size: 110%;
+                padding: 2%;
+            }
+        }
+        @media screen and (max-width:960px) {
+            body {color: #000;}
+            h1 {
+                font-weight: bold;
+                font-size: 120%;
+            }
+            img {
+                border:  2px solid #ccc;
+
+                float: right;
+                width: 20%;
+                padding: 1%;
+                margin: 1%;
+            }
+            p {
+                width: 80%;
+                float: left;
+                font-size: 60%;
+            }
+        }
+        @media screen and (min-width:961px) and (max-width:1280px) {
+            body {color: #000;}
+            h1 {
+                font-weight: bold;
+                font-size: 120%;
+            }
+            img {
+                border:  2px solid #ccc;
+
+                float: right;
+                width: 20%;
+                padding: 1%;
+                margin: 1%;
+            }
+            p {
+                width: 76%;
+                float: left;
+                font-size: 60%;
+            }
+        }
+        @media screen and (min-width:1281px) {
+            body {color: #000;}
+            h1 {
+                font-weight: bold;
+                font-size: 120%;
+            }
+            img {
+                border:  2px solid #ccc;
+
+                float: right;
+                width: 20%;
+                padding: 1%;
+                margin: 1%;
+            }
+            p {
+                width: 70%;
+                float: left;
+                font-size: 100%;
+            }
+        }
+    </style>
+</body>
+</html>
+
+```
+**工作原理**
+
+通过这些不同的设置后，就能够发现在不同的设备中，页面呈现出了不同的样式效果。当然，在你的站点中可以通过组合不同的设备来实现更多样化的响应式特效。
+
+##### 3.4基于媒介查询创建响应式宽度布局
+
+**准备工作**
+
+**实现方式**
+
+**工作原理**
+
+##### 3.5基于媒介查询改变图片大小
+
+**准备工作**
+
+**实现方式**
+
+**工作原理**
+
+##### 3.6基于媒介查询隐藏元素
+
+**准备工作**
+
+**实现方式**
+
+**工作原理**
+
+##### 3.7创建平滑过渡的响应式布局
+
+**准备工作**
+
+**实现方式**
+
+**工作原理**
+
 #### 4.使用响应式框架
 使用新型框架，通过最新的响应式方法和交互方式，既快速又可靠地完成响应式站点的设计和交付，以及如何将旧的静态框架转换为响应式类型的框架。
 #### 5.设计移动设备优先的web应用
