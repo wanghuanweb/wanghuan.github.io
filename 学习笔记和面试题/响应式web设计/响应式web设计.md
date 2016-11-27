@@ -633,26 +633,143 @@ percent 注意100%是16px，也就是1em
 
 **准备工作**
 
+通过CSS媒介查询调整图片的大小，尤其是当我们下载了一个图片，又想在不同尺寸的响应式布局种使用它时。
+客户端调整图片尺寸使然是好方法，但是当客户端下载的图片尺寸较大时，会导致调整图片大小变成浏览器的负担。
 **实现方式**
+http://img.blog.csdn.net/20161127204329604
 
+HTML页面，页面包含一个h1标题，一个wrap元素，wrap元素中包含一张图片和一段文本
+```
+<h1>erer sdg hgfgj</h1>
+<div class="wrap">
+    <img src="robots.jpg" alt="" class="responsive">
+    <p>erer sdg hgfgj</p>
+</div>
+```
+
+接下来，为常见的浏览器窗口的尺寸断点创建媒介查询：960px/1024/1280/1366/1440/1680
+这个势力则是针对960px和1280px的媒介查询：
+
+```
+@media screen and (max-width: 960px) {
+    .wrap {
+        padding: 0 5%;
+        width:90%;
+    }
+    .wrap img {
+        width:90%;
+        height:auto;
+        padding:5%;
+    }
+    .wrap p {
+        width:90%;
+        padding:5%;
+        text-align:justify;
+    }
+}
+@media screen and (min-width:961px) and (max-width: 1280px) {
+    .wrap {
+        padding: 0 5%;
+        width:90%;
+    }
+    .wrap img {
+        width:50%;
+        height:auto;
+        max-width:600px;
+        float:right;
+    }
+    .wrap p {
+        width:50%;
+        text-align:justify;
+        float:left;
+    }
+}
+@media screen and (min-width:1281px) {
+    .wrap {
+        padding: 0 5%;
+        width:90%;
+    }
+    .wrap img {
+        width:40%;
+        height:auto;
+        max-width:500px;
+        float:left;
+    }
+    .wrap p {
+        width:60%;
+        text-align:justify;
+        float:right;
+    }
+}
+```
 **工作原理**
+
+1.浏览器根据自身窗口大小应用对应的媒介查询中的相关设置，使元素能够呈现出不同的width和height属性。
+2.这样，在不同尺寸的设备窗口中得到合适大小的图片。
+3.如果原始图片非常大， 在服务器端改变图片尺寸会是一个好的备选方案。
 
 ##### 3.6基于媒介查询隐藏元素
 
 **准备工作**
 
+这个方法可以应用于很多场景。一个常用的用例就是当页面在较小屏幕的设备上渲染时，菜单会被及时地隐藏，可以利用这点来改变关注的内容以及相关区域的显示方式。
+
 **实现方式**
 
+针对不同屏幕视图断点添加媒介查询。本例添加的是针对960px的媒介查询。
+
+效果： http://img.blog.csdn.net/20161127210501631
+
+移除元素的方法
+1.position:absolute;left:5000px;
+2.float:left;margin-left:-5000px;
+3.display:none;
+```
+.foo {
+    background-color:#ccc;
+    width:300px;
+}
+.bar{
+    background-color:blue;
+    width:600px;
+    color:white;
+}
+@media screen and (max-width: 960px) {
+    img {
+        position:absolute;
+        left:5000px;
+    }
+    .bar{
+        display:none;
+    }
+}
+@media screen and (min-width: 960px) {
+    .foo{
+        float:left;
+        margin-left:-5000px;
+    }
+}
+```
+
 **工作原理**
+
+1.无论是绝对定位还是浮动都没有高度属性，其实就是脱离了文档流，因此一旦应用于某个元素，均不会占用任何垂直的空间区域。利用这个有用的小窍门可以很好的从页面上移除相应元素。
+2.浮动元素布局会导致一些问题，这些问题可以为元素添加clear:both属性来解决
 
 ##### 3.7创建平滑过渡的响应式布局
 
 **准备工作**
 
+大家创建一个涉及多区域的响应式前端页面。页面中包括许多元素，而这些元素的响应方式又各不相同，最终生成给人印象深刻的页面布局，并能够提供出色的用户体验。
+
 **实现方式**
+
+效果： ![这里写图片描述](http://img.blog.csdn.net/20161127212406238)
 
 **工作原理**
 
+将CSS与媒介查询结合在一起，使得页脚在所有尺寸屏幕中都能居中显示。
+响应式布局使得设计者和开发者能够构建适用于不同设备，尤其是移动设备的网页，而省去了开发原生App的花费。
 #### 4.使用响应式框架
 使用新型框架，通过最新的响应式方法和交互方式，既快速又可靠地完成响应式站点的设计和交付，以及如何将旧的静态框架转换为响应式类型的框架。
 #### 5.设计移动设备优先的web应用
