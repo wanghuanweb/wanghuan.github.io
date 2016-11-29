@@ -5,31 +5,88 @@
     <title>Document</title>
 </head>
 <body>
-    <nav class="nav">
-        <ul>
-            <li></li>
-            <li></li>
-            <li></li>
-        </ul>
-    </nav>
 
     <div class="content">
+        <div class="contact-us">
+            dfgy
+        </div>
 
+        <div class="cities">
+            ghdry
+        </div>
     </div>
 
-    <aside class="comments">
+    <footer>
+        <div class="footer-wrap">
+            <div class="footer-1 footer-thrid">
+                <li><a href="#">FaceBook</a></li>
+                <li><a href="#">Google</a></li>
+                <li><a href="#">Twitter</a></li>
+            </div>
 
-    </aside>
+            <div class="footer-2 footer-thrid">
+                <li><a href="#">FaceBook</a></li>
+                <li><a href="#">Google</a></li>
+                <li><a href="#">Twitter</a></li>
+            </div>
+
+            <div class="footer-3 footer-thrid">
+                <li><a href="#">FaceBook</a></li>
+                <li><a href="#">Google</a></li>
+                <li><a href="#">Twitter</a></li>
+            </div>
+        </div>
+    </footer>
 
     <style>
-        @media screen (max-width: 960px) {
 
+        
+        .contact-us{
+            float:left;
         }
-        @media screen (min-width: 961px) and (max-width: 1280px){
-
+        .cities{
+            float:left;
         }
-        @media screen (min-width: 1281px) {
 
+        @media screen and (max-width:600px) {
+            .contact-us {
+                width:100%;
+            }
+            .cities {
+                width:100%;
+            }
+        }
+        @media screen and (min-width:601px) {
+            .contact-us {
+                width:40%;
+            }
+            .cities {
+                width:60%;
+            }
+        }
+
+        footer {
+            width: 100%;
+        }
+        .footer-wrap {
+            width: 100%;
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+        .footer-thrid {
+            display: inline-block;
+        }
+        @media screen and (max-width:600px) {
+            .footer-thrid {
+                width: 100%;
+            }
+        }
+        @media screen and (min-width:601px) {
+            .footer-thrid {
+                float: left;
+                width: 33%;
+                min-width: 144px;
+            }
         }
     </style>
 </body>

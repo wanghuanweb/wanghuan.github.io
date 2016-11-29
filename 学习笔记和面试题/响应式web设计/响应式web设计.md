@@ -674,6 +674,7 @@ http://img.blog.csdn.net/20161127170129232
 
 通过CSS媒介查询调整图片的大小，尤其是当我们下载了一个图片，又想在不同尺寸的响应式布局种使用它时。
 客户端调整图片尺寸使然是好方法，但是当客户端下载的图片尺寸较大时，会导致调整图片大小变成浏览器的负担。
+
 **实现方式**
 http://img.blog.csdn.net/20161127204329604
 
@@ -805,12 +806,219 @@ HTML页面，页面包含一个h1标题，一个wrap元素，wrap元素中包含
 
 效果： ![这里写图片描述](http://img.blog.csdn.net/20161127212406238)
 
+1.创建一个基础页面， 该页面含有一个顶层包装元素、一个中层包装元素、一个页脚(header,content,footer)
+2.header:
+    header和content需要配合，1280以下，width都是100%，否则header是60%左浮动，content是40%右浮动
+    header中有nav--菜单menu，通过媒介查询来隐藏和显示两个不同的菜单big-menu和small-menu。最小尺寸版本会是一个多选的下拉框式的菜单，较大尺寸版本的菜单则包含两个内联的列表。
+```
+<header>
+    <nav>
+        <div class="small-menu">
+            <form>
+                <select name="list" onchange = "window.location.href = this.form.list.options[this.form.list.selectedIndex].value">
+                    <option value = "http://www.baidu.com">百度</option>
+                    <option value = "http://v.qq.com/">腾讯</option>
+                    <option value = "https://www.aliyun.com/?utm_medium=text&utm_source=baidu&utm_campaign=yzj&utm_content=se_76074">阿里</option>
+                </select>
+            </form>
+        </div>
+
+        <div class="big-menu">
+            <ul>
+                <li>
+                    <a href="http://www.baidu.com">百度</a>
+                </li>
+                <li>
+                    <a href="http://v.qq.com">腾讯</a>
+                </li>
+                <li>
+                    <a href="https://www.aliyun.com/?utm_medium=text&utm_source=baidu&utm_campaign=yzj&utm_content=se_76074">阿里</a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="content">
+            <p>wersdgsdfgbxdfgsftergdfzvas大法师提供任何风格和是分厂V型才刚毕业儿童二塔问题儿童而已差不多发给是否儿童水电费三个人图一uyiuyioo</p>
+        </div>
+    </nav>
+</header>
+
+<style>
+    @media screen and (max-width: 800px) {
+        .small-menu {
+            display: inline;
+        }
+        .big-menu {
+            display: none;
+        }
+    }
+    @media screen and (min-width: 801px) and (max-width:1024px){
+        .small-menu {
+            display: none;
+        }
+        .big-menu {
+            display: inline;
+            width: 100%;
+        }
+        .big-menu ul {
+            list-style-type: none;
+        }
+        .big-menu ul li {
+            display: inline;
+        }
+        .content{
+            width: 100%;
+        }
+    }
+    @media screen and (min-width: 1025px) {
+        .small-menu {
+            display: none;
+        }
+        .big-menu {
+            display: inline;
+            width: 20%;
+            float: left;
+        }
+        .content{
+            float: right;
+            width: 80%;
+        }
+    }
+</style>
+```
+
+3.content:
+
+    content会把所有包装内容浮动到布局的右侧
+    content是两个列式的布局，所占宽度比例是60/40，当宽度不够时，每个列所占比例是100%，只需要这两列都设置float为left即可。
+
+```
+.contact-us{
+    float:left;
+}
+.cities{
+    float:left;
+}
+
+@media screen and (max-width:600px) {
+    .contact-us {
+        width:100%;
+    }
+    .cities {
+        width:100%;
+    }
+}
+@media screen and (min-width:601px) {
+    .contact-us {
+        width:40%;
+    }
+    .cities {
+        width:60%;
+    }
+}
+```
+4.footer:
+
+    页脚内容全部位于占100%宽度的<footer>元素中
+    其中包含一个包装元素footer-wrap，宽度同样是100%，max-width为1280px
+    footer-wrap有三个始终含有display:inline-block属性的元素，屏幕尺寸较小时，每一个元素宽度是100%，否则他们宽度都是33%，并且向左浮动，且最小宽度是144px
+
+```
+<footer>
+    <div class="footer-wrap">
+        <div class="footer-1 footer-thrid">
+            <li><a href="#">FaceBook</a></li>
+            <li><a href="#">Google</a></li>
+            <li><a href="#">Twitter</a></li>
+        </div>
+
+        <div class="footer-2 footer-thrid">
+            <li><a href="#">FaceBook</a></li>
+            <li><a href="#">Google</a></li>
+            <li><a href="#">Twitter</a></li>
+        </div>
+
+        <div class="footer-3 footer-thrid">
+            <li><a href="#">FaceBook</a></li>
+            <li><a href="#">Google</a></li>
+            <li><a href="#">Twitter</a></li>
+        </div>
+    </div>
+</footer>
+
+<style>
+    footer {
+        width: 100%;
+    }
+    .footer-wrap {
+        width: 100%;
+        max-width: 1280px;
+        margin: 0 auto;
+    }
+    .footer-thrid {
+        display: inline-block;
+    }
+    @media screen and (max-width:600px) {
+        .footer-thrid {
+            width: 100%;
+        }
+    }
+    @media screen and (min-width:601px) {
+        .footer-thrid {
+            float: left;
+            width: 33%;
+            min-width: 144px;
+        }
+    }
+</style>
+```
+
 **工作原理**
 
-将CSS与媒介查询结合在一起，使得页脚在所有尺寸屏幕中都能居中显示。
-响应式布局使得设计者和开发者能够构建适用于不同设备，尤其是移动设备的网页，而省去了开发原生App的花费。
+1.将CSS与媒介查询结合在收成一列一起，使得页脚在所有尺寸屏幕中都能居中显示。
+2.移动设备上又能够收成一列。
+3.响应式布局使得设计者和开发者能够构建适用于不同设备，尤其是移动设备的网页，而省去了开发原生App的花费。
+
 #### 4.使用响应式框架
 使用新型框架，通过最新的响应式方法和交互方式，既快速又可靠地完成响应式站点的设计和交付，以及如何将旧的静态框架转换为响应式类型的框架。
+
+要多花些时间挑选契合自己的设计的框架，否则一款不适合的框架会产生事倍功半的效果。
+
+##### 4.1使用流式960网格布局
+
+960网格系统不是响应式的，更像一个表格，其列跨越固定宽度的表头。它在960px宽的窗口中布局最完美
+
+**准备工作**
+
+960网格布局使用了百分比宽度、左浮动元素替代了固定宽度的网格元素。该版本大数情况下能良好工作，但是当列变得很狭窄时，阅读会变得很困难。
+
+**实现方式**
+**工作原理**
+
+##### 4.2使用Blueprint网格布局
+
+**准备工作**
+**实现方式**
+**工作原理**
+
+##### 4.3基于三分法的流式布局
+
+**准备工作**
+**实现方式**
+**工作原理**
+
+##### 4.4响应式960网格框架--Gumby
+
+**准备工作**
+**实现方式**
+**工作原理**
+
+##### 4.5易上手的Bootstrap框架
+
+**准备工作**
+**实现方式**
+**工作原理**
+
 #### 5.设计移动设备优先的web应用
 实现web应用程序的移动版本。该章通过jQueryMobile优先针对移动设备优化，并针对桌面视窗进行了优化。
 #### 6.优化响应式内容
