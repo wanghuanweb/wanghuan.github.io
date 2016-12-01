@@ -1186,7 +1186,7 @@ http://blog.csdn.net/github_34514750/article/details/51364202
    .right{float:right;width:30%;height:80px;background:#DDD}
    /*解决代码*/
    .clearfloat:after{
-       content: "";
+       content: " ";
        display: block;
        clear: both;
    }

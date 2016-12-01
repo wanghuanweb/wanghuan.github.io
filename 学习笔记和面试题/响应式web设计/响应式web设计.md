@@ -990,21 +990,132 @@ HTML页面，页面包含一个h1标题，一个wrap元素，wrap元素中包含
 
 **准备工作**
 
-960网格布局使用了百分比宽度、左浮动元素替代了固定宽度的网格元素。该版本大数情况下能良好工作，但是当列变得很狭窄时，阅读会变得很困难。
+960网格布局使用了百分比宽度、左浮动元素替代了固定宽度的网格元素。该版本大数情况下能良好工作，但是当列变得很狭窄时，阅读会变得很困难。并且下载解压流式960网格系统代码，引入grid.css
 
 **实现方式**
+
+下面用container_16布局且使用了grid(引用了grid.css)
+<div class="clear"></div>用于换行
+```
+<div class="container_16">
+    <div class="grid_16">
+        <h2>Fluid Grid</h2>
+    </div>
+    //换行标签
+    <div class="clear"></div>
+
+    <div class="grid_3 break-column">tryhrthuy</div>
+    <div class="grid_5 break-column">bmdryEWEREWRT</div>
+    <div class="grid_2 break-column">FGHDRTYFGXNXV</div>
+    <div class="grid_2 break-column">CVGTAERT</div>
+    <div class="grid_2 break-column">MNJYKT</div>
+    <div class="grid_2 break-column">ERTSRYRTUY</div>
+
+</div>
+```
+给上述流式布局添加一些响应式特性，添加媒介查询来覆盖1024px、600px、420px这几个屏幕断点
 **工作原理**
 
+1.若在浏览器中打开使用了非响应式流式网格的HTML文件，当浏览器窗口变小，页面中6列会保持相同比例，可读性会变差
+2.添加媒介查询重载div元素的样式属性，从而得到响应式效果。
+3.三种方法实现重载：
+    1.使用min-width方法重载百分比宽度
+    2.在grid.css文件之后加载responsive.css文件，并且在responsive.css使用多类显示命名空间(.grid_2.break-column等)
+    3.使用！important声明提升重载等级
+
+```
+@media screen and (max-width:420px) {
+    .break-column {
+        min-width:360px;
+    }
+}
+@media screen and (max-width:600px) and (min-width:421px) {
+    .grid_2.break-column,
+    .grid_3.break-column,
+    .grid_5.break-column {
+        width:48%;
+    }
+}
+@media screen and (max-width:1024px) {
+    .break-column {
+        width:30% !important;
+    }
+}
+```
 ##### 4.2使用Blueprint网格布局
 
+Blueprint CSS框架是另外一款受欢迎的静态CSS网格系统。可以在某些情况下可能需要将静态的Blueprint CSS网格框架定制为自己需要的响应式Blueprint框架。只需简单添加几行CSS代码就能拥有响应式框架。
+
 **准备工作**
+
+下载源码
+
 **实现方式**
+
+总列数是22,先实现基本的blueprint布局
+```
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+
+    <link rel="stylesheet" type="text/css" href="blueprint-css-master/blueprint/ie.css"/>
+    <link rel="stylesheet" type="text/css" href="blueprint-css-master/blueprint/print.css"/>
+    <link rel="stylesheet" type="text/css" href="blueprint-css-master/blueprint/screen.css"/>
+    <link rel="stylesheet" type="text/css" href="test.css"/>
+</head>
+<body>
+    <h1>Blueprint CSS Framework Responsive</h1>
+    <hr>
+    <div class="span-7">asfgerter jhgjghr etyry rfg</div>
+    <div class="span-8">asfgerter jhgjghr etyry rfg</div>
+    <div class="span-7">asfgerter jhgjghr etyry rfg</div>
+    <hr>
+
+    <hr>
+    <div class="span-15">
+        <img src="robots.jpg">
+        <p>asfgerter jhgjghr etyry rfg</p>
+    </div>
+    <div class="span-7">
+        <ul>
+            <li>asfgerter jhgjghr etyry rfg</li>
+            <li>asfgerter jhgjghr etyry rfg</li>
+            <li>asfgerter jhgjghr etyry rfg</li>
+        </ul>
+    </div>
+    <hr>
+</body>
+</html>
+```
+![](http://img.blog.csdn.net/20161201094914852)
+接下来，把这个框架变成一个响应式框架
+
+```
+@media screen and (max-width:600px) {
+	div[class*="span-"]{width:90%;}
+}
+@media screen and (min-width:601px) and (max-width:1024px){
+	div[class*="span-"]{width:42%;}
+}
+```
+
 **工作原理**
 
-##### 4.3基于三分法的流式布局
+为了让Blueprint CSS框架具有响应式效果
+1.首先将容器宽度由固定宽度修改为流式最大宽度、
+2.然后设置一个媒介查询断点
+本节主要是使用属性选择器在CSS中利用通配符批量修改span属性
+
+##### 4.3基于三分法(Rule of thrids)的流式布局
+
+基于三分法是一种设计方法论，即一个布局或图片如果从水平方向或者垂直方向被划分为三个区域。
 
 **准备工作**
+
 **实现方式**
+
 **工作原理**
 
 ##### 4.4响应式960网格框架--Gumby
@@ -1015,8 +1126,12 @@ HTML页面，页面包含一个h1标题，一个wrap元素，wrap元素中包含
 
 ##### 4.5易上手的Bootstrap框架
 
+Bootstrap框架是完全响应式的，可以作为静态框架，也可以使用其提供的附加文件快速部署一个完全响应式的站点。
+
 **准备工作**
+
 **实现方式**
+
 **工作原理**
 
 #### 5.设计移动设备优先的web应用
