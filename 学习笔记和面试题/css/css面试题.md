@@ -843,7 +843,7 @@ display的转换对应表
 
 如果display是none，则position和float不起作用。因为元素不产生框，因此浮动和定位无效。若display不是none，则继续
 
-**2. 'position' 的值是 'absolute' 或 'fixed' **
+**2. 'position' 的值是 'absolute' 或 'fixed'**
 
 框是相对定位的，计算后的float应该是none。并且display按照上表设置。框的位置将由 'top'，'right'，'bottom' 和 'left' 属性和该框的包含块确定。
 
@@ -1020,7 +1020,7 @@ marigin-top会取较大值
 
 两个绿色的块儿之间，相距100px，而若 B 和它的浮动包含块发生 margin 折叠的话，金色的条应该位于绿色块的最上方，显然，没有发生折叠。inline-block 元素、绝对定位元素的 margin同样如此， 不会和垂直方向上其他元素的 margin 折叠。
 
-**3.元素自身的 margin-bottom 和 margin-top 相邻时也会折叠 **
+**3.元素自身的 margin-bottom 和 margin-top 相邻时也会折叠**
 
 自身 margin-bottom 和 margin-top 相邻，只能是自身内容为空，垂直方向上 border、padding 为 0。
 
