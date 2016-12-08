@@ -552,7 +552,9 @@ BootStrap框架公共六个部分：(css组件和js插件是其表现形式，�
 ```
 ##### 2.2 基础布局组件
 
-在12栅格系统上基础上，BootStrap还提供了多种基础布局组件。
+在12栅格系统上基础上，BootStrap还提供了多种基础布局组件
+--buttons,tables,labels,badges(徽章),dropdown menus,nav(导航),navbar(导航条),alert,progress bars(进程条),list groups,panels(面板),wells(是一种会引起内容凹陷显示或插图效果的容器)
+
 CSS组件，总结为8大类型的样式：
 基础样式、颜色样式、尺寸样式、状态样式、特殊元素样式、并列元素样式、嵌套子元素样式、动画样式
 
@@ -616,19 +618,219 @@ BootStrap为大部分组件都提供了尺寸的快捷设置。一般组件包�
 
 ###### 2.2.4状态样式
 
+高亮可用的时候用active样式，禁用的时候用disabled样式或disabled属性。
+
+```
+//源码
+.btn:active,
+.btn.active {
+  background-image: none;
+  outline: 0;
+  -webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, .125);
+          box-shadow: inset 0 3px 5px rgba(0, 0, 0, .125);
+}
+```
 ###### 2.2.5特殊元素样式
+
+所谓特殊元素，即特定类型的组件一般只使用某一种或者几种固定的元素。
+比如：alert警告框内一般有警告标题、内容、关闭链接元素；nav导航中常用li元素
+
+```
+//源码
+//alert内连接的样式
+.alert .alert-link {
+  font-weight: bold;
+}
+//alert内p元素和ul元素的底部外边距设置
+.alert > p,
+.alert > ul {
+  margin-bottom: 0;
+}
+//两个段落之间，增加一个段落外边距
+.alert > p + p {
+  margin-top: 5px;
+}
+//增大右内边距，以便关闭按钮
+.alert-dismissable,
+.alert-dismissible {
+  padding-right: 35px;
+}
+//关闭按钮，右对齐
+.alert-dismissable .close,
+.alert-dismissible .close {
+  position: relative;
+  top: -2px;
+  right: -21px;
+  color: inherit;
+}
+```
+
+```
+//源码
+.nav > li {
+  position: relative;
+  display: block;
+}
+.nav > li > a {
+  position: relative;
+  display: block;
+  padding: 10px 15px;
+}
+.nav > li > a:hover,
+.nav > li > a:focus {
+  text-decoration: none;
+  background-color: #eee;
+}
+.nav > li.disabled > a {
+  color: #777;
+}
+.nav > li.disabled > a:hover,
+.nav > li.disabled > a:focus {
+  color: #777;
+  text-decoration: none;
+  cursor: not-allowed;
+  background-color: transparent;
+}
+```
 ###### 2.2.6并列元素样式
+
+很多情况下，一个组件内部需要放置多个子元素，比如导航栏nav里放置多个li元素，按钮组可以放置多个button元素。
+一般并列元素考虑：1.水平并列时左右内边距(padding-left padding-right)和外边距(margin-left margin-right)2.垂直并列时上下内边距(padding-top padding-bottom)和外边距(margin-top margin-bottom)
+
+```
+//源码
+.alert > p,
+.alert > ul {
+  margin-bottom: 0;
+}
+.alert > p + p {
+  margin-top: 5px;
+}
+```
+
+```
+.modal-footer .btn + .btn {
+  margin-bottom: 0;
+  margin-left: 5px;
+}
+```
+
 ###### 2.2.7嵌套子元素样式
+
+需要将两个相同或不同的组件嵌套在一起使用，这时会有特殊情况，比如，多个按钮组在一起使用，或者按钮和下拉菜单一起使用。
+
+需要考虑嵌套元素的使用情况。比如多个分组按钮一起使用的时候，需要考虑浮动方向和间距
+
+```
+//源码
+//消除2个按钮(或一个按钮和另外一个按钮组)之间的1像素细节引起的冲突
+.btn-group .btn + .btn,
+.btn-group .btn + .btn-group,
+.btn-group .btn-group + .btn,
+.btn-group .btn-group + .btn-group {
+  margin-left: -1px;
+}
+```
 ###### 2.2.8动画样式
 
-##### 2.3 jQuery
+动画样式在BootStrap中的进度条progress组件中才使用到。
 
-BootStrap所有js插件都依赖于jQuery，若使用这些js插件，必须引入jQuery库。若只使用CSS组件，则不用引用它。
+```
+<div class="progress">
+    <div class="progress-bar" style="width:45%">
+        <span class="sr-only">45% complete</span>
+    </div>
+</div>
+```
 
+注意用.progress是总进度条，progress-bar是进度条显示的部分，还有五种颜色progress-bar-success等
+sr-only，全称是 screen reader only（仅供）屏幕阅读器有时候 UI 上会出现一些仅供视觉识别的元素，比如说“汉堡包菜单按钮”只有视力正常的人才能清楚辨识这些元素的作用。而残障人士，比如弱势或盲人是不可能知道这些视觉识别元素是什么的。他们上网使用的是屏幕阅读器，也就是 screen reader（sr），屏幕阅读器需要找到能辨识的文本说明然后“读”出来给用户听。
+```
+//源码
+.progress {
+  height: 20px;
+  margin-bottom: 20px;
+  overflow: hidden;
+  background-color: #f5f5f5;
+  border-radius: 4px;
+  -webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, .1);
+          box-shadow: inset 0 1px 2px rgba(0, 0, 0, .1);
+}
+.progress-bar {
+  float: left;
+  width: 0;
+  height: 100%;
+  font-size: 12px;
+  line-height: 20px;
+  color: #fff;
+  text-align: center;
+  background-color: #337ab7;
+  -webkit-box-shadow: inset 0 -1px 0 rgba(0, 0, 0, .15);
+          box-shadow: inset 0 -1px 0 rgba(0, 0, 0, .15);
+  -webkit-transition: width .6s ease;
+       -o-transition: width .6s ease;
+          transition: width .6s ease;
+}
+.progress-striped .progress-bar,
+.progress-bar-striped {
+  background-image: -webkit-linear-gradient(45deg, rgba(255, 255, 255, .15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, transparent 75%, transparent);
+  background-image:      -o-linear-gradient(45deg, rgba(255, 255, 255, .15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, transparent 75%, transparent);
+  background-image:         linear-gradient(45deg, rgba(255, 255, 255, .15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, transparent 75%, transparent);
+  -webkit-background-size: 40px 40px;
+          background-size: 40px 40px;
+}
+.progress.active .progress-bar,
+.progress-bar.active {
+  -webkit-animation: progress-bar-stripes 2s linear infinite;
+       -o-animation: progress-bar-stripes 2s linear infinite;
+          animation: progress-bar-stripes 2s linear infinite;
+}
+.progress-bar-success {
+  background-color: #5cb85c;
+}
+.progress-striped .progress-bar-success {
+  background-image: -webkit-linear-gradient(45deg, rgba(255, 255, 255, .15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, transparent 75%, transparent);
+  background-image:      -o-linear-gradient(45deg, rgba(255, 255, 255, .15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, transparent 75%, transparent);
+  background-image:         linear-gradient(45deg, rgba(255, 255, 255, .15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, transparent 75%, transparent);
+}
+.progress-bar-info {
+  background-color: #5bc0de;
+}
+.progress-striped .progress-bar-info {
+  background-image: -webkit-linear-gradient(45deg, rgba(255, 255, 255, .15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, transparent 75%, transparent);
+  background-image:      -o-linear-gradient(45deg, rgba(255, 255, 255, .15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, transparent 75%, transparent);
+  background-image:         linear-gradient(45deg, rgba(255, 255, 255, .15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, transparent 75%, transparent);
+}
+.progress-bar-warning {
+  background-color: #f0ad4e;
+}
+.progress-striped .progress-bar-warning {
+  background-image: -webkit-linear-gradient(45deg, rgba(255, 255, 255, .15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, transparent 75%, transparent);
+  background-image:      -o-linear-gradient(45deg, rgba(255, 255, 255, .15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, transparent 75%, transparent);
+  background-image:         linear-gradient(45deg, rgba(255, 255, 255, .15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, transparent 75%, transparent);
+}
+.progress-bar-danger {
+  background-color: #d9534f;
+}
+.progress-striped .progress-bar-danger {
+  background-image: -webkit-linear-gradient(45deg, rgba(255, 255, 255, .15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, transparent 75%, transparent);
+  background-image:      -o-linear-gradient(45deg, rgba(255, 255, 255, .15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, transparent 75%, transparent);
+  background-image:         linear-gradient(45deg, rgba(255, 255, 255, .15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, transparent 75%, transparent);
+}
+```
+
+###### 2.2.9总结
+
+1.通常8种类型样式，需要组合使用，比如设置active状态时候还要兼顾颜色和尺寸样式，设置尺寸又要考虑并列元素的情况，所以从高层往下考虑，考虑需要写哪几种样式。
+2.还有就是样式利用CSS重载覆盖的概念，注意定义的顺序，以免重载顺序错误。
+
+##### 2.3 JavaScript插件架构
+
+BootStrap所有的插件在开发中都遵循了同样的规则，也为自定义插件提供了规范和依据：
+
+1.HTML布局规则：基于元素自定义属性的布局规则，比如使用类似于
 ##### 2.4 响应式设计
 
 响应式设计师一个理念，而不是功能，放在架构图的左边就是因为BootStrap的所有内容，都是以响应式设计为设计理念来实现的。
 
 ##### 2.5 CSS组件
-
-##### 2.4 JavaScript插件
