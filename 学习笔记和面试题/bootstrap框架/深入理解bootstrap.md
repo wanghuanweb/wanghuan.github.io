@@ -826,9 +826,93 @@ sr-only，全称是 screen reader only（仅供）屏幕阅读器有时候 UI �
 
 ##### 2.3 JavaScript插件架构
 
-BootStrap所有的插件在开发中都遵循了同样的规则，也为自定义插件提供了规范和依据：
+BootStrap所有的插件在开发中都遵循了同样的规则，也为自定义插件提供了规范和依据(如下三个规则)：
 
-1.HTML布局规则：基于元素自定义属性的布局规则，比如使用类似于
+###### 2.3.1 HTML布局规则：基于元素自定义属性的布局规则，比如使用类似于
+
+###### 2.3.2 JavaScript实现步骤(所有插件都遵循jQuery插件开发的标准步骤，所有事件保持统一的标准)
+
+BootStrap中所有JavaScript插件走遵循统一的实现步骤，维护方便，自定义插件也方便，步骤如下：
+
+**1.声明立即调用函数，比如+function($){"use strict";...}(jQuery);**
+
+参数中传入jQuery的对象，通过参数$引入变量，好处是：
+1.函数内部的$符变量代表了局部变量，而不是全局变量中代表jQuery的$符变量，以达到防止变量污染的目的。
+2.内部的代码都是私有代码，外部代码无法访问。只能通过第三步，在$.fn上设置了插件(比如$.fn.alert=)的形式，通过$符变量才能将整个插件通过唯一的借口$.fn.alert暴露出去，从而保护了内部代码。
+```
+//function前边的+，主要目的是防止前面有未正常结束的代码(比如遗漏了分号)，导致前后代码被编译器认为是一体的，从而导致代码运行出错。
++function($){
+    "use strict";
+
+}(window.jQuery);
+```
+
+**2.定义插件类(或者选择器)以及相关原型方法。比如Alert,prototype.close**
+
+定义插件类Alert，然后在定义一些原型函数，比如close函数方法。
+先定义选择器，所有符合该自定义属性的元素可以触发下面的事件。
+```
+var dismiss = '[data-dismiss="alert"]';
+var Alert = function(el) {
+    //传入元素，如果元素内部有dismiss上设置的自定义属性，则click事件会触发原型上的close方法
+    $(el).on('click',dismiss,this.close);
+};
+Alert.prototype.close = function(e) {
+
+}
+```
+
+**3.在jQuery上定义插件并重设插件构造函数，例如$.fn.alert.Constructor=Alert**
+
+在jQuery上定义插件，以便通过jQuery.[插件名称]()的方式，也能够使用该插件。
+
+```
+//jQuery插件的定义使用了标准的方式，在fn上进行扩展,在jQuery上定义alert插件
+var old = $.fn.alert;
+//保留其他插件的$.fn.alert代码(如果定义)以便在noConflict之后，可以继续使用改旧代码
+//先备份之前插件的旧代码，以便在后面防冲突的时候使用
+$.fn.alert = function (option) {
+    return this.each(function () {
+        //根据选择器，遍历所有符合规则的元素，然后在元素上绑定插件的实例，以便监控用户的事件行为
+    })
+}
+//在附加扩展之后，重新设置插件的构造器(即Constructor属性)，这样就可以通过Constructor属性查询到插件的真实类函数，使用new操作符实例化的时候也不会出错
+$.fn.alert.Constructor = Alert;
+```
+不声明第三步的话，HTML声明式的方式也是可以用的。所以第三步是专门为某些喜欢用js代码触发事件的人所准备的。需要注意的是，如果第三步不需要，第四步的方冲突的功能也就没办法用了~
+
+**4.防冲突处理(noConflict)，例如$.fn.alert.noConflict**
+
+目的是让BootStrap插件和其他UI库的同名插件并存。
+
+```
+$.fn.alert.noConflict = function() {
+    //恢复以前的代码
+    $.fn.alert = old
+    //将$.fn.alert.noConflict()设置为BootStrap的alert插件
+    return this
+}
+```
+
+比如A库中有个同名$.fn.alert插件，则BootStrap在执行之前就通过old先备份了，
+然后执行$.fn.alert.noConflict后就会还原该old对象插件
+而使用BootStrap的alert插件的话，则通过var alert = $.fn.alert.noConflict()的形式，将BootStrap的alert插件转移到另外一个变量上，从而继续使用。
+
+**5.绑定各种触发事件(data-api)**
+
+由于已经为jQuery提供了默认的$.fn.alert扩展插件功能，就可以手工编写js代码来触发事件了。
+这里主要是为声明式的HTML触发事件。即：在HTML文档里已经按照布局规则声明了相关的自定义属性(比如data-dismiss="alert")，然后通过这里的代码初始化默认的单击事件行为。
+
+```
+/*
+绑定触发事件
+为声明式的HTML绑定单击事件
+在整个document对象上，检测是否有自定义属性data-dismiss="alert"，若有则关闭指定的警告框
+ */
+$(document).on('click.bs.alert.data-api',dismiss,Alert.prototype.close)
+```
+###### 2.3.3 插件调用方法(插件使用方式可以是HTML声明式或者调用式)
+
 ##### 2.4 响应式设计
 
 响应式设计师一个理念，而不是功能，放在架构图的左边就是因为BootStrap的所有内容，都是以响应式设计为设计理念来实现的。
