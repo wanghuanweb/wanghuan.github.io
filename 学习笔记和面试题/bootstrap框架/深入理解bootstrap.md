@@ -46,7 +46,7 @@ meta标签：
     initial-scale：初始缩放比例，也即是当页面第一次 load 的时候缩放比例
     minimun-scale：允许用户缩放到的最小比例
     maximun-scale：允许用户缩放到的最大比例
-    user-scalable：用户是否可以手动缩放
+    user-scalable：用户是否可以手动缩放 no表示禁止缩放功能，禁用缩放功能后，用户只能滚动屏幕，这样能让你的网站看起来更像原生应用
     content里多个属性的设置一定要用分号和空格来隔开，如果不规范则不起作用
 
 ```
@@ -826,9 +826,133 @@ sr-only，全称是 screen reader only（仅供）屏幕阅读器有时候 UI �
 
 ##### 2.3 JavaScript插件架构
 
+如下是插件alert的全部代码，每个插件都定义在如下类似的作用域中：
+
+```
++function ($) {
+  'use strict';
+
+  // ALERT CLASS DEFINITION
+  // ======================
+
+  var dismiss = '[data-dismiss="alert"]'
+  var Alert   = function (el) {
+    $(el).on('click', dismiss, this.close)
+  }
+
+  Alert.VERSION = '3.3.7'
+
+  Alert.TRANSITION_DURATION = 150
+
+  Alert.prototype.close = function (e) {
+    var $this    = $(this)
+    var selector = $this.attr('data-target')
+
+    if (!selector) {
+      selector = $this.attr('href')
+      selector = selector && selector.replace(/.*(?=#[^\s]*$)/, '') // strip for ie7
+    }
+
+    var $parent = $(selector === '#' ? [] : selector)
+
+    if (e) e.preventDefault()
+
+    if (!$parent.length) {
+      $parent = $this.closest('.alert')
+    }
+
+    $parent.trigger(e = $.Event('close.bs.alert'))
+
+    if (e.isDefaultPrevented()) return
+
+    $parent.removeClass('in')
+
+    function removeElement() {
+      // detach from parent, fire event then clean up data
+      $parent.detach().trigger('closed.bs.alert').remove()
+    }
+
+    $.support.transition && $parent.hasClass('fade') ?
+      $parent
+        .one('bsTransitionEnd', removeElement)
+        .emulateTransitionEnd(Alert.TRANSITION_DURATION) :
+      removeElement()
+  }
+
+
+  // ALERT PLUGIN DEFINITION
+  // =======================
+
+  function Plugin(option) {
+    return this.each(function () {
+      var $this = $(this)
+      var data  = $this.data('bs.alert')
+
+      if (!data) $this.data('bs.alert', (data = new Alert(this)))
+      if (typeof option == 'string') data[option].call($this)
+    })
+  }
+
+  var old = $.fn.alert
+
+  $.fn.alert             = Plugin
+  $.fn.alert.Constructor = Alert
+
+
+  // ALERT NO CONFLICT
+  // =================
+
+  $.fn.alert.noConflict = function () {
+    $.fn.alert = old
+    return this
+  }
+
+
+  // ALERT DATA-API
+  // ==============
+
+  $(document).on('click.bs.alert.data-api', dismiss, Alert.prototype.close)
+
+}(jQuery);
+
+//通过将作用域内的Alert类赋值给jQuery的alert对象的Constructor属性，在IIFE作用域外也可以使用Alert类,比如这行代码
+var Alert = $.fn.alert.Constructor  
+```
+
 BootStrap所有的插件在开发中都遵循了同样的规则，也为自定义插件提供了规范和依据(如下三个规则)：
 
-###### 2.3.1 HTML布局规则：基于元素自定义属性的布局规则，比如使用类似于
+1.HTML布局规则：基于元素自定义属性的布局规则，比如使用类似于data-target的自定义属性
+2.JavaScript实现步骤(所有插件都遵循jQuery插件开发的标准步骤，所有事件保持统一的标准)
+3.插件调用方法(插件使用方式可以是HTML声明式或者js代码调用式，且支持多种回调和可选参数)
+
+###### 2.3.1 HTML布局规则：基于元素自定义属性的布局规则，类似于data-* 的自定义属性
+
+默认情况下，所有插件都可以通过设置特定的HTML代码和相应的自定义属性来实现。
+在页面加载的时候，js代码会自动检测到这些标记，并自动绑定相应的事件，不需要添加额外的代码。
+
+点击按钮之后就会关闭警告框：
+```
+<div class="alert">
+    <button type="button" class="close" data-dismiss="alert"></button>
+    <strong>警告!</strong>你输入的项目不合法！
+</div>
+```
+
+下拉菜单：在button按钮上添加data-toggle="dropdown"属性，单机按钮时，默认隐藏的dropdown-menu会显示
+```
+//例子：下拉菜单.html
+<div class="btn-group">
+    <button type="button" class="btn btn-default" data-toggle="dropdown">
+        我的书籍<span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu">
+        <li><a href="#">编程</a></li>
+        <li><a href="#">设计</a></li>
+        <li><a href="#">深入</a></li>
+    </ul>
+</div>
+```
+
 
 ###### 2.3.2 JavaScript实现步骤(所有插件都遵循jQuery插件开发的标准步骤，所有事件保持统一的标准)
 
@@ -847,10 +971,10 @@ BootStrap中所有JavaScript插件走遵循统一的实现步骤，维护方便�
 }(window.jQuery);
 ```
 
-**2.定义插件类(或者选择器)以及相关原型方法。比如Alert,prototype.close**
+**2.定义插件类以及相关原型方法。比如Alert,prototype.close**
 
 定义插件类Alert，然后在定义一些原型函数，比如close函数方法。
-先定义选择器，所有符合该自定义属性的元素可以触发下面的事件。
+先定义选择器，所有 **符合该自定义属性** 的元素可以触发下面的事件。
 ```
 var dismiss = '[data-dismiss="alert"]';
 var Alert = function(el) {
@@ -867,18 +991,28 @@ Alert.prototype.close = function(e) {
 在jQuery上定义插件，以便通过jQuery.[插件名称]()的方式，也能够使用该插件。
 
 ```
+function Plugin(option) {
+  return this.each(function () {
+    var $this = $(this)
+    //获取存储的Alert对象，如果是第一次执行变量data的值为undefined  
+    var data  = $this.data('bs.alert')
+    //缓存没有，就new一个alert对象，存储在元素的jQuery对象上的‘bs.alert’数据字段
+    if (!data) $this.data('bs.alert', (data = new Alert(this)))
+    //支持传入方法名参数，执行该方法,这里就是data.close()
+    if (typeof option == 'string') data[option].call($this)
+  })
+}
 //jQuery插件的定义使用了标准的方式，在fn上进行扩展,在jQuery上定义alert插件
-var old = $.fn.alert;
 //保留其他插件的$.fn.alert代码(如果定义)以便在noConflict之后，可以继续使用改旧代码
 //先备份之前插件的旧代码，以便在后面防冲突的时候使用
-$.fn.alert = function (option) {
-    return this.each(function () {
-        //根据选择器，遍历所有符合规则的元素，然后在元素上绑定插件的实例，以便监控用户的事件行为
-    })
-}
+var old = $.fn.alert
+
+$.fn.alert             = Plugin
 //在附加扩展之后，重新设置插件的构造器(即Constructor属性)，这样就可以通过Constructor属性查询到插件的真实类函数，使用new操作符实例化的时候也不会出错
-$.fn.alert.Constructor = Alert;
+//js区分大小写，所以这里的Constructor只是一个普通属性，跟constructor不同，通过将作用域内的Alert类赋值给jQuery的alert对象的Constructor属性，在IIFE作用域外也可以使用Alert类
+$.fn.alert.Constructor = Alert
 ```
+
 不声明第三步的话，HTML声明式的方式也是可以用的。所以第三步是专门为某些喜欢用js代码触发事件的人所准备的。需要注意的是，如果第三步不需要，第四步的方冲突的功能也就没办法用了~
 
 **4.防冲突处理(noConflict)，例如$.fn.alert.noConflict**
@@ -905,16 +1039,667 @@ $.fn.alert.noConflict = function() {
 
 ```
 /*
-绑定触发事件
-为声明式的HTML绑定单击事件
-在整个document对象上，检测是否有自定义属性data-dismiss="alert"，若有则关闭指定的警告框
+ALERT DATA-API
+这段JavaScript代码将click委托事件监听器绑定在document元素上，并给click事件赋予命名空间
+jQuery将事件绑定在document文档对象上的好处，就是js事件代理的优点
  */
 $(document).on('click.bs.alert.data-api',dismiss,Alert.prototype.close)
 ```
+命名空间的话好处：
+http://suqing.iteye.com/blog/1533123
+
 ###### 2.3.3 插件调用方法(插件使用方式可以是HTML声明式或者调用式)
 
-##### 2.4 响应式设计
+1.插件可以js代码调用，都提供多种调用方式(无参数传递，传递对象字面量，直接传入一个需要执行的方法名称字符串)
 
-响应式设计师一个理念，而不是功能，放在架构图的左边就是因为BootStrap的所有内容，都是以响应式设计为设计理念来实现的。
+```
+$("#myModal").modal();
+$("#myModal").modal({keyboard:false});
+$("#myModal").modal('show');
+```
 
-##### 2.5 CSS组件
+每个插件都有一个Constructor属性，表示原始的构造函数，比如$fn.alert.Constructor
+也可以通过$('选择器').data('bs.插件名称')获取特定插件的实例
+
+2.html声明式就是直接在html中进行声明data-* 自定义属性即可
+
+若想禁用方法
+```
+//命名空间为data-api的全部事件禁用
+$(document).off('.data-api');
+//禁用特定插件的默认行为，禁用该插件所在命名空间下事件即可
+$(document).off('.alert.data-api');
+//禁用该alert插件的click事件
+$(document).off('click.alert.data-api');
+```
+
+#### 3.CSS布局
+
+##### 3.1列表
+
+**列表**--普通、有序、去点、内联、定义、水平定义
+
+```
+ul,
+ol {
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+ul ul,
+ol ul,
+ul ol,
+ol ol {
+  margin-bottom: 0;
+}
+```
+普通列表ul li
+有序列表ol li
+去点列表class="list-unstyled"
+```
+//源码
+.list-unstyled {
+  padding-left: 0;
+  list-style: none;
+}
+```
+内联列表class="list-inline"
+```
+//源码
+.list-inline {
+  padding-left: 0;
+  margin-left: -5px;
+  list-style: none;
+}
+.list-inline > li {
+  display: inline-block;
+  padding-right: 5px;
+  padding-left: 5px;
+}
+```
+定义列表dl dt dd
+```
+dl {
+  margin-top: 0;
+  margin-bottom: 20px;
+}
+dt,
+dd {
+  line-height: 1.42857143;
+}
+dt {
+  font-weight: bold;
+}
+dd {
+  margin-left: 0;
+}
+```
+水平定义列表class="dl-horizontal"
+![这里写图片描述](http://img.blog.csdn.net/20161211152709740?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvZ2l0aHViXzM0NTE0NzUw/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast)
+```
+@media (min-width: 768px) {
+  .dl-horizontal dt {
+    float: left;
+    width: 160px;
+    overflow: hidden;
+    clear: left;
+    text-align: right;
+    //显示省略符号来代表被修剪的文本
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .dl-horizontal dd {
+    margin-left: 180px;
+  }
+}
+```
+
+##### 3.2代码
+##### 3.3表格
+
+表格组件中，BootStrap提供了
+1种基础.table样式
+4种附加样式(.table-striped/.table-bordered/.table-hover/.table-condensed)
+1种支持响应式布局的.table-responsive
+
+**table样式**
+```
+//源码
+table {
+  background-color: transparent;
+}
+caption {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  color: #777;
+  text-align: left;
+}
+th {
+  text-align: left;
+}
+.table {
+  width: 100%;
+  max-width: 100%;
+  margin-bottom: 20px;
+}
+.table > thead > tr > th,
+.table > tbody > tr > th,
+.table > tfoot > tr > th,
+.table > thead > tr > td,
+.table > tbody > tr > td,
+.table > tfoot > tr > td {
+  padding: 8px;
+  line-height: 1.42857143;
+  vertical-align: top;
+  border-top: 1px solid #ddd;
+}
+.table > thead > tr > th {
+  vertical-align: bottom;
+  border-bottom: 2px solid #ddd;
+}
+.table > caption + thead > tr:first-child > th,
+.table > colgroup + thead > tr:first-child > th,
+.table > thead:first-child > tr:first-child > th,
+.table > caption + thead > tr:first-child > td,
+.table > colgroup + thead > tr:first-child > td,
+.table > thead:first-child > tr:first-child > td {
+  border-top: 0;
+}
+.table > tbody + tbody {
+  border-top: 2px solid #ddd;
+}
+.table .table {
+  background-color: #fff;
+}
+```
+
+**table.striped样式--带背景条纹的表格**
+
+```
+//源码
+.table-striped > tbody > tr:nth-of-type(odd) {
+  background-color: #f9f9f9;
+}
+```
+
+**table.bordered样式--带边框的表格**
+
+为表格所有的单元格提供1条1像素宽的边框
+```
+//源码
+.table-bordered {
+  border: 1px solid #ddd;
+}
+.table-bordered > thead > tr > th,
+.table-bordered > tbody > tr > th,
+.table-bordered > tfoot > tr > th,
+.table-bordered > thead > tr > td,
+.table-bordered > tbody > tr > td,
+.table-bordered > tfoot > tr > td {
+  border: 1px solid #ddd;
+}
+.table-bordered > thead > tr > th,
+.table-bordered > thead > tr > td {
+  border-bottom-width: 2px;
+}
+```
+
+**table.hover样式--鼠标悬停高亮的表格**
+
+**table.condensed样式--紧凑型的表格**
+
+```
+//源码
+.table-condensed > thead > tr > th,
+.table-condensed > tbody > tr > th,
+.table-condensed > tfoot > tr > th,
+.table-condensed > thead > tr > td,
+.table-condensed > tbody > tr > td,
+.table-condensed > tfoot > tr > td {
+  padding: 5px;
+}
+```
+
+**行级元素样式**
+
+Bootstrap为表格的tr元素提供了5种额外的样式，用于控制tr的背景颜色。active、success、info、warning、danger
+```
+//源码
+.table > thead > tr > td.active,
+.table > tbody > tr > td.active,
+.table > tfoot > tr > td.active,
+.table > thead > tr > th.active,
+.table > tbody > tr > th.active,
+.table > tfoot > tr > th.active,
+.table > thead > tr.active > td,
+.table > tbody > tr.active > td,
+.table > tfoot > tr.active > td,
+.table > thead > tr.active > th,
+.table > tbody > tr.active > th,
+.table > tfoot > tr.active > th {
+  background-color: #f5f5f5;
+}
+.table-hover > tbody > tr > td.active:hover,
+.table-hover > tbody > tr > th.active:hover,
+.table-hover > tbody > tr.active:hover > td,
+.table-hover > tbody > tr:hover > .active,
+.table-hover > tbody > tr.active:hover > th {
+  background-color: #e8e8e8;
+}
+.table > thead > tr > td.success,
+.table > tbody > tr > td.success,
+.table > tfoot > tr > td.success,
+.table > thead > tr > th.success,
+.table > tbody > tr > th.success,
+.table > tfoot > tr > th.success,
+.table > thead > tr.success > td,
+.table > tbody > tr.success > td,
+.table > tfoot > tr.success > td,
+.table > thead > tr.success > th,
+.table > tbody > tr.success > th,
+.table > tfoot > tr.success > th {
+  background-color: #dff0d8;
+}
+.table-hover > tbody > tr > td.success:hover,
+.table-hover > tbody > tr > th.success:hover,
+.table-hover > tbody > tr.success:hover > td,
+.table-hover > tbody > tr:hover > .success,
+.table-hover > tbody > tr.success:hover > th {
+  background-color: #d0e9c6;
+}
+.table > thead > tr > td.info,
+.table > tbody > tr > td.info,
+.table > tfoot > tr > td.info,
+.table > thead > tr > th.info,
+.table > tbody > tr > th.info,
+.table > tfoot > tr > th.info,
+.table > thead > tr.info > td,
+.table > tbody > tr.info > td,
+.table > tfoot > tr.info > td,
+.table > thead > tr.info > th,
+.table > tbody > tr.info > th,
+.table > tfoot > tr.info > th {
+  background-color: #d9edf7;
+}
+.table-hover > tbody > tr > td.info:hover,
+.table-hover > tbody > tr > th.info:hover,
+.table-hover > tbody > tr.info:hover > td,
+.table-hover > tbody > tr:hover > .info,
+.table-hover > tbody > tr.info:hover > th {
+  background-color: #c4e3f3;
+}
+.table > thead > tr > td.warning,
+.table > tbody > tr > td.warning,
+.table > tfoot > tr > td.warning,
+.table > thead > tr > th.warning,
+.table > tbody > tr > th.warning,
+.table > tfoot > tr > th.warning,
+.table > thead > tr.warning > td,
+.table > tbody > tr.warning > td,
+.table > tfoot > tr.warning > td,
+.table > thead > tr.warning > th,
+.table > tbody > tr.warning > th,
+.table > tfoot > tr.warning > th {
+  background-color: #fcf8e3;
+}
+.table-hover > tbody > tr > td.warning:hover,
+.table-hover > tbody > tr > th.warning:hover,
+.table-hover > tbody > tr.warning:hover > td,
+.table-hover > tbody > tr:hover > .warning,
+.table-hover > tbody > tr.warning:hover > th {
+  background-color: #faf2cc;
+}
+.table > thead > tr > td.danger,
+.table > tbody > tr > td.danger,
+.table > tfoot > tr > td.danger,
+.table > thead > tr > th.danger,
+.table > tbody > tr > th.danger,
+.table > tfoot > tr > th.danger,
+.table > thead > tr.danger > td,
+.table > tbody > tr.danger > td,
+.table > tfoot > tr.danger > td,
+.table > thead > tr.danger > th,
+.table > tbody > tr.danger > th,
+.table > tfoot > tr.danger > th {
+  background-color: #f2dede;
+}
+.table-hover > tbody > tr > td.danger:hover,
+.table-hover > tbody > tr > th.danger:hover,
+.table-hover > tbody > tr.danger:hover > td,
+.table-hover > tbody > tr:hover > .danger,
+.table-hover > tbody > tr.danger:hover > th {
+  background-color: #ebcccc;
+}
+```
+
+**响应式表格**
+
+随着响应式设计的大量需求，Bootstrap为表格提供了一个响应式设计的容器(.table-responsive),将.table-responsive样式包装在.table样式外部即可创建响应式表格
+在小屏幕(<768px)水平滚动，大屏幕上水平滚动条消失
+```
+<div class="table-responsive">
+    <table class="table">
+    </table>
+</div>
+```
+
+```
+//源码
+.table-responsive {
+  min-height: .01%;
+  overflow-x: auto;
+}
+//把原有.table样式得底部外边距margin-bottom从20px改成了0px，目的是消除滚动条带来的上下高度差
+//并在.table-responsive样式上设置了一个margin-bottom:15px,避免和容器外部的下一个元素重叠
+@media screen and (max-width: 767px) {
+  .table-responsive {
+    width: 100%;
+    margin-bottom: 15px;
+    overflow-y: hidden;
+    -ms-overflow-style: -ms-autohiding-scrollbar;
+    border: 1px solid #ddd;
+  }
+  .table-responsive > .table {
+    margin-bottom: 0;
+  }
+  .table-responsive > .table > thead > tr > th,
+  .table-responsive > .table > tbody > tr > th,
+  .table-responsive > .table > tfoot > tr > th,
+  .table-responsive > .table > thead > tr > td,
+  .table-responsive > .table > tbody > tr > td,
+  .table-responsive > .table > tfoot > tr > td {
+    white-space: nowrap;
+  }
+  .table-responsive > .table-bordered {
+    border: 0;
+  }
+  //可以看到table-responsive给自己加了一个1px的外边框，如果在table上在使用table-bordered样式得话，就会和表格的外边框重合，就会变粗，所以进行了以下代码的编写
+  .table-responsive > .table-bordered > thead > tr > th:first-child,
+  .table-responsive > .table-bordered > tbody > tr > th:first-child,
+  .table-responsive > .table-bordered > tfoot > tr > th:first-child,
+  .table-responsive > .table-bordered > thead > tr > td:first-child,
+  .table-responsive > .table-bordered > tbody > tr > td:first-child,
+  .table-responsive > .table-bordered > tfoot > tr > td:first-child {
+    border-left: 0;//所有tr的第一个单元格(最左边的一列)的左边框设置为0px
+  }
+  .table-responsive > .table-bordered > thead > tr > th:last-child,
+  .table-responsive > .table-bordered > tbody > tr > th:last-child,
+  .table-responsive > .table-bordered > tfoot > tr > th:last-child,
+  .table-responsive > .table-bordered > thead > tr > td:last-child,
+  .table-responsive > .table-bordered > tbody > tr > td:last-child,
+  .table-responsive > .table-bordered > tfoot > tr > td:last-child {
+    border-right: 0;//所有tr的最后一个单元格(最右边的一列)的左边框设置为0px
+  }
+  .table-responsive > .table-bordered > tbody > tr:last-child > th,
+  .table-responsive > .table-bordered > tfoot > tr:last-child > th,
+  .table-responsive > .table-bordered > tbody > tr:last-child > td,
+  .table-responsive > .table-bordered > tfoot > tr:last-child > td {
+    border-bottom: 0;//最后一行tr里的单元格的底部边框设置为0px
+  }
+}
+```
+![这里写图片描述](http://img.blog.csdn.net/20161211161917404?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvZ2l0aHViXzM0NTE0NzUw/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast)
+![这里写图片描述](http://img.blog.csdn.net/20161211161932873?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvZ2l0aHViXzM0NTE0NzUw/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast)
+
+##### 3.4 表单
+
+表单是html网页交互很重要的部分，同时也是BootSTrap框架中的核心内容，表单提供了丰富的样式(基础、内联、横向)
+##### 3.5 按钮
+
+按钮是任何系统都不能缺少的组件，设置到按钮的大小、颜色、状态等。
+
+```
+//btn源码
+.btn {
+  display: inline-block;
+  padding: 6px 12px;
+  margin-bottom: 0;
+  font-size: 14px;
+  font-weight: normal;
+  line-height: 1.42857143;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  -ms-touch-action: manipulation;
+      touch-action: manipulation;
+  cursor: pointer;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  background-image: none;
+  border: 1px solid transparent;
+  border-radius: 4px;
+}
+```
+
+**按钮样式**
+
+btn-default、btn-primary、btn-success、btn-info、btn-warning、btn-danger、btn-link
+
+**按钮大小**
+
+btn-xs、btn-sm、btn-lg、btn-block
+```
+//源码
+.btn-lg,
+.btn-group-lg > .btn {
+  padding: 10px 16px;
+  font-size: 18px;
+  line-height: 1.3333333;
+  border-radius: 6px;
+}
+.btn-sm,
+.btn-group-sm > .btn {
+  padding: 5px 10px;
+  font-size: 12px;
+  line-height: 1.5;
+  border-radius: 3px;
+}
+.btn-xs,
+.btn-group-xs > .btn {
+  padding: 1px 5px;
+  font-size: 12px;
+  line-height: 1.5;
+  border-radius: 3px;
+}
+```
+
+所有按钮的宽度都是文本的长短再加上padding值来决定，若我们需要一个充满父容器的100%宽度的按钮，则无法实现。所以有btn-block
+btn-block不根据文本收缩，也没有padding和margin值，而是充满父容器
+```
+//源码
+.btn-block {
+  display: block;
+  width: 100%;
+}
+.btn-block + .btn-block {
+  margin-top: 5px;
+}
+input[type="submit"].btn-block,
+input[type="reset"].btn-block,
+input[type="button"].btn-block {
+  width: 100%;
+}
+```
+
+**多标签支持**
+
+btn相关元素的强大之处，不仅能支持button元素，也能支持a元素和input元素
+
+```
+<a class="btn btn-default" href="#">链接</a>
+<button class="btn btn-default" type="submit">按钮</button>
+<input class="btn btn-default" type="submit" value="输入框">
+```
+
+##### 3.6 图像
+
+img-rounded、img-circle、img-thumbnail(缩放图模式)
+
+```
+//源码
+img {
+  vertical-align: middle;
+}
+.img-responsive,
+.thumbnail > img,
+.thumbnail a > img,
+.carousel-inner > .item > img,
+.carousel-inner > .item > a > img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+.img-rounded {
+  border-radius: 6px;
+}
+//缩略图模式
+.img-thumbnail {
+  display: inline-block;
+  max-width: 100%;
+  height: auto;
+  padding: 4px;
+  line-height: 1.42857143;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  -webkit-transition: all .2s ease-in-out;
+       -o-transition: all .2s ease-in-out;
+          transition: all .2s ease-in-out;
+}
+.img-circle {
+  border-radius: 50%;
+}
+```
+##### 3.7 辅助样式
+
+**文本样式及背景样式**
+
+文本样式：text-muted(柔和灰)、text-primary、text-success、text-info、text-warning、text-danger
+文本背景样式：bg-primary、bg-success、bg-info、bg-warning、bg-danger
+
+
+#### 4.CSS组件
+
+组件也是最核心的地方，因为绝大部分的网页必须利用组件才能构建出绚丽的页面。组件包括：
+icon图标、下拉菜单dropdown、按钮组、按钮下拉菜单、输入框组、导航nav、导航条navbar、面包屑导航breadcrumb、分页导航pagination、标签label、徽章badge、
+大屏幕展播、页面标题、缩略图、警告框、进度条progress bar、媒体对象、列表组、面板panel、洼地well共20种
+
+##### 4.1 字体图标(glyphicon)
+
+使用的时候同时使用两个样式，即.glyphicon和.glyphicon-/* 开头的样式
+```
+//字体图标.html
+<div class="btn-toolbar">
+    <div class="btn-group">
+        <a href="#" class="btn btn-default"><span class="glyphicon glyphicon-align-left"></span></a>
+        <a href="#" class="btn btn-default"><span class="glyphicon glyphicon-align-center"></span></a>
+        <a href="#" class="btn btn-default"><span class="glyphicon glyphicon-align-right"></span></a>
+    </div>
+</div>
+```
+
+##### 4.2 下拉菜单(dropdown)
+
+dropdown、dropdown-menu、dropdown-header、divider、dropdown-submenu
+例子见下拉菜单.html
+```
+//源码
+.dropup,
+.dropdown {
+  position: relative;
+}
+.dropdown-toggle:focus {
+  outline: 0;
+}
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 1000;
+  display: none;
+  float: left;
+  min-width: 160px;
+  padding: 5px 0;
+  margin: 2px 0 0;
+  font-size: 14px;
+  text-align: left;
+  list-style: none;
+  background-color: #fff;
+  -webkit-background-clip: padding-box;
+          background-clip: padding-box;
+  border: 1px solid #ccc;
+  border: 1px solid rgba(0, 0, 0, .15);
+  border-radius: 4px;
+  -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
+          box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
+}
+.dropdown-menu.pull-right {
+  right: 0;
+  left: auto;
+}
+.dropdown-menu .divider {
+  height: 1px;
+  margin: 9px 0;
+  overflow: hidden;
+  background-color: #e5e5e5;
+}
+.dropdown-header {
+  display: block;
+  padding: 3px 20px;
+  font-size: 12px;
+  line-height: 1.42857143;
+  color: #777;
+  white-space: nowrap;
+}
+```
+
+##### 4. 3按钮组
+
+.btn-toolbar(有助于几组btn-group结合到一个btn-toolbar中)/.btn-group(btn-group-lg/btn-group-sm/btn-group-xs)/.btn-group-vertical
+容器内的按钮，可以使用button元素，也可以使用a元素，产生的效果是一样的。
+
+容器的多个分组以table风格进行显示，每组之间保持5px的left margin
+```
+//源码
+.btn-toolbar:before,
+.btn-toolbar:after{
+    display:table;
+    content:" ";
+}
+.btn-toolbar:after{
+    clear:both;
+}
+
+.btn-toolbar {
+  margin-left: -5px;
+}
+.btn-toolbar .btn,
+.btn-toolbar .btn-group,
+.btn-toolbar .input-group {
+  float: left;
+}
+.btn-toolbar > .btn,
+.btn-toolbar > .btn-group,
+.btn-toolbar > .input-group {
+  margin-left: 5px;
+}
+```
+例子见按钮组.html--普通分组，嵌套分组，垂直分组
+
+##### 4.4 按钮下拉菜单
+
+##### 4.5 CSS组件
+##### 4.6 CSS组件
+##### 4.7 CSS组件
+##### 4.8 CSS组件
+##### 4.9 CSS组件
+##### 4.10 CSS组件
+##### 4.11 CSS组件
+##### 4.12 CSS组件
+##### 4.13 CSS组件
+##### 4.14 CSS组件
+##### 4.15 CSS组件
+##### 4.16 CSS组件
+##### 4.17 CSS组件
+##### 4.18 CSS组件
