@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Bootstrap从3.0版本开始全面支持移动平台，贯彻移动先行宗旨 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Bootstrap 101 Template</title>
+
+    <!-- Bootstrap -->
+    <link href="bootstrap-3.3.7-dist/css/bootstrap.min.css" rel="stylesheet">
+
+  </head>
+  <body>
+    <!--选项卡导航nav nav-tabs:
+         菜单当前高亮菜单项.active
+         菜单项是禁用状态.disabled -->
+     <ul class="nav nav-tabs">
+         <li class="active"><a href="#">主页</a></li>
+         <li><a href="#">个人信息</a></li>
+         <li class="disabled"><a href="#">作品</a></li>
+     </ul>
+
+     <!--  胶囊式选项卡导航nav nav-pills：
+            .active的菜单会进行背景色高亮显示-->
+     <ul class="nav nav-pills">
+         <li class="active"><a href="#">主页</a></li>
+         <li><a href="#">个人信息</a></li>
+         <li class="disabled"><a href="#">作品</a></li>
+     </ul>
+
+     <!--  堆叠式导航nav nav-pills nav-stacked：
+            堆叠式导航的原理是去除nav-pills样式得浮动显示(默认不设置浮动，让其垂直摆放)-->
+     <ul class="nav nav-pills nav-stacked">
+         <li class="active"><a href="#">主页</a></li>
+         <li><a href="#">个人信息</a></li>
+         <li class="nav-divider"></li>
+         <li class="disabled"><a href="#">作品</a></li>
+     </ul>
+
+     <!--  自适应导航nav nav-pills/nav-tabs nav-justified：
+            可以将li元素充满整个父元素，在宽度为100%的基础上，设置每个元素的display风格是table-cell-->
+     <ul class="nav nav-pills nav-justified">
+         <li class="active"><a href="#">主页</a></li>
+         <li><a href="#">个人信息</a></li>
+         <li class="disabled"><a href="#">作品</a></li>
+     </ul>
+
+     <!--  二级导航nav nav-tabs：
+            普通导航里的li元素作为父元素容器，内部包含dropdown下拉菜单的-->
+     <ul class="nav nav-tabs">
+         <li class="active"><a href="#">主页</a></li>
+         <li><a href="#">个人信息</a></li>
+         <li class="disabled"><a href="#">作品</a></li>
+         <li class="dropdown">
+             <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <span class="caret"></span></a>
+             <ul class="dropdown-menu">
+                 <li><a href="#">二级菜单</a></li>
+                 <li><a href="#">二级菜单</a></li>
+                 <li><a href="#">二级菜单</a></li>
+             </ul>
+         </li>
+     </ul>
+
+
+    <!-- bootstrap是基于jQuery-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+  </body>
+</html>

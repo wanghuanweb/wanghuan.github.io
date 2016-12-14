@@ -1,0 +1,99 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Bootstrap从3.0版本开始全面支持移动平台，贯彻移动先行宗旨 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Bootstrap 101 Template</title>
+
+    <!-- Bootstrap -->
+    <link href="bootstrap-3.3.7-dist/css/bootstrap.min.css" rel="stylesheet">
+
+  </head>
+  <body>
+
+    <!--  将文本输入框(input-group)和文字或者小icon组合在一起进行显示：
+           input-group/input-group-addon/form-control-->
+    <div class="input-group">
+        <span class="input-group-addon">$</span>
+        <input type="text" class="form-control">
+    </div>
+    <div class="input-group">
+        <input type="text" class="form-control">
+        <span class="input-group-addon">0.0</span>
+    </div>
+
+    <!--  复选框与单选框作为addon .input-group-addon(可以放置label，icon，checkbox，radio)
+          源码中如果对margin-top值进行了消除，方便对齐
+          input-group/input-group-addon/form-control-->
+    <div class="input-group">
+        <span class="input-group-addon"><input type="checkbox"></span>
+        <input type="text" class="form-control">
+    </div>
+    <div class="input-group">
+        <span class="input-group-addon"><input type="radio"></span>
+        <input type="text" class="form-control">
+    </div>
+
+    <!--  按钮作为addon
+          input-group/input-group-addon/form-control-->
+    <div class="input-group">
+        <span class="input-group-addon">
+            <button class="btn btn-default">Go!</button>
+        </span>
+        <input type="text" class="form-control">
+    </div>
+
+    <div class="input-group">
+        <input type="text" class="form-control">
+        <span class="input-group-addon">
+            <button class="btn btn-default">Go!</button>
+        </span>
+    </div>
+
+    <!--  下拉菜单按钮作为addon:
+          input-group/input-group-btn/dropdown-menu/form-control-->
+    <div class="input-group">
+        <input type="text" class="form-control">
+
+        <div class="input-group-btn">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                前端 <span class="caret"></span>
+            </button>
+
+            <ul class="dropdown-menu">
+                <li><a href="#">HTML</a></li>
+                <li><a href="#">JS</a></li>
+                <li><a href="#">CSS</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <!--  分段按钮作为addon：
+          在input-group-btn里有多个btn-->
+
+    <div class="input-group">
+        <input type="text" class="form-control">
+        <div class="input-group-btn">
+            <button class="btn btn-default" type="button">按钮A</button>
+            <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+                <span class="caret"></span>
+            </button>
+            <button class="btn btn-default" type="button">按钮B</button>
+            <button class="btn btn-default" type="button">按钮C</button>
+
+            <ul class="dropdown-menu">
+                <li>1</li>
+                <li>2</li>
+                <li>3</li>
+            </ul>
+        </div>
+    </div>
+    <!-- bootstrap是基于jQuery-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+  </body>
+</html>

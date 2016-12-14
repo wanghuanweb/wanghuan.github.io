@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Bootstrap从3.0版本开始全面支持移动平台，贯彻移动先行宗旨 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Bootstrap 101 Template</title>
+
+    <!-- Bootstrap -->
+    <link href="bootstrap-3.3.7-dist/css/bootstrap.min.css" rel="stylesheet">
+
+  </head>
+  <body>
+      
+      <!--  基础导航条navbar navbar-default navbar-header navbar-brand nav navbar-nav
+            创建一个默认的导航栏的步骤如下：
+            1.向 <nav> 标签添加 class .navbar、.navbar-default
+            2.向上面的元素添加 role="navigation"，有助于增加可访问性。
+            3.向 <div> 元素添加一个标题 class .navbar-header，内部包含了带有 class navbar-brand 的 <a> 元素。这会让文本看起来更大一号。
+            4.为了向导航栏添加链接，只需要简单地添加带有 class .nav、.navbar-nav 的无序列表即可-->
+
+      <nav class="navbar navbar-default" role="navigation">
+          <div class="navbar-header">
+              <a href="#" class="navbar-brand">前端</a>
+          </div>
+          <div>
+              <ul class="nav navbar-nav">
+                  <li class="active"><a href="#">HTML</a></li>
+                  <li><a href="#">CSS</a></li>
+                  <li class="dropdown">
+                      <a class="dropdown-toggle" data-toggle="dropdown" href="#">JS <span class="caret"></span></a>
+                      <ul class="dropdown-menu">
+                          <li><a href="">js高级程序设计</a></li>
+                          <li><a href="">js设计模式</a></li>
+                          <li><a href="">js DOM</a></li>
+                      </ul>
+                  </li>
+              </ul>
+          </div>
+      </nav>
+
+      <!--  导航条中的表单navbar navbar-default navbar-header navbar-brand navbar-form
+            步骤如下：
+            1.向 <nav> 标签添加 class .navbar、.navbar-default
+            2.向上面的元素添加 role="navigation"，有助于增加可访问性。
+            3.向 <div> 元素添加一个标题 class .navbar-header，内部包含了带有 class navbar-brand 的 <a> 元素。这会让文本看起来更大一号。
+            4.navbar容器内放置form元素，在form元素上应用navbar-form样式即可，同事navbar-left和navbar-right可用-->
+      <nav class="navbar navbar-default" role="navigation">
+          <div class="navbar-header">
+              <a href="#" class="navbar-brand">Brand</a>
+          </div>
+          <form role="search" class="navbar-form navbar-left">
+             <div class="form-group">
+                 <input type="text" class="form-control">
+             </div>
+             <button class="btn btn-default" type="button">左按钮</button>
+          </form>
+
+          <form role="search" class="navbar-form navbar-right">
+             <div class="form-group">
+                 <input type="text" class="form-control">
+             </div>
+             <button class="btn btn-default" type="button">右按钮</button>
+          </form>
+      </nav>
+
+      <!--  导航条中的按钮，文本，链接：
+            普通导航栏中使用navbar-brand样式得a元素
+            还有：navbar-btn、bavbar-text、navbar-link(这些象征性的设置了margin和颜色)-->
+      <nav class="navbar navbar-default" role="navigation">
+          <div class="navbar-header">
+              <a href="href-"#"" class="navbar-brand">Brand</a>
+          </div>
+          <ul class="nav navbar-nav">
+              <li><a href="#">Home</a></li>
+              <li><a href="#">Link</a></li>
+              <li><a href="#">Link</a></li>
+          </ul>
+          <button class="btn btn-class navbar-btn">和ul一起使用的button</button>
+      </nav>
+
+     <!--  导航栏中的文本：
+           如果需要在导航中包含文本字符串，请使用 class .navbar-text-->
+      <nav class="navbar navbar-default" role="navigation">
+         <div class="container-fluid">
+         <div class="navbar-header">
+             <a class="navbar-brand" href="#">菜鸟教程</a>
+         </div>
+         <div>
+             <p class="navbar-text">Runoob 用户登录</p>
+         </div>
+         </div>
+     </nav>
+
+    <!-- bootstrap是基于jQuery-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+  </body>
+</html>

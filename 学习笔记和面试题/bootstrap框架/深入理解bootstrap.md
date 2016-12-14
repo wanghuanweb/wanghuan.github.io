@@ -1654,7 +1654,7 @@ dropdown、dropdown-menu、dropdown-header、divider、dropdown-submenu
 }
 ```
 
-##### 4. 3按钮组
+##### 4. 3按钮组(btn-group)
 
 .btn-toolbar(有助于几组btn-group结合到一个btn-toolbar中)/.btn-group(btn-group-lg/btn-group-sm/btn-group-xs)/.btn-group-vertical
 容器内的按钮，可以使用button元素，也可以使用a元素，产生的效果是一样的。
@@ -1689,9 +1689,129 @@ dropdown、dropdown-menu、dropdown-header、divider、dropdown-submenu
 
 ##### 4.4 按钮下拉菜单
 
-##### 4.5 CSS组件
-##### 4.6 CSS组件
-##### 4.7 CSS组件
+结合使用.btn-group(btn-group-lg/btn-group-sm/btn-group-xs) .dropup .btn .dropdown-menu
+按钮下拉菜单是在普通的下拉菜单的基础上封装了.btn样式得效果，就类似于单击一个button按钮，然后显示隐藏的下拉菜单。
+
+组合式下拉菜单
+分离式下拉菜单
+向上弹起的下拉菜单
+```
+//源码，css实现方式主要是设置.dropdown-menu样式容器的bottom为100%
+.dropup .dropdown-menu,
+.navbar-fixed-bottom .dropdown .dropdown-menu {
+  top: auto;//高度自适应
+  bottom: 100%;//距离dropup样式得元素底部100%的宽度，即靠着上边框，向上方向弹出
+  margin-bottom: 2px;
+}
+```
+
+例子见组合试下拉菜单.html
+##### 4.5 输入框组
+了解table-cell的表格width设置为1%的原因。
+
+http://www.tuicool.com/articles/VzUVfyi
+通过向输入域添加前缀和后缀的内容，您可以向用户输入添加公共的元素。例如，您可以添加美元符号，或者在 Twitter 用户名前添加 @，或者应用程序接口所需要的其他公共的元素。
+
+input-group(input-group-xs,input-group-sm,input-group-lg)、input-group-addon、form-control
+
+```
+//源码
+//各元素设置为等高显示，input-group输入框组display:table，input-group-addon和form-control设置display:table-cell
+.input-group {
+  position: relative;
+  display: table;
+  border-collapse: separate;
+}
+//input-group如果同时应用了col样式，则取消浮动和左右padding
+.input-group[class*="col-"] {
+  float: none;
+  padding-right: 0;
+  padding-left: 0;
+}
+.input-group .form-control {
+  position: relative;
+  z-index: 2;
+  float: left;
+  width: 100%;
+  margin-bottom: 0;
+}
+.input-group-addon,
+.input-group-btn {
+//设置最小值，以便表格模式进行近似等分
+  width: 1%;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+.input-group-addon,
+.input-group-btn,
+.input-group .form-control {
+  display: table-cell;
+}
+```
+
+1.基本用法
+有时需要将文本输入框(input-group)和文字或者小icon组合在一起进行显示
+2.复选框与单选框作为addon .input-group-addon(可以放置label，icon，checkbox，radio)
+3.按钮作为addon
+4.下拉菜单按钮作为addon
+5.分段按钮作为addon
+
+例子见输入框组.html
+
+##### 4.6 导航
+
+```
+//源码
+.nav {
+  padding-left: 0;
+  margin-bottom: 0;
+  list-style: none;
+}
+.nav > li {
+  position: relative;
+  display: block;
+}
+.nav > li > a {
+  position: relative;
+  display: block;
+  padding: 10px 15px;
+}
+.nav > li > a:hover,
+.nav > li > a:focus {
+  text-decoration: none;
+  background-color: #eee;
+}
+.nav > li.disabled > a {
+  color: #777;
+}
+.nav > li.disabled > a:hover,
+.nav > li.disabled > a:focus {
+  color: #777;
+  text-decoration: none;
+  cursor: not-allowed;
+  background-color: transparent;
+}
+```
+
+和默认的.btn样式不同，默认的.nav样式不提供默认的导航，必须通过附加另外一个样式才行，比如.nav-tabs样式表示选项卡导航。
+nav nav-tabs nav-pills nav-stacked nav-justified navbar
+1.选项卡导航(nav nav-tabs)
+2.胶囊式选项卡导航(nav nav-pills)
+3.堆叠式导航(nav nav-pills nav-stacked)
+4.自适应导航(nav nav-tabs/nav-pills nav-justified)
+5.二级导航(nav nav-tabs dropdown dropdown-menu)
+
+例子见导航.html
+
+##### 4.7 导航条
+
+1.基础导航条navbar navbar-default navbar-header navbar-brand nav navbar-nav
+2.导航条中的表单navbar navbar-default navbar-header navbar-brand navbar-form
+3.导航条中的按钮，文本，链接navbar-btn、bavbar-text、navbar-link
+4.导航条中的项目进行左右浮动navbar-left、navbar-right
+5.顶部固定或底部固定nacbar-fixed-top、navbar-fixed-bottom
+6.响应式导航条
+
 ##### 4.8 CSS组件
 ##### 4.9 CSS组件
 ##### 4.10 CSS组件

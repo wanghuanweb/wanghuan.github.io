@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Bootstrap从3.0版本开始全面支持移动平台，贯彻移动先行宗旨 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Bootstrap 101 Template</title>
+
+    <!-- Bootstrap -->
+    <link href="bootstrap-3.3.7-dist/css/bootstrap.min.css" rel="stylesheet">
+
+  </head>
+  <body>
+    <!--组合式下拉菜单：
+       组合式下拉菜单就是把普通标签的a元素换成button元素
+       唯一不同的是外部容器从.dropdown换成了.btn-group
+       注意：若没有类dropdown-toggle按钮圆角有问题 -->
+
+    <div class="btn-group">
+        <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
+            Success <span class="caret"></span>
+        </button>
+
+        <ul class="dropdown-menu">
+            <li> <a href="#">HTML</a> </li>
+            <li> <a href="#">CSS</a> </li>
+            <li> <a href="#">JS</a> </li>
+        </ul>
+    </div>
+
+    <!--分离式下拉菜单:
+          组合式下拉菜单是在单击按钮或者箭头的时候，都会触发弹出事件，
+          但分离式则是单机箭头的时候弹出菜单-->
+    <div class="btn-group">
+        <button type="button" class="btn btn-success">Button</button>
+        <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
+            <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+            <li><a href="#">HTML</a></li>
+            <li><a href="#">JS</a></li>
+            <li><a href="#">CSS</a></li>
+        </ul>
+    </div>
+
+    <!--向上弹起的下拉菜单  -->
+    <div class="btn-group dropup">
+        <button type="button" class="btn btn-success">Button</button>
+        <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
+            <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+            <li><a href="#">HTML</a></li>
+            <li><a href="#">JS</a></li>
+            <li><a href="#">CSS</a></li>
+        </ul>
+    </div>
+
+
+    <!-- bootstrap是基于jQuery-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+  </body>
+</html>
