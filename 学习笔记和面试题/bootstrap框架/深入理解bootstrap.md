@@ -1154,6 +1154,65 @@ dd {
 ```
 
 ##### 3.2代码
+
+Bootstrap对代码显示提供了三种方式：内联代码
+
+1.使用<code> 元素显示单行内联代码
+
+内联代码主要是设置code元素的背景颜色和其内部的文字颜色。
+
+```
+//用法
+<code>&lt;body&gt;&lt;/body&gt;</code>
+```
+
+```
+//源码
+code {
+  padding: 2px 4px;
+  font-size: 90%;
+  color: #c7254e;
+  background-color: #f9f2f4;
+  border-radius: 4px;
+}
+```
+
+2.使用<kbd> 元素显示用户输入代码
+
+<kbd>元素包含的内容是表示该内容需要用户键盘输入，所以一般是设置成input 的效果，用法和code类似
+```
+//用法
+<pre>
+&lt;article&gt;
+	&lt;h1&gt;Article Heading&lt;/h1&gt;
+&lt;/article&gt;
+</pre>
+```
+
+```
+//源码
+kbd {
+  padding: 2px 4px;
+  font-size: 90%;
+  color: #fff;
+  background-color: #333;
+  border-radius: 3px;
+  -webkit-box-shadow: inset 0 -1px 0 rgba(0, 0, 0, .25);
+          box-shadow: inset 0 -1px 0 rgba(0, 0, 0, .25);
+}
+```
+
+3.使用<pre> 元素新生多行代码块，代码需要被显示为一个独立的块元素或者代码有多行，那么您应该使用 <pre> 标签。
+
+```
+//用法
+<pre>
+&lt;article&gt;
+	&lt;h1&gt;Article Heading&lt;/h1&gt;
+&lt;/article&gt;
+</pre>
+```
+
 ##### 3.3表格
 
 表格组件中，BootStrap提供了
@@ -1443,6 +1502,92 @@ Bootstrap为表格的tr元素提供了5种额外的样式，用于控制tr的背
 ##### 3.4 表单
 
 表单是html网页交互很重要的部分，同时也是BootSTrap框架中的核心内容，表单提供了丰富的样式(基础、内联、横向)
+
+1.基础表单
+
+```
+<!--基础表单：
+1.向父 <form> 元素添加 role="form"。
+2.把标签label和控件放在一个带有 class .form-group 的 <div> 中。这是获取最佳间距所必需的。因为form-group提供了margin
+3.向所有的文本元素 <input>、<textarea> 和 <select> 添加 class .form-control。-->
+
+<form role="form">
+    <fieldset>
+        <legend>用户登录</legend>
+        <div class="form-group">
+            <label for="name">姓名</label>
+            <input type="text" class="form-control" id="name" placeholder="请输入名称">
+        </div>
+
+        <div class="form-group">
+            <label for="psd">密码</label>
+            <input type="text" class="form-control" id="psd" placeholder="请输入密码">
+        </div>
+
+        <div class="checkbox">
+            <label><input type="checkbox">记住密码</label>
+        </div>
+        <button type="submit" class="btn btn-default">登录</button>
+    </fieldset>
+</form>
+```
+
+2.内联表单
+
+```
+<!--  内联表单：
+      如果需要创建一个表单，它的所有元素是内联的，向左对齐的，标签是并排的，请向 <form> 标签添加 class .form-inline -->
+  <form role="form" class="form-inline">
+      <fieldset>
+          <legend>用户登录</legend>
+          <div class="form-group">
+              <label for="name">姓名</label>
+              <input type="text" class="form-control" id="name" placeholder="请输入名称">
+          </div>
+
+          <div class="form-group">
+              <label for="psd">密码</label>
+              <input type="text" class="form-control" id="psd" placeholder="请输入密码">
+          </div>
+
+          <div class="checkbox">
+              <label><input type="checkbox">记住密码</label>
+          </div>
+          <button type="submit" class="btn btn-default">登录</button>
+      </fieldset>
+  </form>
+```
+
+3.横向表单
+
+```
+<!--  横向表单：
+      1.向父 <form> 元素添加 class .form-horizontal。
+      2.把标签和控件放在一个带有 class .form-group 的 <div> 中。
+      3.向标签添加 class .control-label。
+      4.要实现横向表单，还要用栅格类-->
+  <form role="form" class="form-horizontal">
+      <fieldset>
+          <legend>用户登录</legend>
+          <div class="form-group">
+              <label class="control-label  col-lg-1" for="name">姓名</label>
+              <div class="col-lg-10">
+                  <input type="text" class="form-control" id="name" placeholder="请输入名称">
+              </div>
+          </div>
+
+          <div class="form-group">
+              <label class="control-label  col-lg-1" for="psd">密码</label>
+              <div class="col-lg-10">
+                  <input type="text" class="form-control" id="psd" placeholder="请输入密码">
+              </div>
+          </div>
+      </fieldset>
+  </form>
+```
+
+4.表单控件
+
 ##### 3.5 按钮
 
 按钮是任何系统都不能缺少的组件，设置到按钮的大小、颜色、状态等。
@@ -1812,14 +1957,80 @@ nav nav-tabs nav-pills nav-stacked nav-justified navbar
 5.顶部固定或底部固定nacbar-fixed-top、navbar-fixed-bottom
 6.响应式导航条
 
-##### 4.8 CSS组件
-##### 4.9 CSS组件
-##### 4.10 CSS组件
-##### 4.11 CSS组件
-##### 4.12 CSS组件
-##### 4.13 CSS组件
-##### 4.14 CSS组件
-##### 4.15 CSS组件
-##### 4.16 CSS组件
-##### 4.17 CSS组件
-##### 4.18 CSS组件
+##### 4.8 面包屑导航
+##### 4.9 分页
+##### 4.10 标签
+
+网页排版的时候，经常要高亮一些标题里的特殊字符或者整个字符。bootstrap提供了一个.label样式用于实现高亮功能。
+label主要设置背景色和背景方框
+```
+//源码
+.label {
+  display: inline;
+  padding: .2em .6em .3em;
+  font-size: 75%;
+  font-weight: bold;
+  line-height: 1;
+  color: #fff;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: .25em;
+}
+```
+
+和按钮类似，label样式提供了多种颜色的支持label-default label-primary label-success label-info label-warning label-danger
+大小 label-xs label-sm label-lg
+##### 4.11 徽章
+
+在开发交互式系统或者信息系统时，经常要显示一些最新收到的消息、需要有多少审批的消息。
+在span或者label上应用该badge样式即可
+
+```
+<a href="#">Inbox<span class="badge">42</span></a>
+```
+
+```
+//源码，主要是设置具有圆角的背景椭圆框
+.badge {
+  display: inline-block;
+  min-width: 10px;
+  padding: 3px 7px;
+  font-size: 12px;
+  font-weight: bold;
+  line-height: 1;
+  color: #fff;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  background-color: #777;
+  border-radius: 10px;
+}
+```
+
+##### 4.12 大屏幕展播
+
+在设计网页布局的时候，经常会有大屏内容的显示jumbotron
+顾名思义该组件可以增加标题的大小，并为登陆页面内容添加更多的外边距（margin）。
+源码中可以看出：
+如果jumbotron放在container样式内，则显示圆角;如果不放在里边，则不会显示圆角。
+
+##### 4.13 页面标题
+页面标题（Page Header）是个不错的功能，它会在网页标题四周添加适当的间距。当一个网页中有多个标题且每个标题之间需要添加一定的间距时，页面标题这个功能就显得特别有用。如需使用页面标题（Page Header），请把您的标题放置在带有 class .page-header 的 <div> 中：
+
+page-header页面标题提供了类似h1元素的显示效果，只不过margin和底部padding距离稍大一些。
+
+##### 4.14 缩略图
+
+缩略图(thumbnail)
+##### 4.15 警告
+
+##### 4.16 进度条
+
+##### 4.17 多媒体对象
+
+##### 4.18 列表组
+
+##### 4.19 面板
+
+##### 4.20 Wells
