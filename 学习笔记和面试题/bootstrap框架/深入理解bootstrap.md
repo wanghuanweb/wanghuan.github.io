@@ -1503,7 +1503,12 @@ Bootstrap为表格的tr元素提供了5种额外的样式，用于控制tr的背
 
 表单是html网页交互很重要的部分，同时也是BootSTrap框架中的核心内容，表单提供了丰富的样式(基础、内联、横向)
 
-1.基础表单
+表单的元素
+input textarea select checkbox radio(checkbox和radio是input的特殊类型)
+其他标签
+form fieldset legend
+
+###### 3.4.1.基础表单
 
 ```
 <!--基础表单：
@@ -1532,7 +1537,7 @@ Bootstrap为表格的tr元素提供了5种额外的样式，用于控制tr的背
 </form>
 ```
 
-2.内联表单
+###### 3.4.2.内联表单
 
 ```
 <!--  内联表单：
@@ -1558,7 +1563,7 @@ Bootstrap为表格的tr元素提供了5种额外的样式，用于控制tr的背
   </form>
 ```
 
-3.横向表单
+###### 3.4.3.横向表单
 
 ```
 <!--  横向表单：
@@ -1586,7 +1591,156 @@ Bootstrap为表格的tr元素提供了5种额外的样式，用于控制tr的背
   </form>
 ```
 
-4.表单控件
+###### 3.4.4.表单控件
+
+input元素：
+使用input元素的时候，必须声明type类型，否则可能引起问题。
+
+select元素：
+多行选择设置multiple="multiple"
+
+textarea元素：
+textarea元素定义了rows数字即可定义大文本框的高度，cols宽度。但是textarea应用了form-control央视，则cols无效。
+
+checkbox和radio(是两个特殊的type)
+注意使用的时候，每个input外部用label包住，并且在最外层用容器元素宝珠，并应用相应的.checkbox和.radio样式。
+```
+//使用
+<div class="checkbox">
+    <label><input type="checkbox">学习前端</label>
+</div>
+<div class="radio">
+    <label><input type="radio" name="optionsRadios" value="male">男生</label>
+</div>
+<div class="radio">
+    <label><input type="radio" name="optionsRadios" value="female">女生</label>
+</div>
+```
+
+```
+//源码
+//让单选框和复选框都能左右和上下居中
+.radio,
+.checkbox {
+  position: relative;
+  display: block;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+//内部有label的话，内联显示
+.radio label,
+.checkbox label {
+  min-height: 20px;
+  padding-left: 20px;
+  margin-bottom: 0;
+  font-weight: normal;
+  cursor: pointer;
+}
+```
+
+同时可以内联显示，在labelshang添加checkbox-inline或者radio-inline
+
+###### 3.4.5.空间状态
+
+焦点状态、禁用状态、验证提示状态
+
+焦点状态：
+当输入框 input 接收到 :focus 时，输入框的轮廓会被移除，同时应用 box-shadow。
+
+禁用状态：
+对 <fieldset> 添加 disabled 属性来禁用 <fieldset> 内的所有控件。
+
+验证提示状态：
+Bootstrap 包含了错误、警告和成功消息的验证样式。只需要对父元素简单地添加适当的 class（.has-warning、 .has-error 或 .has-success）即可使用验证状态。
+--对文字、边框和阴影设置的颜色不同
+
+```
+<div class="form-group has-warning">
+    <label for="inputWarning" class="control-label">输入长度不够!</label>
+    <input type="text" class="form-control">
+</div>
+<div class="form-group has-error">
+    <label for="inputError" class="control-label">输入不符合要求！</label>
+    <input type="text" class="form-control">
+</div>
+<div class="form-group has-success has-feedback">
+    <label for="inputSuccess" class="control-label">输入文本符合要求！</label>
+    <input type="text" class="form-control" id="inputSuccess">
+    <span class="glyphicon glyphicon-ok form-control-feedback"></span>
+</div>
+```  
+
+```
+//相对定位，用于设置input元素的父容器的定位方式
+.has-feedback {
+  position: relative;
+}
+//右内边距的设置，以便可以显示小图标
+.has-feedback .form-control {
+  padding-right: 42.5px;
+}
+//设置小图标的显示方式
+.form-control-feedback {
+  position: absolute;//绝对定位
+  top: 0;
+  right: 0;//右对齐
+  z-index: 2;
+  display: block;
+  width: 34px;
+  height: 34px;
+  line-height: 34px;
+  text-align: center;
+  pointer-events: none;
+}
+.input-lg + .form-control-feedback,
+.input-group-lg + .form-control-feedback,
+.form-group-lg .form-control + .form-control-feedback {
+  width: 46px;
+  height: 46px;
+  line-height: 46px;
+}
+.input-sm + .form-control-feedback,
+.input-group-sm + .form-control-feedback,
+.form-group-sm .form-control + .form-control-feedback {
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
+}
+.has-success .help-block,
+.has-success .control-label,
+.has-success .radio,
+.has-success .checkbox,
+.has-success .radio-inline,
+.has-success .checkbox-inline,
+.has-success.radio label,
+.has-success.checkbox label,
+.has-success.radio-inline label,
+.has-success.checkbox-inline label {
+  color: #3c763d;
+}
+.has-success .form-control {
+  border-color: #3c763d;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+          box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+}
+.has-success .form-control:focus {
+  border-color: #2b542c;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #67b168;
+          box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #67b168;
+}
+.has-success .input-group-addon {
+  color: #3c763d;
+  background-color: #dff0d8;
+  border-color: #3c763d;
+}
+.has-success .form-control-feedback {
+  color: #3c763d;
+}
+```
+
+###### 3.4.6.空间大小
+
+input-lg/input-sm
 
 ##### 3.5 按钮
 
@@ -1799,7 +1953,7 @@ dropdown、dropdown-menu、dropdown-header、divider、dropdown-submenu
 }
 ```
 
-##### 4. 3按钮组(btn-group)
+##### 4.3 按钮组(btn-group)
 
 .btn-toolbar(有助于几组btn-group结合到一个btn-toolbar中)/.btn-group(btn-group-lg/btn-group-sm/btn-group-xs)/.btn-group-vertical
 容器内的按钮，可以使用button元素，也可以使用a元素，产生的效果是一样的。
@@ -1948,7 +2102,7 @@ nav nav-tabs nav-pills nav-stacked nav-justified navbar
 
 例子见导航.html
 
-##### 4.7 导航条
+##### 4.7 导航条(navbar)
 
 1.基础导航条navbar navbar-default navbar-header navbar-brand nav navbar-nav
 2.导航条中的表单navbar navbar-default navbar-header navbar-brand navbar-form
@@ -1957,9 +2111,128 @@ nav nav-tabs nav-pills nav-stacked nav-justified navbar
 5.顶部固定或底部固定nacbar-fixed-top、navbar-fixed-bottom
 6.响应式导航条
 
-##### 4.8 面包屑导航
-##### 4.9 分页
-##### 4.10 标签
+##### 4.8 面包屑导航(breadcrumb)
+
+面包屑breadcrumb一般用于导航，表示当前页面所在的位置
+面包屑可以设置其他相关的小标记内容，比如标签、徽章标记等。
+
+```
+//源码
+//基础样式
+.breadcrumb {
+  padding: 8px 15px;
+  margin-bottom: 20px;
+  list-style: none;
+  background-color: #f5f5f5;
+  border-radius: 4px;
+}
+//所有li项都是内联块方式
+.breadcrumb > li {
+  display: inline-block;
+}
+//并且li项才起作用
+.breadcrumb > li + li:before {
+  padding: 0 5px;
+  color: #ccc;
+  content: "/\00a0";
+}
+//设置当前项的颜色
+.breadcrumb > .active {
+  color: #777;
+}
+```
+##### 4.9 分页(pagination)和翻页(pager)
+
+几乎所有网站内容都需要分页显示,一个用户体验良好的分页组件会得到访问用户的良好评价。
+
+```
+//源码
+.pagination {
+  display: inline-block;
+  padding-left: 0;
+  margin: 20px 0;
+  border-radius: 4px;
+}
+.pagination > li {
+  display: inline;
+}
+.pagination > li > a,
+.pagination > li > span {
+  position: relative;
+  float: left;
+  padding: 6px 12px;
+  margin-left: -1px;
+  line-height: 1.42857143;
+  color: #337ab7;
+  text-decoration: none;
+  background-color: #fff;
+  border: 1px solid #ddd;
+}
+.pagination > li:first-child > a,
+.pagination > li:first-child > span {
+  margin-left: 0;
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+}
+.pagination > li:last-child > a,
+.pagination > li:last-child > span {
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+}
+```
+
+**普通的分页**
+```
+<ul class="pagination">
+    <li><a href="#">&laquo;</a></li>
+    <li><a href="#">1</a></li>
+    <li><a href="#">2</a></li>
+    <li><a href="#">3</a></li>
+    <li><a href="#">4</a></li>
+    <li><a href="#">5</a></li>
+    <li><a href="#">&raquo;</a></li>
+</ul>
+```
+
+**分页的状态-disabled active**
+```
+<ul class="pagination">
+    <li><a href="#">&laquo;</a></li>
+    <li class="active"><a href="#">1</a></li>
+    <li><a href="#">2</a></li>
+    <li><a href="#">3</a></li>
+    <li><a href="#">4</a></li>
+    <li><a href="#">5</a></li>
+    <li class="disabled"><a href="#">&raquo;</a></li>
+</ul>
+```
+
+**分页的大小-pagination-lg，pagination-sm**
+```
+<ul class="pagination pagination-lg">
+<li><a href="#">&laquo;</a></li>
+    <li><a href="#">1</a></li>
+    <li><a href="#">2</a></li>
+    <li><a href="#">3</a></li>
+    <li><a href="#">4</a></li>
+    <li><a href="#">5</a></li>
+    <li><a href="#">&raquo;</a></li>
+</ul>
+```
+
+**翻页(pager)**
+```
+<ul class="pager">
+    <li><a href="#">Previous</a></li>
+    <li><a href="#">Next</a></li>
+</ul>
+<ul class="pager">
+    <li class="previous"><a href="#">&larr; Older</a></li>
+    <li class="next"><a href="#">Newer &rarr;</a></li>
+</ul>
+```
+
+##### 4.10 标签(label)
 
 网页排版的时候，经常要高亮一些标题里的特殊字符或者整个字符。bootstrap提供了一个.label样式用于实现高亮功能。
 label主要设置背景色和背景方框
@@ -1981,13 +2254,22 @@ label主要设置背景色和背景方框
 
 和按钮类似，label样式提供了多种颜色的支持label-default label-primary label-success label-info label-warning label-danger
 大小 label-xs label-sm label-lg
-##### 4.11 徽章
+
+##### 4.11 徽章(badge)
 
 在开发交互式系统或者信息系统时，经常要显示一些最新收到的消息、需要有多少审批的消息。
 在span或者label上应用该badge样式即可
 
+**徽章使用**
 ```
-<a href="#">Inbox<span class="badge">42</span></a>
+//使用
+<a href="#" class="btn btn-default">通知<span class="badge">42</span></a>
+
+<ul class="nav nav-pills nav-stacked" style="width:200px">
+    <li><a href="#"><span class="badge pull-right">2</span>Home</a></li>
+    <li><a href="#"><span class="badge pull-right">3</span>Profile</a></li>
+    <li><a href="#"><span class="badge pull-right">4</span>Message</a></li>
+</ul>
 ```
 
 ```
@@ -2008,7 +2290,13 @@ label主要设置背景色和背景方框
 }
 ```
 
-##### 4.12 大屏幕展播
+**徽章样式**
+badge-danger
+badge-success
+badge-warning
+badge-info
+
+##### 4.12 大屏幕展播(jumbotron)
 
 在设计网页布局的时候，经常会有大屏内容的显示jumbotron
 顾名思义该组件可以增加标题的大小，并为登陆页面内容添加更多的外边距（margin）。
@@ -2023,9 +2311,81 @@ page-header页面标题提供了类似h1元素的显示效果，只不过margin�
 ##### 4.14 缩略图
 
 缩略图(thumbnail)
-##### 4.15 警告
+##### 4.15 警告框(alert)
 
-##### 4.16 进度条
+交互式网页中，经常要根据用户操作的上下文为用户提供灵活的提示消息，比如操作成功、警告提示、错误信息等。
+
+**默认警告框**
+
+##### 4.16 进度条(progress-bar)
+
+进度条是一个比较常见的网页效果，一般用于加载、跳转或者动作正在执行中的状态。
+
+**基本样式**
+
+基本进度条需要应用两个样式:progress/progress-bar
+progress用于设置进度条的容器样式
+progress-bar用于限制进度条的进度
+
+```
+<div class="progress">
+    <div class="progress-bar" style="width:60%">
+         <span class="sr-only">60% complete</span>
+    </div>
+</div>
+```
+
+**多彩样式**
+progress-bar-success
+progress-bar-info
+orogress-bar-warning
+progress-bar-danger
+```
+<div class="progress">
+    <div class="progress-bar progress-bar-info" style="width:60%">
+         <span class="sr-only">60% complete</span>
+    </div>
+</div>
+<div class="progress">
+    <div class="progress-bar progress-bar-success" style="width:60%">
+         <span class="sr-only">60% complete</span>
+    </div>
+</div>
+<div class="progress">
+    <div class="progress-bar progress-bar-danger" style="width:60%">
+         <span class="sr-only">60% complete</span>
+    </div>
+</div>
+```
+
+**条纹样式**
+progress-striped
+```
+<div class="progress progress-striped">
+    <div class="progress-bar" style="width:60%">
+         <span class="sr-only">60% complete</span>
+    </div>
+</div>
+```
+
+**动画样式**
+让条纹动起来，在进度条容器元素上再多附加一个active样式即可
+```
+<div class="progress progress-striped active">
+    <div class="progress-bar" style="width:60%">
+         <span class="sr-only">60% complete</span>
+    </div>
+</div>
+```
+
+**堆积样式**
+```
+<div class="progress">
+    <div class="progress-bar progress-bar-success" style="width:30%"><span class="sr-only">30% complete</span></div>
+    <div class="progress-bar progress-bar-info" style="width:20%"><span class="sr-only">20% complete</span></div>
+    <div class="progress-bar progress-bar-danger" style="width:30%"><span class="sr-only">10% complete</span></div>
+</div>
+```
 
 ##### 4.17 多媒体对象
 
