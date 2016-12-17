@@ -2315,9 +2315,47 @@ page-header页面标题提供了类似h1元素的显示效果，只不过margin�
 
 交互式网页中，经常要根据用户操作的上下文为用户提供灵活的提示消息，比如操作成功、警告提示、错误信息等。
 
+用法：
+1.通过data属性
+通过数据 API（Data API）添加可取消功能，只需要向关闭按钮添加 data-dismiss="alert"，就会自动为警告框添加关闭功能。
+2.通过 JavaScript
+通过 JavaScript 添加可取消功能，$(".alert").alert()
+
 **默认警告框**
 
-##### 4.16 进度条(progress-bar)
+1.默认的警告框是带有alert样式的div元素容器包含的(p元素也可以)
+2.内部可选地添加一个关闭按钮button元素，需要添加属性值data-dismiss="alert"
+
+```
+<div class="alert">
+    <button type="button" class="close" data-dismiss="alert">x</button>
+    <strong>Warning!</strong>
+</div>
+```
+
+**可关闭的警告框**
+
+可关闭的警告框的实现方式主要是增加了alert-dismissable的右边距。
+```
+<div class="alert alert-dismissable">
+    <button type="button" class="close" data-dismiss="alert">x</button>
+    <strong>Warning!</strong>
+</div>
+```
+
+**多彩样式的警告框**
+
+和btn、label类似，alert也有多种
+alert-danger alert-success alert-info
+```
+<!--多彩样式的警告框  -->
+<div class="alert alert-dismissable alert-danger">
+    <button type="button" class="close" data-dismiss="alert">x</button>
+    <strong>Warning!</strong>
+</div>
+```
+
+##### 4.16 进度条(progress和progress-bar)
 
 进度条是一个比较常见的网页效果，一般用于加载、跳转或者动作正在执行中的状态。
 
@@ -2387,8 +2425,45 @@ progress-striped
 </div>
 ```
 
-##### 4.17 多媒体对象
+##### 4.17 多媒体对象(media object)
 
+这些抽象的对象样式用于创建各种类型的组件（比如：博客评论），我们可以在组件中使用图文混排，图像可以左对齐或者右对齐。
+媒体对象可以用更少的代码来实现媒体对象与文字的混排。
+
+**默认样式**
+
+一组默认样式通常用以下样式：
+media、media-object、 media-body、media-heading
+
+```
+<div class="media">
+    <a href="#" class="pull-left">
+        <img src="robots.jpg" class="media-object">
+    </a>
+    <div class="media-body">
+        <h4 class="media-heading">媒体标题</h4>
+          这是一些示例文本。这是一些示例文本。
+          这是一些示例文本。这是一些示例文本。
+          这是一些示例文本。这是一些示例文本。
+          这是一些示例文本。这是一些示例文本。
+          这是一些示例文本。这是一些示例文本。
+          <div class="media">
+              <a href="#" class="pull-left">
+                  <img src="robots.jpg" class="media-object">
+              </a>
+              <div class="media-body">
+                  <h4 class="media-heading">媒体标题</h4>
+                  这是一些示例文本。这是一些示例文本。
+                  这是一些示例文本。这是一些示例文本。
+                  这是一些示例文本。这是一些示例文本。
+                  这是一些示例文本。这是一些示例文本。
+                  这是一些示例文本。这是一些示例文本。
+              </div>
+          </div>
+    </div>
+</div>
+```
+**媒体列表**
 ##### 4.18 列表组
 
 ##### 4.19 面板
