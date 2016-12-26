@@ -1,8 +1,18 @@
-function b(x, y, a) {
-    alert(b.length);//3
-    alert(arguments.length);//2
-    arguments[2] = 10;
-    alert(a); //undefined
-    alert(arguments[2]);//10
-}
-b(1, 2);
+(function() {
+
+
+    function Person(name){
+     this.nickname = name;
+     this.distractedGreeting = function() {
+
+       setTimeout(function(){
+         console.log("Hello, my name is " + this.nickname);
+       }.bind(this), 500);
+     }
+    }
+     
+    var alice = new Person('Alice');
+    alice.distractedGreeting();
+
+
+}());

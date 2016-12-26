@@ -2308,9 +2308,45 @@ badge-info
 
 page-header页面标题提供了类似h1元素的显示效果，只不过margin和底部padding距离稍大一些。
 
-##### 4.14 缩略图
+##### 4.14 缩略图(thumbnail)
 
-缩略图(thumbnail)
+缩略图(thumbnail)结合12栅格系统，并使用thumbnail方式，可以将图像，视频，文本展示的更加漂亮。
+
+```
+//源码
+.thumbnail > img,
+.thumbnail a > img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+.thumbnail {
+  display: block;
+  padding: 4px;
+  margin-bottom: 20px;
+  line-height: 1.42857143;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  -webkit-transition: border .2s ease-in-out;
+       -o-transition: border .2s ease-in-out;
+          transition: border .2s ease-in-out;
+}
+.thumbnail > img,
+.thumbnail a > img {
+  margin-right: auto;
+  margin-left: auto;
+}
+a.thumbnail:hover,
+a.thumbnail:focus,
+a.thumbnail.active {
+  border-color: #337ab7;
+}
+.thumbnail .caption {
+  padding: 9px;
+  color: #333;
+}
+```
 ##### 4.15 警告框(alert)
 
 交互式网页中，经常要根据用户操作的上下文为用户提供灵活的提示消息，比如操作成功、警告提示、错误信息等。
@@ -2464,8 +2500,847 @@ media、media-object、 media-body、media-heading
 </div>
 ```
 **媒体列表**
-##### 4.18 列表组
 
-##### 4.19 面板
+```
+<div class="media-list">
+    <li class="media"></li>
+    <li class="media"></li>
+    <li class="media"></li>
+</div>
+```
+##### 4.18 列表组(list-group)
 
-##### 4.20 Wells
+list-group
+list-group-item
+list-group-item-success指定背景颜色，同时也支持高亮样式active
+list-group-item-heading list-group-item-text
+
+其实列表组是堆叠式导航样式。
+```
+//源码
+.list-group {
+  padding-left: 0;
+  margin-bottom: 20px;
+}
+.list-group-item {
+  position: relative;
+  display: block;
+  padding: 10px 15px;
+  margin-bottom: -1px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+}
+//设置最上边的一个li元素的左上角和右上角为圆角
+.list-group-item:first-child {
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+}
+//设置最下边的一个li元素的左下角和右下角为圆角
+.list-group-item:last-child {
+  margin-bottom: 0;
+  border-bottom-right-radius: 4px;
+  border-bottom-left-radius: 4px;
+}
+//可以应用一些徽章图标
+.list-group-item > .badge {
+  float: right;
+}
+.list-group-item > .badge + .badge {
+  margin-right: 5px;
+}
+```
+
+**基础列表组**
+```
+//例子
+<ul class="list-group">
+    <li class="list-group-item">JS</li>
+    <li class="list-group-item">HTML</li>
+    <li class="list-group-item">CSS</li>
+    <li class="list-group-item">jQuery</li>
+</ul>
+```
+
+**应用徽章标记(badge)或导航箭头(glyphicon)**
+```
+<ul class="list-group">
+    <li class="list-group-item">
+        <span class="badge">14</span>
+        JS
+    </li>
+    <li class="list-group-item">
+        <span class="badge">12</span>
+        HTML
+    </li>
+    <li class="list-group-item">
+        <span class="badge">10</span>
+        CSS
+    </li>
+    <li class="list-group-item">
+        <span class="badge">8</span>
+        jQuery
+    </li>
+</ul>
+```
+
+**自定义列表**
+这是在可链接的列表组(用a标签)基础上，Bootstrap又提供了list-group-item-heading list-group-item-text
+
+```
+<div class="list-group">
+    <a href="" class="list-group-item">
+        <h4 class="list-group-item-heading">HTML</h4>
+        <p class="list-group-item-text">html是什么</p>
+    </a>
+    <a href="" class="list-group-item">
+        <h4 class="list-group-item-heading">CSS</h4>
+        <p class="list-group-item-text">css是什么</p>
+    </a>
+    <a href="" class="list-group-item">
+        <h4 class="list-group-item-heading">JS</h4>
+        <p class="list-group-item-text">js是什么</p>
+    </a>
+</div>
+```
+
+##### 4.19 面板(panel)
+
+panel panel-default panel-heading panel-body panel-footer
+
+**基本面板**
+```
+<div class="panel panle-default">
+    <div class="panel-body">
+        这里是面板内容
+    </div>
+</div>
+```
+
+**带有头和尾的面板**
+```
+<div class="panel panel-default">
+    <div class="panel-heading">
+        面板header
+    </div>
+    <div class="panel-body">
+        面板内容
+    </div>
+    <div class="panel-footer">
+        面板footer
+    </div>
+</div>
+```
+
+**多彩面板**
+
+panel-primary panel-success panel-info panel-warning panel-danger
+
+**面板和表格进行嵌套**
+```
+<div class="panel panel-default">
+    <div class="panel-heading">
+        面板header
+    </div>
+    <div class="panel-body">
+        <p>...</p>
+        <table class="tabel bordered">
+
+        </table>
+    </div>
+    <div class="panel-footer">
+        面板footer
+    </div>
+</div>
+```
+
+##### 4.20 洼地(Wells)
+
+洼地样式的效果和大屏幕展播样式类似，不同点是well样式有了边框设置，并且默认高度是自适应文本的高度。
+
+
+#### 5. JS插件
+
+声明式用法:触发一个插件需要对特定元素设置触发属性data-
+js用法：
+
+##### 5.1 动画过滤(transition)
+
+##### 5.2 模拟弹窗(popup,bootstrap里称为model)
+
+模拟弹框是大部分交互式网站都需要的功能，一般用法是：
+1.提示信息、警告信息、大文本
+2.确认提示
+3.显示表单元素(一般使用ajax操作等功能)
+4.其他需要特殊显示的信息(单击缩略图时放大图片)
+
+###### 5.2.1 弹框布局和样式
+
+```
+<!--  用法-->
+<div class="modal show">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">x</button>
+                <div class="modal-title">modal title</div>
+            </div>
+            <div class="modal-body">
+                <p>这里是弹框的具体内容</p>
+            </div>
+            <div class="modal-footer">
+                  <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                  <button type="button" class="btn btn-primary">保存</button>
+            </div>
+        </div>
+    </div>
+</div>
+```
+![这里写图片描述](http://img.blog.csdn.net/20161221112548569?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvZ2l0aHViXzM0NTE0NzUw/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast)
+
+包含了3个部分：头部(包括标题和关闭符号)、中间部分(主要是内容)、底部(主要防止操作按钮)
+弹框组件使用了3层div容器元素：model、model-dialog、model-content
+model-content包含了：model-header(model-title)、model-body、model-footer
+
+model：
+modal就是一个背景容器，100%充满全屏，还有就是当弹框内容较多时，可以在modal容器里进行滚动操作，避免弹框不能移动的弊端。
+```
+<!--  modal样式源码-->
+.modal {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  <!--  防止其他元素溢出，提升z-index-->
+  z-index: 1050;
+  display: none;
+  overflow: hidden;
+  <!--  支持移动设备上使用触摸方式进行滚动-->
+  -webkit-overflow-scrolling: touch;
+  <!--  消除虚边框-->
+  outline: 0;
+}
+<!--  bootstrap提供了一个动画的功能，在弹窗完全显示之前执行一段动画，动画内容是：从25%的top值位置到top：0的位置-->
+.modal.fade .modal-dialog {
+  -webkit-transition: -webkit-transform .3s ease-out;
+       -o-transition:      -o-transform .3s ease-out;
+          transition:         transform .3s ease-out;
+  -webkit-transform: translate(0, -25%);
+      -ms-transform: translate(0, -25%);
+       -o-transform: translate(0, -25%);
+          transform: translate(0, -25%);
+}
+<!--  页面完整显示时，回归到原始位置-->
+.modal.in .modal-dialog {
+  -webkit-transform: translate(0, 0);
+      -ms-transform: translate(0, 0);
+       -o-transform: translate(0, 0);
+          transform: translate(0, 0);
+}
+```
+
+modal-dialog：
+modal完全充满全屏的时候，默认在内部防止了一个宽度自适应，左右水平居中的modal-dialog样式的div容器
+```
+<!--  源码-->
+.modal-dialog {
+  position: relative;
+  width: auto;
+  margin: 10px;
+}
+@media (min-width: 768px) {
+  .modal-dialog {
+    width: 600px;
+    margin: 30px auto;
+  }
+  .modal-content {
+    -webkit-box-shadow: 0 5px 15px rgba(0, 0, 0, .5);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, .5);
+  }
+  .modal-sm {
+    width: 300px;
+  }
+}
+@media (min-width: 992px) {
+  .modal-lg {
+    width: 900px;
+  }
+}
+```
+
+modal-content：这事弹窗进行设置的主要代码，主要是边框/编剧/背景色/阴影的处理
+```
+<!--  源码-->
+.modal-content {
+  position: relative;
+  background-color: #fff;
+  -webkit-background-clip: padding-box;
+          background-clip: padding-box;
+  border: 1px solid #999;
+  border: 1px solid rgba(0, 0, 0, .2);
+  border-radius: 6px;
+  outline: 0;
+  -webkit-box-shadow: 0 3px 9px rgba(0, 0, 0, .5);
+          box-shadow: 0 3px 9px rgba(0, 0, 0, .5);
+}
+```
+
+modal-header(modal-title)、modal-content、modal-footer
+```
+<!--  源码-->
+.modal-header {
+  padding: 15px;
+  border-bottom: 1px solid #e5e5e5;
+}
+.modal-header .close {
+  margin-top: -2px;
+}
+.modal-title {
+  margin: 0;
+  line-height: 1.42857143;
+}
+.modal-body {
+  position: relative;
+  padding: 15px;
+}
+.modal-footer {
+  padding: 15px;
+  text-align: right;//居右对齐，因为一般都是按钮
+  border-top: 1px solid #e5e5e5;//上边框设置，以便和modal-body分隔
+}
+.modal-footer .btn + .btn {
+  margin-bottom: 0;
+  margin-left: 5px;
+}
+.modal-footer .btn-group .btn + .btn {
+  margin-left: -1px;
+}
+.modal-footer .btn-block + .btn-block {
+  margin-left: 0;
+}
+```
+
+###### 5.2.2 声明式用法
+
+上述了解了弹框的基本HTML代码和样式原理之后，我们学习弹窗的声明式用法.
+
+弹窗modal的触发属性是:data-toggle="modal",data-target=".popupCSS"(data-target值可以设置为CSS选择器，也可以是modal的id值，也可以是唯一的CSS样式)
+```
+<button data-toggle="modal" data-target=".popupCSS" class="btn btn-primary">单击弹出</button>
+<div class="modal popupCSS">
+</div>
+```
+
+###### 5.2.3 js用法
+
+js方面的一般用法是，传入可以拥有一部分可选参数的js对象字面量，用于初始化弹窗的一些自定义属性
+```
+$('#myModal').modal({
+    backdrop:true,
+    keyboard:false
+});
+```
+1.属性
+2.参数
+所有js组件都支持传入特定字符串执行其内部方法的用法
+```
+$('#myModal').modal("toggle");
+$('#myModal').modal("show");
+$('#myModal').modal("hide");
+```
+3.事件
+
+###### 5.2.4 源码分析
+
+```
+<!--  立即调用函数，防止插件内代码外泄，形成一个闭环，并且只能从jQuery的fn里进行扩展-->
++function ($) {
+  'use strict';
+
+  // MODAL CLASS DEFINITION
+  // ======================
+  <!--  定义modal核心类函数的定义、默认参数定义、原型方法-->
+  var Modal = function (element, options) {
+    this.options             = options
+    this.$body               = $(document.body)
+    this.$element            = $(element)
+    this.$dialog             = this.$element.find('.modal-dialog')
+    this.$backdrop           = null
+    this.isShown             = null
+    this.originalBodyPad     = null
+    this.scrollbarWidth      = 0
+    this.ignoreBackdropClick = false
+
+    <!--  设置了remote，加载指定url内容到modal-content样式的元素内，并触发loaded.bs.modal事件-->
+    if (this.options.remote) {
+      this.$element
+        .find('.modal-content')
+        .load(this.options.remote, $.proxy(function () {
+          this.$element.trigger('loaded.bs.modal')
+        }, this))
+    }
+  }
+
+  Modal.VERSION  = '3.3.7'
+
+  Modal.TRANSITION_DURATION = 300
+  Modal.BACKDROP_TRANSITION_DURATION = 150
+
+  <!--  默认设置：背景遮罩层、ESC键的支持、状态框初始化之后就立即显示-->
+  Modal.DEFAULTS = {
+    backdrop: true,
+    keyboard: true,
+    show: true
+  }
+
+  <!--  反转弹框-->
+  Modal.prototype.toggle = function (_relatedTarget) {
+    return this.isShown ? this.hide() : this.show(_relatedTarget)
+  }
+
+  <!--  打开弹框-->
+  Modal.prototype.show = function (_relatedTarget) {
+    <!-- 当前modal对象赋值为that，防止作用域冲突-->
+    var that = this
+    <!--  定义弹窗前的触发事件
+          Create a new jQuery.Event object with specified event properties.-->
+    var e    = $.Event('show.bs.modal', { relatedTarget: _relatedTarget })
+
+    <!--  打开弹窗前，触发事件-->
+    this.$element.trigger(e)
+    <!--  如果已经打开了(或者曾经被组织过)，则退出执行，后续代码不做处理-->
+    if (this.isShown || e.isDefaultPrevented()) return
+    <!--  设置状态为打开-->
+    this.isShown = true
+
+    this.checkScrollbar()
+    this.setScrollbar()
+    this.$body.addClass('modal-open')
+    <!--  处理键盘事件，主要是设置按Esc键的时候是否关闭弹窗-->
+    this.escape()
+    this.resize()
+    <!--  如果单击了元素内的子元素(带有[data-dismiss="modal"])，则关闭弹窗-->
+    this.$element.on('click.dismiss.bs.modal', '[data-dismiss="modal"]', $.proxy(this.hide, this))
+
+    this.$dialog.on('mousedown.dismiss.bs.modal', function () {
+      that.$element.one('mouseup.dismiss.bs.modal', function (e) {
+        if ($(e.target).is(that.$element)) that.ignoreBackdropClick = true
+      })
+    })
+    <!--  绘制弹窗背景以后，处理一下代码-->
+    this.backdrop(function () {
+      <!--  判断浏览器是否支持动画吗，并且弹窗是否设置块了动画过度效果-->
+      var transition = $.support.transition && that.$element.hasClass('fade')
+      <!--  如果modal弹窗没有父容器，将他附加到body上-->
+      if (!that.$element.parent().length) {
+        that.$element.appendTo(that.$body) // don't move modals dom position
+      }
+      <!--  显示modal弹窗-->
+      that.$element
+        .show()
+        .scrollTop(0)
+
+      that.adjustDialog()
+      <!--  如果支持动画，强制刷新UI现场，重绘弹窗-->
+      if (transition) {
+        that.$element[0].offsetWidth // force reflow
+      }
+      <!--  给modal弹窗添加in样式，和modal样式一起-->
+      that.$element.addClass('in')
+      <!--  强制给弹窗设定焦点-->
+      that.enforceFocus()
+      <!--  打开弹窗显示后的触发事件-->
+      var e = $.Event('shown.bs.modal', { relatedTarget: _relatedTarget })
+
+      <!--  -->
+      transition ?
+        that.$dialog // wait for modal to slide in
+          .one('bsTransitionEnd', function () {
+            that.$element.trigger('focus').trigger(e)
+          })
+          .emulateTransitionEnd(Modal.TRANSITION_DURATION) :
+        that.$element.trigger('focus').trigger(e)
+    })
+  }
+
+  Modal.prototype.hide = function (e) {
+    if (e) e.preventDefault()
+
+    e = $.Event('hide.bs.modal')
+
+    this.$element.trigger(e)
+
+    if (!this.isShown || e.isDefaultPrevented()) return
+
+    this.isShown = false
+
+    this.escape()
+    this.resize()
+
+    $(document).off('focusin.bs.modal')
+
+    this.$element
+      .removeClass('in')
+      .off('click.dismiss.bs.modal')
+      .off('mouseup.dismiss.bs.modal')
+
+    this.$dialog.off('mousedown.dismiss.bs.modal')
+
+    $.support.transition && this.$element.hasClass('fade') ?
+      this.$element
+        .one('bsTransitionEnd', $.proxy(this.hideModal, this))
+        .emulateTransitionEnd(Modal.TRANSITION_DURATION) :
+      this.hideModal()
+  }
+
+  Modal.prototype.enforceFocus = function () {
+    $(document)
+      .off('focusin.bs.modal') // guard against infinite focus loop
+      .on('focusin.bs.modal', $.proxy(function (e) {
+        if (document !== e.target &&
+            this.$element[0] !== e.target &&
+            !this.$element.has(e.target).length) {
+          this.$element.trigger('focus')
+        }
+      }, this))
+  }
+
+  Modal.prototype.escape = function () {
+    if (this.isShown && this.options.keyboard) {
+      this.$element.on('keydown.dismiss.bs.modal', $.proxy(function (e) {
+        e.which == 27 && this.hide()
+      }, this))
+    } else if (!this.isShown) {
+      this.$element.off('keydown.dismiss.bs.modal')
+    }
+  }
+
+  Modal.prototype.resize = function () {
+    if (this.isShown) {
+      $(window).on('resize.bs.modal', $.proxy(this.handleUpdate, this))
+    } else {
+      $(window).off('resize.bs.modal')
+    }
+  }
+
+  Modal.prototype.hideModal = function () {
+    var that = this
+    this.$element.hide()
+    this.backdrop(function () {
+      that.$body.removeClass('modal-open')
+      that.resetAdjustments()
+      that.resetScrollbar()
+      that.$element.trigger('hidden.bs.modal')
+    })
+  }
+
+  Modal.prototype.removeBackdrop = function () {
+    this.$backdrop && this.$backdrop.remove()
+    this.$backdrop = null
+  }
+
+  Modal.prototype.backdrop = function (callback) {
+    var that = this
+    var animate = this.$element.hasClass('fade') ? 'fade' : ''
+
+    if (this.isShown && this.options.backdrop) {
+      var doAnimate = $.support.transition && animate
+
+      this.$backdrop = $(document.createElement('div'))
+        .addClass('modal-backdrop ' + animate)
+        .appendTo(this.$body)
+
+      this.$element.on('click.dismiss.bs.modal', $.proxy(function (e) {
+        if (this.ignoreBackdropClick) {
+          this.ignoreBackdropClick = false
+          return
+        }
+        if (e.target !== e.currentTarget) return
+        this.options.backdrop == 'static'
+          ? this.$element[0].focus()
+          : this.hide()
+      }, this))
+
+      if (doAnimate) this.$backdrop[0].offsetWidth // force reflow
+
+      this.$backdrop.addClass('in')
+
+      if (!callback) return
+
+      doAnimate ?
+        this.$backdrop
+          .one('bsTransitionEnd', callback)
+          .emulateTransitionEnd(Modal.BACKDROP_TRANSITION_DURATION) :
+        callback()
+
+    } else if (!this.isShown && this.$backdrop) {
+      this.$backdrop.removeClass('in')
+
+      var callbackRemove = function () {
+        that.removeBackdrop()
+        callback && callback()
+      }
+      $.support.transition && this.$element.hasClass('fade') ?
+        this.$backdrop
+          .one('bsTransitionEnd', callbackRemove)
+          .emulateTransitionEnd(Modal.BACKDROP_TRANSITION_DURATION) :
+        callbackRemove()
+
+    } else if (callback) {
+      callback()
+    }
+  }
+
+  // these following methods are used to handle overflowing modals
+
+  Modal.prototype.handleUpdate = function () {
+    this.adjustDialog()
+  }
+
+  Modal.prototype.adjustDialog = function () {
+    var modalIsOverflowing = this.$element[0].scrollHeight > document.documentElement.clientHeight
+
+    this.$element.css({
+      paddingLeft:  !this.bodyIsOverflowing && modalIsOverflowing ? this.scrollbarWidth : '',
+      paddingRight: this.bodyIsOverflowing && !modalIsOverflowing ? this.scrollbarWidth : ''
+    })
+  }
+
+  Modal.prototype.resetAdjustments = function () {
+    this.$element.css({
+      paddingLeft: '',
+      paddingRight: ''
+    })
+  }
+
+  Modal.prototype.checkScrollbar = function () {
+    var fullWindowWidth = window.innerWidth
+    if (!fullWindowWidth) { // workaround for missing window.innerWidth in IE8
+      var documentElementRect = document.documentElement.getBoundingClientRect()
+      fullWindowWidth = documentElementRect.right - Math.abs(documentElementRect.left)
+    }
+    this.bodyIsOverflowing = document.body.clientWidth < fullWindowWidth
+    this.scrollbarWidth = this.measureScrollbar()
+  }
+
+  Modal.prototype.setScrollbar = function () {
+    var bodyPad = parseInt((this.$body.css('padding-right') || 0), 10)
+    this.originalBodyPad = document.body.style.paddingRight || ''
+    if (this.bodyIsOverflowing) this.$body.css('padding-right', bodyPad + this.scrollbarWidth)
+  }
+
+  Modal.prototype.resetScrollbar = function () {
+    this.$body.css('padding-right', this.originalBodyPad)
+  }
+
+  Modal.prototype.measureScrollbar = function () { // thx walsh
+    var scrollDiv = document.createElement('div')
+    scrollDiv.className = 'modal-scrollbar-measure'
+    this.$body.append(scrollDiv)
+    var scrollbarWidth = scrollDiv.offsetWidth - scrollDiv.clientWidth
+    this.$body[0].removeChild(scrollDiv)
+    return scrollbarWidth
+  }
+
+
+  // MODAL PLUGIN DEFINITION
+  // =======================
+  /** 
+   * 取触发元素上的data()，获得对应参数并实例化Modal 
+   * @param {object} option         触发元素的缓存数据对象，或字符串直接调用方法 
+   * @param {object} _relatedTarget 触发元素的dom对象 
+   */  
+  function Plugin(option, _relatedTarget) {
+      <!--  根据选择器，遍历所有符合规则的元素-->
+    return this.each(function () {
+      var $this   = $(this)
+      <!--  获取自定义属性bs.modal的值-->
+      var data    = $this.data('bs.modal')
+      <!--  将默认参数、选择器所在元素的自定义属性(data-开头)和option参数，这三种值合并在一起，作为options参数-->
+      var options = $.extend({}, Modal.DEFAULTS, $this.data(), typeof option == 'object' && option)
+      <!--  如果值不存在，将modal实例设置为bs.modal的值-->
+      if (!data) $this.data('bs.modal', (data = new Modal(this, options)))
+      <!--  如果option传递了string，则表示要执行某个方法
+            如果传入了show，则要执行modal实例的show方法，data['show']相当于data.show()-->
+      if (typeof option == 'string') data[option](_relatedTarget)
+      else if (options.show) data.show(_relatedTarget)
+    })
+  }
+  <!--  保存其他库的$.fn.modal代码-->
+  var old = $.fn.modal
+
+  $.fn.modal             = Plugin
+  $.fn.modal.Constructor = Modal
+
+
+  // MODAL NO CONFLICT
+  // =================
+
+  $.fn.modal.noConflict = function () {
+    $.fn.modal = old
+    return this
+  }
+
+
+  // MODAL DATA-API
+  // ==============
+  <!--  绑定触发事件-->
+  $(document).on('click.bs.modal.data-api', '[data-toggle="modal"]', function (e) {
+    <!--  检测所有拥有自定义属性data-toggle="modal"的元素上的单击事件-->
+    var $this   = $(this)
+    var href    = $this.attr('href')
+    <!--  获取data-target属性值，如果没有，则获取href值，该值是所弹出元素的id-->
+    var $target = $($this.attr('data-target') || (href && href.replace(/.*(?=#[^\s]+$)/, ''))) // strip for ie7
+    <!--  如果弹窗元素上已经有该弹窗实例(即弹出过一次),则设置option值为字符串toggle
+          否则将remote值、弹窗元素上的自定义属性值集合、触发元素上的自定义属性值集合合并成option对象
+          jQuery.extend()函数用于将一个或多个对象的内容合并到目标对象。-->
+    var option  = $target.data('bs.modal') ? 'toggle' : $.extend({ remote: !/#/.test(href) && href }, $target.data(), $this.data())
+    <!--  如果是a链接元素，则还要阻止默认行为-->
+    if ($this.is('a')) e.preventDefault()
+
+    $target.one('show.bs.modal', function (showEvent) {
+      if (showEvent.isDefaultPrevented()) return // only register focus restorer if modal will actually get shown
+      <!--  定义一次hide事件，给所单击元素加上焦点-->
+      $target.one('hidden.bs.modal', function () {
+        $this.is(':visible') && $this.trigger('focus')
+      })
+    })
+    <!--  把对应的模拟框jquery对象作为this，传入Plugin中
+          把参数option和触发元素this作为参数传入Plugin中-->
+    Plugin.call($target, option, this)
+  })
+
+}(jQuery);
+```
+##### 5.3 下拉菜单(dropdown)
+
+###### 5.3.1 声明式用法
+实现原理：
+
+1.dropdown插件在网页加载的时候，对所有带有data-toggle="dropdown"样式的元素进行事件绑定
+2.用户单击带有data-toggle="dropdown"样式得连接或按钮时，触发js事件代码
+3.js事件代码在父容器上加一个.open样式
+4.默认隐藏的.dropdown-menu菜单在外部有了open样式，即可显示出来，从而达到预期效果。
+
+```
+<div class="dropdown">
+    <a href="#" class="dropdown-toggle btn btn-primary" data-toggle="dropdown">下拉菜单</a>
+    <ul class="dropdown-menu" role="menu">
+        <li>HTML</li>
+        <li>JS</li>
+        <li>CSS</li>
+    </ul>
+</div>
+```
+为避免href="#"被单击时页面跳到顶部，可以使用data-target="#"代替href="#"
+```
+<div class="dropdown">
+    <a data-target="#" class="dropdown-toggle btn btn-primary" data-toggle="dropdown">下拉菜单</a>
+    <ul class="dropdown-menu" role="menu">
+        <li>HTML</li>
+        <li>JS</li>
+        <li>CSS</li>
+    </ul>
+</div>
+```
+
+关于data-target属性，触发元素其实可以放在菜单的父容器外部。只需要：
+1.设置父容器的id值
+2.button元素的data-toggle属性和data-target属性(值是#id)
+```
+<button class="btn btn-primary" data-toggle="dropdown" data-target="#myDropDown">外部按钮</button>
+<ul class="nav nav-pills">
+    <li class="dropdown" id="myDropDown">
+        <ul class="dropdown-menu">
+            <li>html</li>
+            <li>css</li>
+            <li>js</li>
+        </ul>
+    </li>
+</ul>
+```
+###### 5.3.2 js用法
+```
+<div class="dropdown">
+    <a data-target="#" class="dropdown-toggle btn btn-primary">下拉菜单</a>
+    <ul class="dropdown-menu" role="menu">
+        <li>HTML</li>
+        <li>JS</li>
+        <li>CSS</li>
+    </ul>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $('.dropdown-toggle').dropdown();
+    });
+</script>
+```
+###### 5.3.3 源码分析
+
+##### 5.4 滚动侦测(scrollspy)
+
+滚动侦测插件是根据滚动的位置自动更新导航条响应的导航项。如果导航中有下拉菜单，并且滚动区域的内容到达下拉菜单子项对应的区域，除了子菜单高亮以外，子菜单的父元素(dropdown按钮)也会高亮。
+
+###### 5.4.1 声明式用法
+
+1.设置滚动容器，即在所要侦测的元素上设置data-target="#selector" data-spy="scroll"
+2.设置菜单链接容器，该容器id和data-target属性对应的选择器一致。
+3.菜单容器中，必须有.nav样式得元素，并且在内部有li元素，li内包含的a元素才是可以侦测高亮的菜单链接，即符合.nav li > a这种选择器的条件。
+
+###### 5.4.2 js用法
+
+###### 5.4.3 源码分析
+
+##### 5.5 选项卡(tab)
+
+###### 5.4.1 声明式用法
+
+###### 5.4.2 js用法
+
+###### 5.4.3 源码分析
+
+##### 5.6 提示框(tooltip)
+
+
+###### 5.4.1 声明式用法
+
+###### 5.4.2 js用法
+
+###### 5.4.3 源码分析
+
+##### 5.7 弹出框(popover)
+
+###### 5.3.1 声明式用法
+###### 5.2.3 js用法
+###### 5.2.4 源码分析
+
+##### 5.8 警告框(alert)
+
+###### 5.3.1 声明式用法
+###### 5.2.3 js用法
+###### 5.2.4 源码分析
+
+##### 5.9 按钮(button)
+
+###### 5.3.1 声明式用法
+###### 5.2.3 js用法
+###### 5.2.4 源码分析
+
+##### 5.10 折叠(collapse)
+
+###### 5.3.1 声明式用法
+###### 5.2.3 js用法
+###### 5.2.4 源码分析
+
+##### 5.11 旋转轮播(carousel)
+
+###### 5.3.1 声明式用法
+###### 5.2.3 js用法
+###### 5.2.4 源码分析
+
+##### 5.12 自动定位浮标(affix)
+
+###### 5.3.1 声明式用法
+###### 5.2.3 js用法
+###### 5.2.4 源码分析

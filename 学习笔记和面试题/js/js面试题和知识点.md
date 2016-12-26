@@ -2121,8 +2121,8 @@ var point = {
     }
  };
  point.moveTo(1, 1);
- console.log(point.x); //==>0
- console.log(point.y); //==>0
+ console.log(point.x); //==>1
+ console.log(point.y); //==>1
  console.log(x); //==>x is not defined
  console.log(y); //==>y is not defined
 ```
@@ -2140,6 +2140,10 @@ moveTo : function(x, y) {
 };
 
 point.moveTo(1, 1)//this 绑定到当前对象，即 point 对象
+console.log(point.x); //==>1
+console.log(point.y); //==>1
+console.log(x); //==>x is not defined
+console.log(y); //==>y is not defined
 ```
 
 3.作为构造函数调用-- 绑定到新创建的对象上
@@ -2224,7 +2228,7 @@ bind()方法会创建一个新函数,称为绑定函数,新函数与被调函数
 function Person(name){
  this.nickname = name;
  this.distractedGreeting = function() {
- 
+   <!--  函数里边的函数，this是全局变量-->
    setTimeout(function(){
      console.log("Hello, my name is " + this.nickname);---setTimeout是函数内部的函数，this指向全局对象，所以是undefined
    }, 500);
@@ -2245,14 +2249,14 @@ function Person(name){
    var that = this;
  
    setTimeout(function(){
-     console.log("Hello, my name is " + that.nickname);---setTimeout是函数内部的函数，this指向全局对象，所以是undefined
+     console.log("Hello, my name is " + that.nickname);
    }, 500);
  }
 }
  
 var alice = new Person('Alice');
 alice.distractedGreeting();
-//Hello, my name is undefined
+//Hello, my name is Alice
 ```
 
 更好的方法：是使用bind()来创建，使这个函数不论怎么调用都有同样的 this 值，从原来的函数和原来的对象创建一个绑定函数
@@ -2263,14 +2267,14 @@ function Person(name){
  this.distractedGreeting = function() {
 
    setTimeout(function(){
-     console.log("Hello, my name is " + this.nickname);---setTimeout是函数内部的函数，this指向全局对象，所以是undefined
+     console.log("Hello, my name is " + this.nickname);
    }.bind(this), 500);
  }
 }
  
 var alice = new Person('Alice');
 alice.distractedGreeting();
-//Hello, my name is undefined
+//Hello, my name is Alice
 ```
 
 bind() 最简单的用法是创建一个函数，使这个函数不论怎么调用都有同样的 this 值。JavaScript新手经常犯的一个错误是将一个方法从对象中拿出来，然后再调用，希望方法中的 this 是原来的对象。（比如在回调中传入这个方法。）如果不做特殊处理的话，一般会丢失原来的对象。从原来的函数和原来的对象创建一个绑定函数，则能很漂亮地解决这个问题：

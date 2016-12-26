@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Bootstrap从3.0版本开始全面支持移动平台，贯彻移动先行宗旨 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Bootstrap 101 Template</title>
+
+    <!-- Bootstrap -->
+    <link href="bootstrap-3.3.7-dist/css/bootstrap.min.css" rel="stylesheet">
+
+  </head>
+  <body>
+      <div class="dropdown">
+          <a href="#" class="dropdown-toggle btn btn-primary" data-toggle="dropdown">下拉菜单</a>
+          <ul class="dropdown-menu" role="menu">
+              <li>HTML</li>
+              <li>JS</li>
+              <li>CSS</li>
+          </ul>
+      </div>
+
+      <button class="btn btn-primary" data-toggle="dropdown" data-target="#myDropDown">外部按钮</button>
+      <ul class="nav nav-pills">
+          <li class="dropdown" id="myDropDown">
+              <ul class="dropdown-menu">
+                  <li><a href="">html</a></li>
+                  <li><a href="">css</a></li>
+                  <li><a href="">js</a></li>
+              </ul>
+          </li>
+      </ul>
+
+      <nav class="navbar navbar-default" role="nav">
+          <div class="navbar-header">
+              <a href="#" class="navbar-brand">Project Name</a>
+          </div>
+          <ul class="nav navbar-nav" role="navigation">
+              <li><a href="#">HTML</a></li>
+              <li class="dropdown">
+                  <a href="#" data-toggle="dropdown" class="dropdown-toggle">CSS<span class="caret"></span></a>
+                  <ul class="dropdown-menu">
+                      <li><a href="">CSS</a></li>
+                      <li><a href="">CSS</a></li>
+                      <li><a href="">CSS</a></li>
+                  </ul>
+              </li>
+              <li><a href="#">JS</a></li>
+          </ul>
+      </nav>
+
+      <!-- bootstrap是基于jQuery-->
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+      <script src="bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+  </body>
+</html>
