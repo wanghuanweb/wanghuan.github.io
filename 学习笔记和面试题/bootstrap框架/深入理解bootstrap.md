@@ -3290,50 +3290,118 @@ $('#myModal').modal("hide");
 
 ###### 5.4.2 js用法
 
+滚动检测的js用法相对比较简单，只需要指定两个容器的名称即可：
+```
+//用法
+$('滚动侦测容器选择器').scrollspy({target:'#菜单容器的选择器'});
+//示例
+$('scroll').scrollspy({target:'#myScrollSpy'})
+```
+
+如果需要经常在滚动侦测的容器内部进行DOM更新，则更新以后为了让滚动侦测功能继续能用的话，需要使用以下代码进行刷新绑定相关的事件。
+```
+$('[data-spy="scroll"]').each(function() {
+    var $spy = $(this).scrollspy('refresh');
+})
+```
 ###### 5.4.3 源码分析
 
 ##### 5.5 选项卡(tab)
 
-###### 5.4.1 声明式用法
+选项卡(Tab)是单击一个选项，下面就显示对应的选项卡面板。(选项卡+选项卡面板)
 
-###### 5.4.2 js用法
+###### 5.5.1 声明式用法
 
-###### 5.4.3 源码分析
+1.选项卡导航和选项卡面板要同时有
+2.导航链接里要设置data-toggle="tab",并且还要设置data-target="选择器"(或者href)，以便点击的时候能找到所对应的tab-pane面板
+3.tab-pane要放在tab-content里，要又id(或者CSS样式)并与data-target="选择器"一致。
+```
+<!-- 导航选项卡和选项卡面板 -->
+<ul class="nav nav-tabs">
+    <li><a href="#myself" data-toggle="tab">I</a></li>
+    <li><a href="#yourself" data-toggle="tab">YOU</a></li>
+    <li><a href="#herself" data-toggle="tab">HER</a></li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane active" id="myself">myself</div>
+    <div class="tab-pane" id="yourself">yourself</div>
+    <div class="tab-pane" id="herself">herself</div>
+</div>
+```
+
+不仅仅支持tabs的导航，还支持胶囊式选项卡导航
+data-toggle="pill"且nav-pills
+```
+<ul class="nav nav-pills">
+    <li><a href="#myself" data-toggle="pill">I</a></li>
+    <li><a href="#yourself" data-toggle="pill">YOU</a></li>
+    <li><a href="#herself" data-toggle="pill">HER</a></li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane active" id="myself">myself</div>
+    <div class="tab-pane" id="yourself">yourself</div>
+    <div class="tab-pane" id="herself">herself</div>
+</div>
+```
+
+###### 5.5.2 js用法
+
+###### 5.5.3 源码分析
 
 ##### 5.6 提示框(tooltip)
 
+提示框(tooltip)也是一个比较常用的功能，一般来说是鼠标移动到特定的元素上，显示相关的提示语。
 
-###### 5.4.1 声明式用法
+###### 5.6.1 声明式用法
 
-###### 5.4.2 js用法
+###### 5.6.2 js用法
 
-###### 5.4.3 源码分析
+###### 5.6.3 源码分析
 
 ##### 5.7 弹出框(popover)
 
-###### 5.3.1 声明式用法
-###### 5.2.3 js用法
-###### 5.2.4 源码分析
+###### 5.7.1 声明式用法
+
+###### 5.7.2 js用法
+
+###### 5.7.3 源码分析
 
 ##### 5.8 警告框(alert)
 
-###### 5.3.1 声明式用法
-###### 5.2.3 js用法
-###### 5.2.4 源码分析
+
+###### 5.8.1 声明式用法
+
+###### 5.8.2 js用法
+
+###### 5.8.3 源码分析
 
 ##### 5.9 按钮(button)
 
-###### 5.3.1 声明式用法
-###### 5.2.3 js用法
-###### 5.2.4 源码分析
+
+###### 5.9.1 声明式用法
+
+###### 5.9.2 js用法
+
+###### 5.9.3 源码分析
 
 ##### 5.10 折叠(collapse)
 
-###### 5.3.1 声明式用法
-###### 5.2.3 js用法
-###### 5.2.4 源码分析
+
+###### 5.10.1 声明式用法
+
+###### 5.10.2 js用法
+
+###### 5.10.3 源码分析
 
 ##### 5.11 旋转轮播(carousel)
+
+###### 5.11.1 声明式用法
+
+###### 5.11.2 js用法
+
+###### 5.11.3 源码分析
 
 ###### 5.3.1 声明式用法
 ###### 5.2.3 js用法
