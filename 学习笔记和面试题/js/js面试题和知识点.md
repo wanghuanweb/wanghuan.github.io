@@ -5,9 +5,11 @@
 
  ECMAScript 描述了该语言的语法和基本对象；(包含语法，类型，语句，关键字，保留字，操作符，对象)
 
- DOM 描述了处理网页内容的方法和接口，把整个页面映射为一个多层节点结构
+ DOM 描述了处理网页内容的方法和接口，通过此接口动态对文档的内容、结构和样式进行访问和修改
 
  BOM 描述了与浏览器进行交互的方法和接口。
+
+3. js是弱类型语言，弱类型语言就是不要求进行类型声明的语言。
 
 ##### 2.script标签位置和属性
 
@@ -621,6 +623,8 @@ Goodbye Jack
 引用数据类型：object，function
 typeof的返回值：undefined，boolean，number，string，object，function
 
+js对象分为三种类型：用户定义对象、内建对象、宿主对象
+
 **内置对象** -- (不要NEW就是不可以实例化,直接引用——只有MATH  GLOBAL)
 
 “由 ECMAScript 实现提供的、独立于宿主环境的所有对象，在 ECMAScript 程序开始执行时出现”。这意味着开发者不必明确实例化内置对象，它已被实例化了。
@@ -630,6 +634,8 @@ typeof的返回值：undefined，boolean，number，string，object，function
 为“独立于宿主环境的 ECMAScript 实现提供的对象”，需要new，Object、Function、Array、String、Boolean、Number、Date、RegExp、Error、EvalError、RangeError、ReferenceError、SyntaxError、TypeError、URIError、ActiveXObject(服务器方面)、Enumerator(集合遍历类)、RegExp（正则表达式）---本地对象就是 ECMA-262 定义的类（引用类型）。
 
 **宿主对象** -- (BOM  DOM  &  自定义对象)
+
+由运行环境提供的对象，也就是由浏览器提供的对象。宿主对象主要有Document、Form、Image、Element，可以通过这些对象获取给定网页的表单、图像和各种表单元素等信息。
 
  ECMAScript中的“宿主”当然就是我们网页的运行环境，即“操作系统”和“浏览器”。所有非本地对象都是宿主对象（host object），即由 ECMAScript 实现的宿主环境提供的对象。你自己构建的对象和所有的BOM和DOM对象都是宿主对象。
 
@@ -658,16 +664,9 @@ typeof的返回值：undefined，boolean，number，string，object，function
 http://blog.csdn.net/github_34514750/article/details/51049935
 
 
-**Date对象**
-
-
-
 **RegExp对象**
 
 http://blog.csdn.net/github_34514750/article/details/51043277
-
-
-**Global对象**
 
 **Math对象**
 
@@ -761,12 +760,37 @@ indexOf(),lastIndexOf()
 
 toUpperCase(),toLowerCase()
 
-**字符串的模式匹配方法**
+##### 8.js数组和js数组合并的方法？
 
-##### 8.js数组合并的方法？
+http://blog.csdn.net/github_34514750/article/details/51049935
+
+数组基本方法：
+栈方法：push()、pop()
+队列方法：push()、shift()
+重排序方法：sort()、
+操作方法：concat()、slice()、splice()
+位置方法：indexOf()、lastIndexOf()
+迭代方法：every()、some()、forEach()、filter()、map()
+归并方法：reduce()、reduceRight()
 
 http://blog.csdn.net/github_34514750/article/details/51320982
 
+**关联数组**
+
+平常用的是数值数组，在新元素给出下标时，不必局限于整数数字，数组下标可以是字符串，这就是关联数组。这样可以提高脚本的可读性。
+数值数组其实是关联数组的特殊情况。
+
+```
+var lennon = Array();
+lennon["name"] = "wanghuan";
+lennon["year"] = 1993;
+lennon["living"] = false;
+
+var stus = Array();
+stus["stu1"] = lennon;
+
+//访问stus["stu1"]["name"]值是wanghuan
+```
 ##### 9.说说写JavaScript的基本规范？或者说如何编写高质量的可维护的js代码？
 
 **1.注意编程规范**
@@ -2428,6 +2452,16 @@ someNode.nextSibling
 someNode.previousSibling
 ```
 
+常用的方法
+```
+getElementById()
+getElementsByTagName()
+getAttribute()
+setAttribute()
+--上述是DOM1的组成部分，也是DOM core的方法，可以对任意元素节点任意属性进行设置
+--之前用的是element.value或者element.src等HTML-DOM方法，但这个方法不是对所有属性都有用，所以基本都用setAttribute方法
+```
+
 **4.node类型--Document类型**
 
 Document类型表示文档。document对象是Document的一个实例，表示整个HTML页面。document对象是window对象的一个属性，可以作为全局对象来访问。
@@ -2494,6 +2528,8 @@ function outputAttributes(element) {
 }
 ```
 
+**遍历所有元素子节点**
+
 元素的子节点(li标签之间有空白是如何形成的)
 ```
 <!-- IE解析成3个子节点，但是其他浏览器解析成7个节点(3个li元素节点和4个空白文本节点) -->
@@ -2549,6 +2585,25 @@ for(var i = 0 ,len = ulList.childElementCount;i < len;i++) {
     }
 }
 ```
+
+**下一个元素节点**
+
+真正需要的不是下一个节点，而是下一个元素节点。
+```
+function getNextElement(node) {
+    if(node.nodeType == 1) {
+        return node;
+    }
+    if(node.nextSibling) {
+        return getNextElement(node.nextSibling);
+    }
+    return null;
+}
+
+//把当前h1元素(即headers[i])的nextSibing节点作为参数传递给getNextElement()函数
+var elem = getNextElement(headers[i].nextSibing);
+```
+
 **6.node类型--Attr类型**--不常用
 
 attr对象的属性和方法--虽然也是节点，但不被人为是DOM文档树的一部分
@@ -2578,6 +2633,15 @@ element.getAttributeNode("align").value;--left
 ```
 
 **7.node类型--Text类型**
+
+若想改变某个文本节点的值，那就使用nodeValue属性。比如，想获取p元素下的文本内容
+```
+<p id="discription">text content</p>
+
+document.getElementById("discription").childNodes[0].nodeValue;
+document.getElementById("discription").firstChild.nodeValue;
+--获取p元素孩子节点也就是文本内容的nodeValue也就是文本的值
+```
 
 text对象的属性和方法
 ```
@@ -2618,6 +2682,7 @@ commentNode.nodeName--"#comment"
 commentNode.nodeValue--注释的内容
 commentNode.parentNode--可能是Document或Element
 ```
+
 **9.node类型--DocumentFragment类型**
 DocumentFragment对象的属性和方法
 ```
@@ -2641,98 +2706,18 @@ for(var i = 0;i < 3;i++) {
 
 ul.appendChild(fragment);
 ```
-##### 23.NodeList转换成数组的方法？
 
-```
-<!--  一般用此方法转换成数组，但是在IE8及更早版本吧nodelist实现成一个COM对象，不能用js对象的方法，所以IE8之前需要枚举所有对象 -->
-Array.prototype.slice.call(someNode.childNodes,0);
+##### 23.通过DOM API操作元素(样式，类名，内容，节点)?
 
-<!-- 通用的方法 -->
+###### 1.CSS-DOM(样式style，类名className)--DOM2
 
-function convertListToArray(nodes) {
-    var array = null;
-    try{
-        array = Array.prototype.slice.call(nodes,0);
-    }catch(ex){
-        array = new Array();
-        for(var i = 0,len = nodes.length;i < len;i++) {
-            array.push(nodes[i]);
-        }
-    }
+**样式style属性**
 
-    return array;
-}
-```
+1.直接DOM属性来访问，去除-，首字母变大些
+2.像数组一样访问属性
 
-##### 24."attribute" 和 "property" 的区别是什么？
-
-Property：属性，property是DOM中的属性，是JavaScript里的对象  比如：element.id;
-
-Attribute：特性，attribute是HTML标签上的特性，它的值只能够是字符串，通过类数组attributes可以罗列所有的attribute。 比如：element.getAttribute("id");或者element.attributes.
-
-property能够从attribute中得到同步；attribute不会同步property上的值；attribute和property之间的数据绑定是单向的，attribute->property；更改property和attribute上的任意值，都会将更新反映到HTML页面中；
-
-```
-html代码
-<input id="in_1" value="1" sth="whatever">
-js代码
-var in1 = document.getElementById('in_1');
-in1.value = 'new value of prop';
-console.log(in1.value);				// 'new value of prop'
-console.log(in1.attributes.value);	// 'value="1"'-----attribute不会同步property上的值
-
-in1.attributes.value.value = 'new value of attr';
-console.log(in1.value);				// 'new value of attr'
-console.log(in1.attributes.value);	// 'new value of attr'-----property能够从attribute中得到同步
-```
-
-http://www.codeceo.com/article/javascript-property-attribute.html
-
-##### 25.DOM扩展?
-
-1.选择器API
-
-querySelector(),querySelectorAll(),matchesSelector()
-
-2.元素遍历(上边讲过了)
-
-3.HTML5 DOM扩展--支持的浏览器不全
-
-  getElementByClassName()--一个可以包含一个或者多个类名的名字
-
-  childList--操作类名的时候，需要通过className属性添加，删除和替换类名，可以操作类名
-
-```
-操作类名的原始方法
-var classNames = div.className.split(/\s+/);
-
-var pos = -1,
-    len,
-    i;
-
-for(i = 0,len = classNames.length;i < len;i++) {
-    if(classNames[i] == "user") {
-        pos = i;
-        break;
-    }
-}
-classNames.splice(i,1);
-div.className = classNames.join(" ");
-
-有了classList之后可以直接用整个方法，classList有如下方法
-div.classList.add(value);
-div.classList.contains(value);
-div.classList.remove(value);
-div.classList.toggle(value);
-```
-
-##### 26.通过DOM API操作元素(样式，内容，节点)?
-
-###### 1.访问元素的样式--DOM2
-
--- 1.直接点属性来访问，去除-，首字母变大些 2.像数组一样访问属性
-
-这里我们只是要了基本的CSS属性名称，唯一区别是CSS属性的名称如果带有-的话，就需要去除，比如用marginTop代替margin-top。
+DOM属性和CSS属性的区别：
+这里我们只是要了基本的CSS属性名称，唯一区别是CSS属性的名称如果带有-的话，就需要去除，比如用marginTop代替margin-top,采用Camel记号。
 
 ```
 document.getElementById('intro').style.color = '#FF0000';
@@ -2773,12 +2758,92 @@ for(var i = 0,len = myDiv.style.length;i < len;i++) {
 
 myDiv.style.removeProperty("border");
 ```
-###### 2.操作元素的内容
 
-通常DOM操作都是改变原始的内容，最简单的是使用innerHTML属性
+**className属性**
 
+以下是设置className
+```
+elem.className = "newName";
+//存在现有的class--将新的class设置值追加到className属性上，注意又空格
+elem.className += " newName";
+//不存在现有的class用函数
+function addClass(element,value) {
+    if (!element.className) {
+        element.className = value;
+    } else {
+        newClassName = element.className;
+        newClassName += " ";
+        newClassName += value;
+        element.className = newClassName;
+    }
+}
+```
+可以看下面DOM扩展中，classList的方便性
+```
+操作类名的原始方法
+var classNames = div.className.split(/\s+/);
+
+var pos = -1,
+   len,
+   i;
+
+for(i = 0,len = classNames.length;i < len;i++) {
+   if(classNames[i] == "user") {
+       pos = i;
+       break;
+   }
+}
+classNames.splice(i,1);
+div.className = classNames.join(" ");
+
+有了classList之后可以直接用整个方法，classList有如下方法
+div.classList.add(value);
+div.classList.contains(value);
+div.classList.remove(value);
+div.classList.toggle(value);
+```
+###### 2.动态创建HTML内容(除了两个老方法还结合第三部分)
+
+动态创建HTML内容的老技巧：document.write() 和innerHTML
+
+document.write():
+
+用法：document.write()是DOM方法,此方法是方便快捷把字符串插入到文档里，也就是内容写入页面从而导致整个页面重绘
+缺点：违背了分离javascript原则，应该避免HTML文档的<body>部分使用<script>标签,避免使用
+```
+//违背了分离js原则，html文档中还有script
+<body>
+    <script type="text/javascript">
+        document.write("<p>This is inserted</p>");
+    </script>
+</body>
+
+//就算是document.write挪到外部函数中，你也需要在html文档的body中使用script调用这个函数,所以还是没有分离js
+
+function insertP(text) {
+    var str = "<p>";
+    str += text;
+    str += "</p>";
+    document.write(str);
+}
+
+<body>
+    <script type="text/javascript">
+        insertP("This is inserted");
+    </script>
+</body>
+```
+
+innerHTML(比上一个方法更值得推荐)：
+
+用法：是DOM元素的一个属性，代表这个元素的内部html内容。可以用来读，写某给定元素里的HTML内容。一旦使用innerHTML属性，整个元素全部内容将被替换
+优点：允许更精确的控制刷新某个页面的某个部分，所以优于document.write
+缺点：
 ```
 var myIntro = document.getElementById('intro');  
+
+//获取某元素的innerHTML
+myIntro.innerHTML;
 
 // 替换当前的内容
 myIntro.innerHTML = 'New content for the <strong>amazing</strong> paragraph!';  
@@ -2786,6 +2851,14 @@ myIntro.innerHTML = 'New content for the <strong>amazing</strong> paragraph!';
 // 添加内容到当前的内容里
 myIntro.innerHTML += '... some more content...';
 ```
+
+**document.write和 innerHTML的区别**
+
+1.document.write是DOM方法，innerHTML是DOM属性
+2.document.write是方便快捷把字符串插入到文档里，也就是内容写入页面从而导致整个页面重绘；
+  innerHTML则是可以读写某元素的HTML内容，对页面控制更加准确
+3.document.write没实现js分离，innerHTML实现js和html分离
+
 ###### 3.DOM操作——怎样添加、移除、移动、复制、创建和查找节点?
 
 （1）创建新节点（只是创建没添加到文档中，添加还需要2中的方法）
@@ -2806,6 +2879,24 @@ myIntro.innerHTML += '... some more content...';
 
        removeChild()
 
+insertBefore()这个方法把一个新元素插入到一个现有元素的前面：
+1.想插入的新元素(newElement)
+2.新元素插入到哪个现有元素(targetElement)的前面
+3.这两个元素共同的父元素(parentElement)
+语法：
+parentElement.insertBefore(newElement,targetElement);
+
+**自己编写insertAfter方法**
+```
+function insertAfter(newElement,targetElement) {
+    var parent = targetElement.parentNode;
+    if( parent.lastChild == targetElement ) {
+        parent.appendChild(newElement);
+    } else {
+        parent.insertBefore(newElement,targetElement.nextSibling);
+    }
+}
+```
 （3）查找
 
        getElementsByTagName()    //通过标签名称
@@ -2814,9 +2905,45 @@ myIntro.innerHTML += '... some more content...';
 
        getElementById()    //通过元素Id，唯一性
 
+##### 24.DOM扩展?
 
+1.选择器API
 
-##### 27.DOM2 级遍历?
+querySelector(),querySelectorAll(),matchesSelector()
+
+2.元素遍历(上边讲过了)
+
+3.HTML5 DOM扩展--支持的浏览器不全
+
+ getElementByClassName()--一个可以包含一个或者多个类名的名字
+
+ childList--操作类名的时候，需要通过className属性添加，删除和替换类名，可以操作类名
+
+```
+操作类名的原始方法
+var classNames = div.className.split(/\s+/);
+
+var pos = -1,
+   len,
+   i;
+
+for(i = 0,len = classNames.length;i < len;i++) {
+   if(classNames[i] == "user") {
+       pos = i;
+       break;
+   }
+}
+classNames.splice(i,1);
+div.className = classNames.join(" ");
+
+有了classList之后可以直接用整个方法，classList有如下方法
+div.classList.add(value);
+div.classList.contains(value);
+div.classList.remove(value);
+div.classList.toggle(value);
+```
+
+##### 25.DOM2 级遍历?
 
 DOM2 级遍历DOM结构的类型：NodeIterator和TreeWalker，两者都是深度优先的DOM结构遍历
 
@@ -2933,6 +3060,53 @@ while(node != null) {
     node = walker.nextSibling();
 }
 ```
+
+##### 26.NodeList转换成数组的方法？
+
+```
+<!--  一般用此方法转换成数组，但是在IE8及更早版本吧nodelist实现成一个COM对象，不能用js对象的方法，所以IE8之前需要枚举所有对象 -->
+Array.prototype.slice.call(someNode.childNodes,0);
+
+<!-- 通用的方法 -->
+
+function convertListToArray(nodes) {
+    var array = null;
+    try{
+        array = Array.prototype.slice.call(nodes,0);
+    }catch(ex){
+        array = new Array();
+        for(var i = 0,len = nodes.length;i < len;i++) {
+            array.push(nodes[i]);
+        }
+    }
+
+    return array;
+}
+```
+
+##### 27."attribute" 和 "property" 的区别是什么？
+
+Property：属性，property是DOM中的属性，是JavaScript里的对象  比如：element.id;
+
+Attribute：特性，attribute是HTML标签上的特性，它的值只能够是字符串，通过类数组attributes可以罗列所有的attribute。 比如：element.getAttribute("id");或者element.attributes.
+
+property能够从attribute中得到同步；attribute不会同步property上的值；attribute和property之间的数据绑定是单向的，attribute->property；更改property和attribute上的任意值，都会将更新反映到HTML页面中；
+
+```
+html代码
+<input id="in_1" value="1" sth="whatever">
+js代码
+var in1 = document.getElementById('in_1');
+in1.value = 'new value of prop';
+console.log(in1.value);				// 'new value of prop'
+console.log(in1.attributes.value);	// 'value="1"'-----attribute不会同步property上的值
+
+in1.attributes.value.value = 'new value of attr';
+console.log(in1.value);				// 'new value of attr'
+console.log(in1.attributes.value);	// 'new value of attr'-----property能够从attribute中得到同步
+```
+
+http://www.codeceo.com/article/javascript-property-attribute.html
 
 ##### 28.事件流(事件冒泡和事件捕获)
 
@@ -3106,6 +3280,8 @@ alert('four');
 3.是否可以添加多个事件处理程序
 
 **HTML事件处理程序**
+
+在html元素中加onclick等事件
 
 **DOM0级事件处理程序**  
 
@@ -4685,15 +4861,6 @@ requireJS就是模块化的管理和生成，且定义无依赖和有依赖的�
 
 ##### 33.ECMAScript6 怎么写class，为什么会出现class这种东西?
 
-
-##### 35.documen.write和 innerHTML的区别?
-在什么时候你会使用 document.write()？
-
-document.write是重写这个document也就是重写页面，写入内容是字符串的html
-
-innerHTML是DOM元素的一个属性，代表这个元素的内部html内容。
-
-innerHTML允许更精确的控制刷新某个页面的某个部分，所以优于document.write
 
 ##### 20.用原生JavaScript的实现过什么功能吗？
 
