@@ -1,5 +1,6 @@
 
 ##### 1.介绍一下标准的CSS的盒子模型？低版本IE的盒子模型有什么不同的？
+相关问题：盒子模型的区别border-box 和 content-box
 
 1.1分类：IE盒子模型和标准W3C盒子模型
 
@@ -168,7 +169,7 @@ list-style-image, list-style-position,list-style-type, list-style可以继承
    伪元素是通过添加一个实际的元素，在给元素添加样式来实现效果的。
 
    eg:  :first-letter :first-line :before :after
-
+```
        <style>
             p>i:first-child {color: red}
        </style>
@@ -197,13 +198,15 @@ list-style-image, list-style-position,list-style-type, list-style可以继承
             .first-letter {color: red}
         </style>
         <p><span class='first-letter'>I</span> am stephen lee.</p>
-
+```
 
  2.css3中为了区分二者：伪类用: 但是伪元素用::
 
  但因为兼容性的问题，所以现在大部分还是统一的单冒号，但是抛开兼容性的问题，我们在书写时应该尽可能养成好习惯，区分两者。
 
 ##### 5.CSS优先级算法(特殊性值)如何计算？
+相关问题：选择器优先级
+CSS 中字母 'C' 的意思是叠层 (Cascading)。请问在确定样式的过程中优先级是如何决定的 (请举例)？如何有效使用此系统？
 
 **1.css优先级**
 
@@ -444,7 +447,8 @@ Vertical-align is similar. It also applies to table cells and it works with some
 
 规定应该从父元素继承 display 属性的值
 
-##### 9.position的值relative和absolute定位原点是？
+##### 9.position的值relative和absolute定位原点是？position有几个属性？
+
 **static**
 
 1.默认值，没有定位
@@ -1810,7 +1814,6 @@ Flash Of Unstyled Content无样式内容的闪退
 请解释浏览器是如何判断元素是否匹配某个 CSS 选择器？
 请解释你对盒模型的理解，以及如何在 CSS 中告诉浏览器使用不同的盒模型来渲染你的布局。
 请解释 * { box-sizing: border-box; } 的作用, 并且说明使用它有什么好处？
-CSS 中字母 'C' 的意思是叠层 (Cascading)。请问在确定样式的过程中优先级是如何决定的 (请举例)？如何有效使用此系统？
 你在开发或生产环境中使用过哪些 CSS 框架？你觉得应该如何改善他们？
 请问你有尝试过 CSS Flexbox 或者 Grid 标准规格吗？
 为什么响应式设计 (responsive design) 和自适应设计 (adaptive design) 不同？

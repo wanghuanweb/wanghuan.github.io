@@ -93,6 +93,11 @@ parseFloat()--字符串第一个小数点有效，和parseInt()区别是会忽�
 
 ##### 4.JavaScript的类型转换
 
+NaN==NaN也返回false
+0==false //true
+true==1 //true
+0==undefined //false
+
 ###### 4.1.显式转换
 转换为数值类型：Number(mix)、parseInt(string,radix)、parseFloat(string)
 
@@ -917,6 +922,7 @@ console.log(typeof trois); // "undefined"
 ```
 
 ##### 10.Javascript创建对象的几种方式？
+相关问题：如何继承性地创建一个对象？
 
 请指出以下代码的区别：function Person(){}、var person = Person()、var person = new Person()？(可结合下列知识点回答)
 
@@ -1299,6 +1305,7 @@ function A(){
 ```
 
 ##### 12.Javascript如何实现继承？
+相关问题：对象的继承
 
 ###### 1.使用原型链实现继承
 继承实际是依靠原型链来实现的，原型链是实现继承的主要方法。
@@ -2321,6 +2328,7 @@ boundGetX(); // 81
 ```
 
 ##### 21.什么是闭包（closure）？如何使用闭包？为什么要用它？
+相关问题：闭包优点缺点
 
 **背景：**
 
@@ -3273,6 +3281,7 @@ alert('four');
 ```
 
 ##### 29.事件处理程序(HTML事件处理程序，DOM0事件处理程序，DOM2事件处理程序，IE事件处理程序，跨浏览器事件处理程序)
+相关问题：给元素绑定点击事件怎么绑定，有哪几种方法，区别是什么
 
 在以下几点进行对比和了解：
 1.各种事件处理程序的添加和删除
@@ -3567,8 +3576,8 @@ mousedown,mouseup,click,dblclick,mouseenter,mouseleave,mousemove,mouseout,mouseo
 (1)mousedown
 (2)mouseup
 (3)click
-(4)mousedown
-(5)mouseup
+(4)mouseout
+(5)mouseover
 (6)click
 (7)dblclick
 
@@ -3581,7 +3590,7 @@ mousedown,mouseup,click,dblclick,mouseenter,mouseleave,mousemove,mouseout,mouseo
 //ie8以及更早版本不支持事件对象上的页面坐标pageX和pageY，不过可以使用客户区和滚动信息计算出来
 //另外混杂模式用document.body,标准模式用document.documentElement
 
-var div = document.getElementByID("myDiv");
+var div = document.getElementById("myDiv");
 
 EventUtil.addHandler(div,"click",function(event) {
     event = EventUtil.getEvent(event);
@@ -3644,7 +3653,52 @@ var EventUtil = {
 };
 ```
 
-**设备事件**
+**onload事件**
+
+网页加载完成触发onload事件，所以我们可以利用onload事件来网页加载完毕之后就立即执行的函数。
+
+把myfunction函数绑定到这个事件上：
+```
+window.onload = myFunction();
+```
+
+若需要加载页面完成之后执行多个函数
+```
+//方法一,执行两个函数
+window.onload = function() {
+    myFunction1();
+    myFunction2();
+}
+
+//这样会覆盖，只执行第二个函数myFunction2
+window.onload = myFunction1();
+window.onload = myFunction2();
+```
+
+但是其实还存在一个最佳的解决方案——不管你打算在页面加载完毕后要执行多少个函数，利用该函数都可以轻松的实现。
+```
+/*addLoadEvent函数主要是完成如下的操作：
+           1、把现有的window.onload事件处理函数的值存入到oldonload中。
+           2、如果在这个处理函数上还没有绑定任何函数，就将该函数添加给它。
+           3、如果在这个处理函数上已经绑定了一些函数，就把该函数追加到现有指定的末尾。
+*/
+function addLoadEvent(func){  
+   var oldonLoad = window.onload;  
+   if(typeof window.onload!='function'){  
+        window.onload = func;  
+   }  
+   else{  
+       window.onload = function(){  
+       oldonload();  
+       func();  
+       }  
+   }  
+}  
+
+addLoadEvent(myFunction1);
+addLoadEvent(myFunction2);
+```
+
 ##### 33.js是单线程的？什么是同步异步？什么同步异步函数？什么是异步过程？什么是消息队列和事件循环 (event loop)？
 
 事件循环是js的运行机制
@@ -4795,7 +4849,54 @@ ajax的全称：Asynchronous Javascript And XML。
 
 (6)使用JavaScript和DOM实现局部刷新
 
-##### 47.请解释 JSONP 的工作原理，以及它为什么不是真正的 Ajax。
+##### 47. 请解释 JSONP 的工作原理，以及它为什么不是真正的 Ajax。
+
+##### 48. .和[ ]的区别
+
+访问对象属性的方法
+
+**1.语法差别**
+
+```
+object.property
+object['property']
+```
+
+**2.举例**
+
+```
+function Person() {
+  this.name=" 王欢 ";
+  this.sex=" 女 ";
+  this.age=22;
+}
+var wanghuan=new Person();
+wanghuan.name;
+wanghuan["name"];
+```
+
+**3.灵活性差别**
+使用”.“运算符来存取一个对象的属性时，属性名是用标识符表示的。而在JavaScript程序中，标识符必须被逐字地输入，它们不是一种数据类型，因此程序不能对其操作。
+而使用数组[]表示法来存取一个对象的属性时，属性名是用字符串表示的。字符串是JavaScript的一种数据类型，因此可以在程序运行中操作并创建它们。
+
+这种情况使用[]才可，因为city是个字符串
+
+```
+var city = document.getElementById('aqi-city-input').value,
+    num = document.getElementById('aqi-value-input').value;
+//这里就不能用.看随后属性访问的比较
+aqiData[city] = num;
+//随后的遍历操作
+for(var city in aqiData) {
+	alert(city+":"+aqiData[city]);//北京：90，上海：40等
+}
+```
+
+**4.执行效率差别**
+数组[]表示法在存取属性值时会进行表达式运行。
+而点表示法是直接存取属性值，理论上执行效率会比数组表示法高。
+
+
 
 
 
