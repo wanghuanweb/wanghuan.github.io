@@ -20,6 +20,7 @@
 3.2 而HTML4.01基于SGML,所以需要对DTD进行引用，才能告知浏览器文档所使用的文档类型。
 ###### ps：
  SGML (Standard Generalized Markup Language) 标准通用标记语言
+
 ##### 4.行内元素有哪些？块级元素有哪些？ 空(void)元素有那些？
 
 |   | 块级元素  | 行内元素 |空元素 |
@@ -32,16 +33,14 @@
 | 切换 | display:inline变成行内元素        |    display:block变成块级元素 |无 |
 
 ##### 5.实现div的跳转
+
 ```
 <div onclick="window.open('http://www.mygaytrip.com');>跳转页面，在新建窗口打开网页</div>  
 <div onclick="window.location.href='http://www.mygaytrip.com';">跳转页面，在当前窗口打开网页</div>  
 <div onclick="window.open('enterpriseSocial.html','_self')" >跳转页面，在当前窗口打开网页</div>
 ```
-##### 5.页面导入样式时，使用link和@import有什么区别？
 
-##### 6.介绍一下你对浏览器内核的理解？
-
-##### 7.常见的浏览器内核有哪些？
+##### 6.介绍一下你对浏览器内核的理解？常见的浏览器内核有哪些？
 
 ##### 8.html5有哪些新特性、移除了那些元素？如何处理HTML5新标签的浏览器兼容问题？如何区分 HTML 和 HTML5？
 
@@ -98,3 +97,7 @@ HTML 和 XHTML 有什么区别？
 为什么通常推荐将 CSS <link> 放置在 <head></head> 之间，而将 JS <script> 放置在 </body> 之前？你知道有哪些例外吗？
 什么是渐进式渲染 (progressive rendering)？
 你用过哪些不同的 HTML 模板语言？
+img标签中alt和title的区别
+如果src=' '会怎样
+form表单的属性
+##### 5.页面导入样式时，使用link和@import有什么区别？

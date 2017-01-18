@@ -126,8 +126,8 @@ p:before,p:after
 http://blog.csdn.net/github_34514750/article/details/51122212
 
 eg:p:only-child 选择属于其父元素的唯一子元素的每个 <p> 元素。
-##### 3.css哪些属性可以继承？哪些不可继承？
 
+##### 3.css哪些属性可以继承？哪些不可继承？
 
 **css属性分类**
 
@@ -244,7 +244,268 @@ html > body div [id=”totals”] ul li > p {color:red;}--Specificity值为 0,0,
 
 ##### 6.CSS3新增伪类有那些？
 
-http://blog.csdn.net/github_34514750/article/details/51122212
+###### 6.1.css3新增的3个属性选择器
+
+```
+[attribute^="value"]
+eg:a[src^="https"] 选择其 src 属性值以 "https" 开头的每个 <a> 元素。
+```
+
+```
+[attribute$="value"]
+eg:a[src$=".pdf"] 选择其 src 属性以 ".pdf" 结尾的所有 <a> 元素
+//所以可以使用css3实现不同文件给与不同图标，没有css3则我们只可以辛苦用js实现了~
+```
+
+```
+[attribute*="value"]
+eg:a[src*="abc"] 选择其 src 属性中包含 "abc" 子串的每个 <a> 元素。
+[class*="col-"]类名中包含col-子串的元素
+```
+###### 6.2.css3新增的结构伪类选择器
+
+  n可以是even、odd（表格常用）、m*n+偏移量（m自己定一个值）、数字
+
+
+```
+:only-child
+eg:p:only-child 选择属于其父元素的唯一子元素的每个 <p> 元素。
+```
+
+```
+:nth-child(n)
+eg:p:nth-child(2) 选择属于其父元素的第二个子元素的每个 <p> 元素。
+p:nth-child(2) 匹配<div><h1></h1><p></p><p></p></div>片段中的第二个元素，但却是第一个p元素
+```
+
+```
+:nth-last-child(n)
+eg：p:nth-last-child(2) 同上，从最后一个子元素开始计数。
+```
+
+```
+:last-child
+eg:p:last-child 选择属于其父元素最后一个子元素每个 <p> 元素。
+```
+
+```
+:nth-of-type(n)
+eg:p:nth-of-type(2) 选择属于其父元素第二个 <p> 元素的每个 <p> 元素。
+p.nth-of-type(2)
+匹配<div><h1></h1><p></p><p></p></div>片段中的第二个p元素
+```
+
+```
+:nth-last-of-type(n)
+eg:p:nth-last-of-type(2) 同上，但是从最后一个子元素开始计数。
+
+```
+
+```
+:first-of-type  
+eg:p:first-of-type 选择属于其父元素的首个 <p> 元素的每个 <p> 元素。
+```
+
+```
+:last-of-type  
+eg:p:last-of-type 选择属于其父元素的最后 <p> 元素的每个 <p> 元素。
+```
+
+```
+:only-of-type  
+eg:p:only-of-type 选择属于其父元素唯一的 <p> 元素的每个 <p> 元素。
+
+```
+
+```
+:nth-child(n) 选择器匹配属于其父元素的第 N 个子元素，不论元素的类型。
+```
+
+```
+:nth-of-type(n) 选择器，该选择器选取父元素的第 N 个指定类型的子元素。
+```
+
+```
+:root  
+eg::root 选择文档的根元素。
+```
+
+```
+:empty  
+eg:p:empty 选择没有子元素的每个 <p> 元素（包括文本节点）。
+```
+###### 6.3.UI元素状态伪类选择器
+这几个状态伪类选择器在IE7，8不支持，其他浏览器都支持的比较好，如今IE7,8在国内用户还比较多，不推荐使用，但是当IE9广泛使用时，则需要积极使用这几个状态伪类选择器。
+```
+ :enabled  
+ eg:input:enabled 选择每个启用的 <input> 元素。
+
+```
+
+```
+:disabled  
+eg:input:disabled 选择每个禁用的 <input> 元素
+```
+
+```
+:checked  e
+g:input:checked 选择每个被选中的 <input> 元素。
+```
+###### 6.4.css3新增的其他选择器列表
+
+```
+//主流浏览器一般都对此支持
+E~F：选择匹配F的所有元素，且匹配元素位于匹配E的元素后面（EF需要同级）
+eg：div~p匹配<div><p>1</p></div><p>2</p>，则匹配到<p>2</p>，无<p>1</p>
+```
+
+```
+//选择器在IE7，8不支持，其他浏览器都支持的比较好，如今IE7,8在国内用户还比较多，不推荐使用，但是当IE9广泛使用时，则需要积极使用这几个状态伪类选择器。
+ :target  
+ eg:#news:target 选择当前活动的 #news 元素。
+
+```
+```
+//选择器在IE7，8不支持，其他浏览器都支持的比较好，如今IE7,8在国内用户还比较多，不推荐使用，但是当IE9广泛使用时，则需要积极使用这几个状态伪类选择器。
+:not(selector)  
+eg::not(p) 选择非 <p> 元素的每个元素。
+```
+```
+:focus(鼠标点入之后)
+--这个文本框focus动画效果感觉蛮好看的~，代码如下
+input:focus{
+    width: 200px;
+    transition: width 2s;
+    border: #87c6f9 1px solid;
+    box-shadow: 0 0 8px rgba(103,166,217,1);
+}
+```
+###### 6.5.实例-制作优雅表格
+
+```
+table{
+  width: 70%;
+  font-size: 14px;
+  font-family: SimHei;
+  /*设计表格要习惯的加如下声明*/
+  border-collapse: collapse;
+  empty-cells: show;
+  table-layout: fixed;
+  border: 1px solid #cad9ea;
+}
+
+th{
+  height: 30px;
+}
+td{
+  height: 25px;
+}
+
+th,td{
+  border: 1px solid #cad9ea;
+  padding: 2px;
+}
+/*浅色颜色舒服*/
+tr:nth-child(even) {
+  background-color: #f5fafe;
+}
+
+```
+
+```
+
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <link href="index.css" rel="stylesheet">
+    <title>优雅的数据表格</title>
+  </head>
+
+  <body>
+
+    <table>
+      <caption>优雅的数据表格</caption>
+      <thead>
+        <th>排名</th>
+        <th>校名</th>
+        <th>总得分</th>
+        <th>人才培养得分</th>
+        <th>研究生培养得分</th>
+        <th>本科生培养得分</th>
+      </thead>
+
+      <tbody>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+
+  </body>
+</html>
+
+```
+![这里写图片描述](http://img.blog.csdn.net/20160411153545378)
 
 ##### 7.元素的水平居中？垂直居中？水平垂直居中？
 
@@ -541,8 +802,13 @@ gradient线性渐变
 多列布局        （multi-column layout）
 
 ##### 11.请解释一下CSS3的Flexbox（弹性盒布局模型）,以及适用场景？
+
 见css布局中的flex布局
-##### 12.用纯CSS创建一个三角形的原理是什么？
+画四分之一圆的时候，是画出一个圆并且结合overflow等实现，但是其实可以直接画出半圆或者四分之一圆，之前忽略了几个属性。
+
+##### 12.用纯CSS创建一个三角形的原理是什么？纯CSS创建其他图形。
+
+**三角形**
 基于盒子模型，不给content的宽高，设置border，将上、左、右三条边隐藏掉
 
     {
@@ -552,6 +818,211 @@ gradient线性渐变
         border-style:solid;
         border-color:transparent transparent red transparent;
     }
+
+圆的画法：先画相应矩形，在用border-radius
+
+**画出圆**
+```
+{
+  width:100px;
+  height:100px;
+  border-radius:50px;
+}
+```
+**画出方向四个不同的本圆**
+
+```
+.top
+{
+  width: 100px;
+  height: 50px;
+  border-radius: 50px 50px 0 0;
+}
+.right {
+  height: 100px;
+  width: 50px;
+  border-radius: 0 50px 50px 0;
+}
+.bottom {
+  width: 100px;
+  height: 50px;
+  border-radius: 0 0 50px 50px;
+}
+.left {
+  width: 50px;
+  height: 100px;
+  border-radius: 50px 0 0 50px;
+}
+```
+**画出四分之一个圆方法**
+
+```
+{
+  width:50px;
+  height:50px;
+  border-radius:50px 0 0 0;
+}
+```
+
+**椭圆**
+
+```
+<div class="ellipse">
+</div>
+ .ellipse{
+    width: 200px;
+    height: 100px;
+    border-radius: 50%;
+    background: black;
+}
+
+```
+
+**沿横轴、纵轴劈开的半椭圆**
+
+```
+<div class="x-ellipse">
+</div>
+<div class="y-ellipse">
+</div>
+
+.x-ellipse{
+    width: 200px;
+    height: 150px;
+    border-radius: 50%/ 100% 100% 0 0;
+    /*相当于50% 50% 50% 50%/ 100% 100% 0 0;*/
+    background: black;
+}
+.y-ellipse{
+    width: 200px;
+    height: 150px;
+    border-radius: 100% 0 0 100%/50%;
+    background: black;
+}        
+```
+![这里写图片描述](http://img.blog.csdn.net/20160916141440085)
+
+**四分之一椭圆**
+
+```
+<div class="quarter-ellipse">
+</div>
+.quarter-ellipse{
+    width: 200px;
+    height: 150px;
+    border-radius: 100% 0 0 0;
+    background: black;
+}
+```
+![这里写图片描述](http://img.blog.csdn.net/20160916141536023)
+
+
+**菱形**
+如果想让形状变形，但是里边的字体不变形
+
+思路：
+变形之后，再让里边内容旋转回来
+
+```
+<div class="paralle"><p>transform:skew()</p></div>
+
+.paralle {
+    position: relative;
+    left: 100px;
+    width:200px;
+    height: 100px;
+    background:#44a5fc;
+
+    line-height: 100px;
+    text-align: center;
+    font-weight: bolder;
+
+    transform: skew(-20deg);
+}
+.paralle p{
+    transform: skew(20deg);
+}
+
+```
+![这里写图片描述](http://img.blog.csdn.net/20160916145111696)
+
+**三角形**
+
+```
+#triangle-up {
+    width: 0;
+    height: 0;
+    border-left: 50px solid transparent;
+    border-right: 50px solid transparent;
+    border-bottom: 100px solid lightblue;
+}
+#triangle-down {
+    width: 0;
+    height: 0;
+    border-left: 50px solid transparent;
+    border-right: 50px solid transparent;
+    border-top: 100px solid lightblue;
+}
+
+#triangle-left {
+    width: 0;
+    height: 0;
+    border-top: 50px solid transparent;
+    border-right: 100px solid lightblue;
+    border-bottom: 50px solid transparent;
+}
+#triangle-right {
+    width: 0;
+    height: 0;
+    border-top: 50px solid transparent;
+    border-left: 100px solid lightblue;
+    border-bottom: 50px solid transparent;
+}
+#triangle-topleft {
+    width: 0;
+    height: 0;
+    border-top: 100px solid lightblue;
+    border-right: 100px solid transparent;
+}
+#triangle-topright {
+    width: 0;
+    height: 0;
+    border-top: 100px solid lightblue;
+    border-left: 100px solid transparent;
+}
+#triangle-bottomleft {
+    width: 0;
+    height: 0;
+    border-bottom: 100px solid lightblue;
+    border-right: 100px solid transparent;
+}
+#triangle-bottomright {
+    width: 0;
+    height: 0;
+    border-bottom: 100px solid lightblue;
+    border-left: 100px solid transparent;
+}
+```
+
+
+**一些属性的说明**
+
+border-radius:50px 0 0 0
+等价于将border-raduis属性分成四个属性来设置，把一个圆分成上左，上右，下右，下左4份
+border-top-left-radius:
+border-top-right-radius:
+border-bottom-right-radius:
+border-bottom-left-radius:
+
+首选需要了解border-radius
+border-radius可以是元素也可是百分比。
+border-radius:border-top-left-radius,border-top-right-radius,
+              border-bottom-right-radius,border-bottom-left-radius;
+不仅仅可以为四个角分别设置值，甚至可以给每个角提供水平和垂直半径
+方法是在斜杠前指定 1~4 个值，在斜杠后指定另外 1~4 个值
+举例来说，
+当 border-radius 的值为10px / 5px 20px 时，
+其效果相当于 10px 10px 10px 10px / 5px 20px 5px 20px 。
 ##### 13.一个满屏 品 字布局 如何设计?
 1.上边一个div，下边两个div
 
