@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link href="index.css" rel="stylesheet">
+</head>
+<body>
+    <div class="banner">
+        <ul id="imgList">
+            <li class="img"><img src="background1.jpg" alt=""></li>
+            <li class="img"><img src="background2.png" alt=""></li>
+            <li class="img"><img src="background1.jpg" alt=""></li>
+        </ul>
+
+        <ul class="showList">
+            <li class="show"></li>
+            <li class="show"></li>
+            <li class="show"></li>
+        </ul>
+    </div>
+    <script src="index.js"></script>
+</body>
+</html>
+<!--  思路：
+1.定义banner大盒子，相对定位，overflow为hidden
+2.定义imgList小盒子(ul列表)，绝对定位
+3.imgList里放置img，img的float为left，img大小是轮播器的大小
+4.设置定时器，imgList的left改变即可-->

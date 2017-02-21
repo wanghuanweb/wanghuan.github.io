@@ -499,7 +499,12 @@ Infinity == -Infinity
 false
 ```
 
-##### 5.检测JavaScript的数据类型。
+##### 5.检测JavaScript的数据类型。安全的类型检测。
+
+typeof检测基本类型，instanceof检测引用类型
+但typeof会有一些不可预知的结果，蔽日safari(直到第四版)在对正则表达式应用typeof操作符还是返回function，因此很难做出判断。
+若用instanceof，value instanceof Array 若Array是在另一个frame中定义的数组，那么返回的则是false，因为Array毕竟是window的属性。
+所以typeof instanceof都是不安全的检测，其实可以利用Object原生的toString方法。
 
   **typeof操作符来检测基本数据类型**
 
@@ -513,12 +518,11 @@ false
 
   ```
   typeof null --返回object
-
   ```
 
   **instanceof操作符来检测引用数据类型**
 
-  语法：variable instanceof constructor
+  语法：variable instanceof constructor(Array等)
 
   返回值:true和false；
 
@@ -541,6 +545,23 @@ false
   alert(res); //false
 
   ```
+
+**Object.prototype.toString()**
+
+这一方法应用于检测原生JSON对象，不能检测非原生构造函数的构造函数名。
+开发人员定义的任何构造函数都将返回[Object Object]
+
+```
+function isArray(value) {
+    return Object.prototype.toString.call(value) == "[Object Array]";
+}
+function isFunction(value) {
+    return Object.prototype.toString.call(value) == "[Object Function]";
+}
+function isRegExp(value) {
+    return Object.prototype.toString.call(value) == "[Object RegExp]";
+}
+```
 
 ##### 6.JavaScript的作用域。
 
@@ -667,7 +688,6 @@ js对象分为三种类型：用户定义对象、内建对象、宿主对象
 归并：reduce(),reduceRight()
 
 http://blog.csdn.net/github_34514750/article/details/51049935
-
 
 **RegExp对象**
 
@@ -922,7 +942,8 @@ console.log(typeof trois); // "undefined"
 ```
 
 ##### 10.Javascript创建对象的几种方式？
-相关问题：如何继承性地创建一个对象？
+
+相关问题：如何继承性地创建一个对象？JS 怎么实现一个类。怎么实例化这个类?
 
 请指出以下代码的区别：function Person(){}、var person = Person()、var person = new Person()？(可结合下列知识点回答)
 
@@ -4288,6 +4309,7 @@ selectbox.insertBefore(optionToMove,selectbox.options[optionToMove.index-1]);
 ```
 
 ##### 38.BOM
+
 **window对象**
 
 BOM就是浏览器窗口对象模型，顶级对象就是window，window对象表示浏览器中一个打开的窗口，也就是窗体，所有的全局对象和函数都属于window对象的属性和方法。
@@ -4661,19 +4683,25 @@ Function.prototype._new_ = function() {
 
 ###### 1.什么是JSON
 
-JSON:JavaScript Object Notation，javascript对象表示法；
-JSON利用javascript的模式来表示结构化数据，但JSON不从属于javascript，只是一种数据格式，很多语言都有针对JSON的解析器和序列化器
+1. JSON:JavaScript Object Notation，javascript对象表示法
+2. json是一种数据结构
+3. 不从属于javascript
+4. 很多语言都有针对JSON的解析器和序列化器
+
 **JSON流行的原因**
+
 1.和js语法类似，容易理解
 2.可以将JSON数据结构解析成有用的js对象
 
 ###### 2.JSON语法
 
 **JSON的语法可以表示以下三种类型的值：**
+
 简单值：字符串、数值、布尔值、null，但不支持js的undefined
 对象：表示一组无序的键值对儿
-数组：有序的值得列表
+数组：有序的值的列表
 JSON不支持变量，函数，对象实例，只是一种表示结构化数据的格式
+
 **JSON的对象**
 
 ```
@@ -4690,6 +4718,7 @@ JSON不支持变量，函数，对象实例，只是一种表示结构化数据�
 1.对象属性必须加上""
 2.无末尾的分号；
 3.没有声明变量（json只是数据结构，没有变量的概念）
+
 **JSON的数组**
 [23,"wanghuan",true]
 与js数组字面量的不同：
@@ -4721,6 +4750,7 @@ JSON不支持变量，函数，对象实例，只是一种表示结构化数据�
 
 JSON对象的方法：
 **stringify()**
+
 用于把js对象序列化为JSON字符串,默认情况下，此函数输出的JSON字符串不包含任何空格字符或缩进，同时会忽略js对象的函数和原型对象。
 参数1：js对象
 ```
@@ -4732,6 +4762,7 @@ var book = {
 var jsonText = JSON.stringify(book);
 //{"title":"bupt","author":["wanghuan"],"year":2011}
 ```
+
 参数2：过滤器（可以是数组，也可以是函数），可选
 
 ```
@@ -4794,6 +4825,7 @@ var book = {
 };
 var jsonText = JSON.stringify(book);
 ```
+
 **序列化对象的顺序**
 1.若存在toJSON()方法而且能通过它取得有效的值，则调用这个方法。否则，返回对象本身
 2.如果提供了第二个参数，应用此函数过滤器。传入函数过滤器的值是第1步返回的值
@@ -4804,11 +4836,13 @@ var jsonText = JSON.stringify(book);
 
 **parse()**
 把JSON字符串解析成原生js值
+
 参数1：js对象
 ```
 var bookCopy = JSON.parse(jsonText);
-//book与bookCopy有相同属性，但是没关系的对象
+//book与bookCopy有相同属性，但是是无关的对象
 ```
+
 参数2：函数，可选，将在每个键值对上调用
 ```
 var book = {
@@ -4976,8 +5010,6 @@ javaScript中hasOwnProperty函数方法是返回一个布尔值，指出一个�
 ##### 23. [].forEach.call($$("*"),function(a){ a.style.outline="1px solid #"+(~~(Math.random()*(1<<24))).toString(16) })  能解释一下这段代码的意思吗？
 
 
-##### 42.JS 怎么实现一个类。怎么实例化这个类
-
 ##### 61.需求：实现一个页面操作不会整页刷新的网站，并且能在浏览器前进、后退时正确响应。给出你的技术实现方案？
 
 
@@ -5052,7 +5084,6 @@ What is the extent of your experience with Promises and/or their polyfills?
 你使用过 JavaScript 模板系统吗？
 如有使用过，请谈谈你都使用过哪些库？
 请解释 JavaScript 的同源策略 (same-origin policy)。
-什么是三元表达式 (Ternary expression)？“三元 (Ternary)” 表示什么意思？
 为何通常会认为保留网站现有的全局作用域 (global scope) 不去改变它，是较好的选择？
 请解释什么是单页应用 (single page app), 以及如何使其对搜索引擎友好 (SEO-friendly)。
 使用 Promises 而非回调 (callbacks) 优缺点是什么？

@@ -1,0 +1,77 @@
+<!doctype>
+<html>
+    <head>
+        <meta charset="utf-8">
+    </head>
+
+    <body>
+        <div id="main">
+            <div id="head">
+                this is header,height is 100px
+            </div>
+
+            <div id="content">
+                <div id="contentLeft">
+                    this is left content，width is 300px,float left
+                </div>
+                <div id="contentRight">
+                    this is right content,overflow is hidden;<br/>
+                    为了触发BFC，防止与包含块border box的左边相接触<br/>
+                    同时整个content的overflow is hidden，为了触发BFC，使得浮动子元素也参与计算，也就是所谓的清除浮动
+                </div>
+            </div>
+
+            <div id="foot">
+                this is footer,height is 100px
+                this is footer,height is 100px
+            </div>
+
+        </div>
+
+        <style type="text/css">
+            /*其他样式代码*/
+            *{
+                margin: 0px;
+                font-size: 25px;
+                color: white;
+                font-family: SimHei;
+                text-align: center;
+            }
+            #head,
+            #foot{
+                background-color: #7E7E7E;
+            }
+            #content #contentLeft{
+                background-color: #FF8686;
+            }
+            #content #contentRight{
+                background-color: #AFD9FD;
+            }
+
+            /**
+             * 布局核心代码
+             */
+            #head,
+            #foot{
+                height: 100px;
+            }
+            #content{
+                /*或者使用注释掉的那行代码，两种方法均可*/
+                overflow: hidden;
+            }
+            #content #contentLeft{
+                width:300px;
+                float: left;
+                height: 500px;
+            }
+            #content #contentRight{
+                overflow: hidden;
+                height: 400px;
+            }
+            #foot{
+                /*clear: both;*/
+            }
+
+        </style>
+    </body>
+</html>

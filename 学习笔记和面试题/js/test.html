@@ -1,11 +1,28 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>test</title>
-    <script src="index.js"></script>
+    <title></title>
+    <style type="text/css">
+        .myDiv {
+            width: 600px;
+            height: 400px;
+            margin: 20px auto;
+            background-size: over;
+            background-position: center;
+            -webkit-animation-name: 'loop';
+            -webkit-animation-duration: 20s;
+            -webkit-animation-iteration-count: infinite;
+        }
+        @-webkit-keyframes "loop"{
+            0% {background: url(http://img5.duitang.com/uploads/blog/201408/12/20140812150016_8NMUU.jpeg) no-repeat;}
+            25% {background: url(http://pic29.nipic.com/20130518/9908282_142904524164_2.jpg) no-repeat;}
+            50% {background: url(http://uploadfile.huiyi8.com/2014/0605/20140605114503719.jpg) no-repeat;}
+            75% {background: url(http://img3.redocn.com/20100322/Redocn_2010032112222793.jpg) no-repeat;}
+            100% {background: url(http://uploadfile.huiyi8.com/2014/0605/20140605114447934.jpg) no-repeat;}
+        }
+    </style>
 </head>
 <body>
-
+    <div class="myDiv"></div>
 </body>
 </html>
