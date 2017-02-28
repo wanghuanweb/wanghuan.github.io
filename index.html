@@ -6,62 +6,21 @@
 
 </head>
 <body>
-    <form id="myForm">
-        <input name="tel1" type="text" maxlength="3" class="tel">
-        <input name="tel2" type="text" maxlength="4" class="tel">
-        <input name="tel3" type="text" maxlength="5" class="tel">
-    </form>
+
     <script type="text/javascript">
-        var EventUtil = {
-            addHandler: function(element,type,handler) {
-                if (element.addEventListener) {
-                    element.addEventListener(type,handler,false);
-                } else if (element.attachEvent) {
-                    element.attachEvent("on" + type,handler);
-                } else {
-                    element["on" + type] = handler;
-                }
-            },
 
-            getEvent: function(event) {
-                return event ? event : window.event;
-            },
-            getTarget: function(event) {
-                return event.target || event.srcElement;
-            },
-            preventDefault:function(event) {
-                if(event.preventDefault) {
-                    event.preventDefault();
-                } else {
-                    event.returnValue = false;
-                }
-            }
-        };
 
-        function tabForward(event) {
-            event = EventUtil.getEvent(event);
-            var target = EventUtil.getTarget(event);
 
-            if(target && target.nodeName.toUpperCase() === "INPUT") {
-                if(target.value.length == target.maxLength) {
-                    console.log("tab");
-                    var form = target.form;
-
-                    for(var i = 0 ,len = form.length;i < len;i++) {
-                        if(form.elements[i] == target) {
-                            if(form.elements[i+1]) {
-                                form.elements[i+1].focus();
-                            }
-                            return;
-                        }
-                    }
-                }
-            }
+    var a = 1;
+    function b() {
+        var a = 2;
+        function c() {
+            console.log(a);
         }
+        return c;
+    }
+    b()();
 
-        // var tele = document.getElementByClassName("tel");
-        var form = document.getElementById('myForm');
-        EventUtil.addHandler(form,"keyup",tabForward);
     </script>
 </body>
 </html>

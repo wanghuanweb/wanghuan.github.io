@@ -1,5 +1,7 @@
+层叠样式表(英文全称：Cascading Style Sheets)
 
 ##### 1.介绍一下标准的CSS的盒子模型？低版本IE的盒子模型有什么不同的？
+
 相关问题：盒子模型的区别border-box 和 content-box
 
 1.1分类：IE盒子模型和标准W3C盒子模型
@@ -7,6 +9,7 @@
 1.2盒子模型：content、padding、border、margin
 
 1.3区别（IE的content部分把 border 和 padding计算了进去）
+
 ###### W3C的标准Box Model:
 
 ###### 外盒尺寸计算：
@@ -163,6 +166,7 @@ margin padding width height float clear position left top overflow z-index displ
 list-style-image, list-style-position,list-style-type, list-style可以继承
 
 ##### 4.伪类和伪元素的差别？
+
 1. 伪类是通过给子元素添加一个类，然后定义这个类的样式来实现效果
 
     eg:  :link :visited :hover :active :focus :first-child
@@ -206,7 +210,9 @@ list-style-image, list-style-position,list-style-type, list-style可以继承
  但因为兼容性的问题，所以现在大部分还是统一的单冒号，但是抛开兼容性的问题，我们在书写时应该尽可能养成好习惯，区分两者。
 
 ##### 5.CSS优先级算法(特殊性值)如何计算？
+
 相关问题：选择器优先级
+
 CSS 中字母 'C' 的意思是叠层 (Cascading)。请问在确定样式的过程中优先级是如何决定的 (请举例)？如何有效使用此系统？
 
 **1.css优先级**
@@ -243,7 +249,7 @@ Div # sjweb { font-size:12px;}--Specificity值为 0,1,0,1
 
 html > body div [id=”totals”] ul li > p {color:red;}--Specificity值为 0,0,1,6
 
-##### 6.CSS3新增伪类有那些？
+##### 6.CSS3新增选择器，伪元素，伪类有那些？
 
 ###### 6.1.css3新增的3个属性选择器
 
@@ -319,14 +325,6 @@ eg:p:only-of-type 选择属于其父元素唯一的 <p> 元素的每个 <p> 元�
 ```
 
 ```
-:nth-child(n) 选择器匹配属于其父元素的第 N 个子元素，不论元素的类型。
-```
-
-```
-:nth-of-type(n) 选择器，该选择器选取父元素的第 N 个指定类型的子元素。
-```
-
-```
 :root  
 eg::root 选择文档的根元素。
 ```
@@ -335,8 +333,11 @@ eg::root 选择文档的根元素。
 :empty  
 eg:p:empty 选择没有子元素的每个 <p> 元素（包括文本节点）。
 ```
+
 ###### 6.3.UI元素状态伪类选择器
+
 这几个状态伪类选择器在IE7，8不支持，其他浏览器都支持的比较好，如今IE7,8在国内用户还比较多，不推荐使用，但是当IE9广泛使用时，则需要积极使用这几个状态伪类选择器。
+
 ```
  :enabled  
  eg:input:enabled 选择每个启用的 <input> 元素。
@@ -349,8 +350,8 @@ eg:input:disabled 选择每个禁用的 <input> 元素
 ```
 
 ```
-:checked  e
-g:input:checked 选择每个被选中的 <input> 元素。
+:checked
+eg:input:checked 选择每个被选中的 <input> 元素。
 ```
 ###### 6.4.css3新增的其他选择器列表
 
@@ -512,7 +513,7 @@ tr:nth-child(even) {
 
 **水平居中**
 
-1.如果需要居中的是常规流中inline元素
+1.如果需要居中的是常规流中inline元素---图片，按钮，文字等行内元素(display为inline或inline-block等)
 
 则在 **父元素** 中使用text-align: center;
 
@@ -530,9 +531,13 @@ tr:nth-child(even) {
 </style>
 ```
 
-2.如果需要居中的是常规流中block元素
+2.如果需要居中的是常规流中block元素---是常规流，对浮动元素或绝对定位元素无效。
 
-则需要为1.元素设置宽度，2.设置左右margin为auto，3.IE6下需在父元素上设置text-align: center;再给子元素恢复需要的值
+则需要为
+
+1.元素设置宽度，
+2.设置左右margin为auto，
+3.IE6下需在父元素上设置text-align: center;再给子元素恢复需要的值
 
 ```
 <body>
@@ -563,7 +568,15 @@ tr:nth-child(even) {
 
 3.如果需要居中的元素为浮动元素
 
-则需要为 1.为元素设置宽度 2.position: relative 3.浮动方向偏移量（left或者right）设置为50% 4.浮动方向上的margin设置为元素宽度一半乘以-1
+则需要为
+1.为元素设置宽度
+2.position: relative
+3.浮动方向偏移量（left或者right）设置为50%
+4.浮动方向上的margin设置为元素宽度一半乘以-1
+
+浮动居中的原理是：把浮动元素相对定位到父元素宽度50%的地方，但这个时候元素还不是居中的，而是比居中的那个位置多出了自身一半的宽度，这时就需要他里面的子元素再用一个相对定位，把那多出的自身一半的宽度拉回来，而因为相对定位正是相对于自身来定位的，所以自身一半的宽度只要把left 或 right 设为50%就可以得到了，因而不用知道自身的实际宽度是多少。
+
+这种使用浮动配合相对定位来居中的方法，优点是不用知道要居中的元素的宽度，即使这个宽度是不断变化的也行；缺点是需要一个多余的元素来包裹要居中的元素。
 
 ```
 <body>
@@ -587,6 +600,49 @@ tr:nth-child(even) {
         background-color: purple;
     }
 </style>
+```
+
+```
+<head>
+<style>
+    body{
+        margin:0;
+        padding:0;
+    }
+    .parent{
+        width:300px;
+        height:200px;
+        border:1px solid red;
+    }
+    /*浮动居中的方法需要有这么一个包裹的元素，需要浮动的就是哲哥元素*/
+    .wraper{
+        float:left;//在哲哥包裹元素上浮动，让它自适应的宽度
+        position:relative;
+        left:50%;//相对定位到父元素宽度一半的地方
+        clear:both;
+    }
+    .child{
+        border:1px solid blue;//这个是真正需要居中的元素
+        position:relative;//在这个元素上进行相对定位
+        left:-50%;//向左偏移本身的一半宽度，正好就居中了
+        white-space:nowrap;
+    }
+</style>
+
+</head>
+<body>
+    <div class="parent">
+        <div class="wraper">
+            <div class="child">我水平居中了</div>
+        </div>
+        <div class="wraper" style="margin-top:20px;">
+            <div class="child">宽度不同</div>
+        </div>
+        <div class="wraper" style="margin-top:20px;">
+            <div class="child">确实啊</div>
+        </div>
+    </div>
+</body>
 ```
 
 4.如果需要居中的元素为绝对定位元素
@@ -646,10 +702,48 @@ tr:nth-child(even) {
 ```
 
 **垂直居中**
+
+1.使用line-height让单行的文字垂直居中
+
+把文字的line-height设为文字父容器的高度，适用于只有一行文字的情况。
+
 Vertical-align is similar. It also applies to table cells and it works with some inline elements.不用于块级元素
+
+2.利用font-size来实现垂直居中
+
+如果父元素高度是已知的，要把它里面的子元素进行水平垂直居中，则可以使用这种方法，且子元素的宽度或高度都不必知道。
+
+该方法只对IE6和IE7有效。
+
+该方法的要点是给父元素设一个合适的font-size的值，这个值的取值为该父元素的高度除以1.14得到的值，并且子元素必须 是一个inline或inline-block元素，需要加上vertical-align:middle属性。
+
+至于为什么是除以1.14而不是其他的数，还真没有人知道，你只需要记住1.14这个数就行了。
+
+3.使用表格
+
+如果你使用的是表格的话，那完全不用为各种居中问题而烦恼了，只要用到 td(也可能会用到 th)元素的 align=”center” 以及 valign=”middle” 这两个属性就可以完美的处理它里面内容的水平和垂直居中问题了,而且表格默认的就会对它里面的内容进行垂直居中。如果想在css中控制表格内容的居中，垂直居中可以使用 vertical-align:middle，至于水平居中，貌似css中是没有相对应的属性的,但是在IE6、7中我们可以使用text-align:center来对表格里的元素进行水平居中，IE8+以及谷歌、火狐等浏览器的text-align:center只对行内元素起作用，对块状元素无效。
+
+```
+<table>
+    <tr>
+        <td height="200" width="200" style="border:1px solid red;vertical-align:top;text-align:center;">
+            <div style="width:100px;height:100px;background:#000;"></div>
+        </td>
+    </tr>
+</table>
+```
 
 **水平垂直居中**
 
+1.使用display:table-cell来居中
+
+对于那些不是表格的元素，我们可以通过display:table-cell 来把它模拟成一个表格单元格，这样就可以利用表格那很方便的居中特性了。例如：
+
+```
+<div style="display:table-cell;vertical-align:middle;text-align:center;width:200px;height:200px;border:1px solid black;">
+    <div style="width:50px;height:50px;background:#03F;display:inline-block;"></div>
+</div>
+```
 如何居中div？如何居中一个浮动元素？如何让绝对定位的div居中？
 居中div
 
@@ -1024,92 +1118,6 @@ border-radius:border-top-left-radius,border-top-right-radius,
 举例来说，
 当 border-radius 的值为10px / 5px 20px 时，
 其效果相当于 10px 10px 10px 10px / 5px 20px 5px 20px 。
-
-##### 13.一个满屏 品 字布局 如何设计?
-1.上边一个div，下边两个div
-
-2.上边一个div高：50%，宽100%
-
-3.下边两个div，高：50%，宽50%，一个是float:left;一个float:right;
-或者是设置下边两个div的display:inline-block;注意不能用inline因为这样是行内元素，宽高设置会无效
-
-```
-    <!DOCTYPE html>
-    <html>
-        <head>
-            <meta charset="utf-8">
-            <link href="index.css" rel="stylesheet"
-            <style>
-                *{
-                    margin: 0;
-                    padding: 0;
-                }
-                html,body{
-                    height: 100%;
-                }
-                .top{
-                    width: 100%;
-                    height: 50%;
-                    border: 1px solid black;
-                }
-                .bottom{
-                    width: calc(50% - 2px);
-                    height: 50%;
-                    border: 1px solid black;
-
-                }
-                .bottom1{
-                    float: left;
-                }
-                .bottom2{
-                    float: right;
-                }
-            </style>
-        </head>
-
-        <body>
-            <div class="top"></div>
-            <div class="bottom bottom1"></div>
-            <div class="bottom bottom2"></div>
-        </body>
-    </html>
-
-
-    <!DOCTYPE html>
-    <html>
-        <head>
-            <meta charset="utf-8">
-            <link href="index.css" rel="stylesheet">
-            <style>
-                *{
-                    margin: 0;
-                    padding: 0;
-                }
-                html,body{
-                    height: 100%;
-                }
-                .top{
-                    width: 100%;
-                    height: 50%;
-                    border: 1px solid black;
-                }
-                .bottom{
-                    width: calc(50% - 4px);
-                    height: 50%;
-                    border: 1px solid black;
-                    display: inline-block;
-                }
-            </style>
-        </head>
-
-        <body>
-            <div class="top"></div>
-            <div class="bottom bottom1">2</div>
-            <div class="bottom bottom2">3</div>
-        </body>
-    </html>
-
-```
 
 ##### 14.经常遇到的浏览器的兼容性有哪些？原因，解决方法是什么，常用hack的技巧 ？
 
@@ -1560,7 +1568,6 @@ http://blog.csdn.net/github_34514750/article/details/51364202
 
 如果权重相同，则最后定义的样式会起作用，但是应该避免这种情况出现
 
-
 ##### 22.请解释一下为什么会出现浮动和什么时候需要清除浮动？清除浮动的方式和优劣。
 
 **出现浮动的原因：**
@@ -1743,7 +1750,7 @@ css规范中规定此属性overflow：
 建议：不推荐使用，如果你需要出现滚动条或者确保你的代码不会出现滚动条就使用吧。
 
 
-##### 23.移动端的布局用过媒体查询吗？
+##### 23.移动端的布局用过媒体查询吗？你用过媒体查询，或针对移动端的布局/CSS 吗？
 
 ##### 24.使用 CSS 预处理器吗？喜欢那个？
 
@@ -1751,6 +1758,7 @@ css规范中规定此属性overflow：
 1.尽量将样式写在单独的css文件中，在head元素中引入<link>
 
 好处：
+
 (1)内容和样式分离，容易管理和维护
 (2)减少页面体积
 (3)css文件可以被缓存、重用，维护成本降低
@@ -1852,6 +1860,7 @@ css规范中规定此属性overflow：
 ##### 28.margin和padding分别适合什么场景使用？
 
 1.两者都可以用来隔开元素
+
   margin布局元素使元素与元素互不相干
   padding用于元素与内容之间的间隔
 
@@ -1882,8 +1891,6 @@ css规范中规定此属性overflow：
 ##### 32.什么是响应式设计？响应式设计的基本原理是什么？如何兼容低版本的IE？
 
 ##### 33.视差滚动效果，如何给每页做不同的动画？（回到顶部，向下滑动要再次出现，和只出现一次分别怎么做？）
-
-##### 32.::before 和 :after中双冒号和单冒号 有什么区别？解释一下这2个伪元素的作用。
 
 ##### 33.如何修改chrome记住密码后自动填充表单的黄色背景 ？
 
@@ -2070,7 +2077,119 @@ display:inline-block其作用是将对象呈递为内联对象，但是对象的
 ```
 ##### 42.overflow: scroll时不能平滑滚动的问题怎么处理？
 
-##### 43.有一个高度自适应的div，里面有两个div，一个高度100px，希望另一个填满剩下的高度。
+##### 43.层叠顺序（stacking level）和层叠上下文（stacking context）
+
+1.根据 z-index 的高低决定层叠的优先级
+
+2.但还要了解7阶层叠水平
+
+**著名的7阶层叠水平**
+
+    1.形成堆叠上下文环境的元素的背景与边框
+    2.拥有负 z-index 的子堆叠上下文元素 （负的越高越堆叠层级越低）
+    3.正常流式布局，非 inline-block，无 position 定位（static除外）的子元素
+    4.无 position 定位（static除外）的 float 浮动元素
+    5.正常流式布局， inline-block元素，无 position 定位（static除外）的子元素（包括 display:table 和 display:inline ）
+    6.拥有 z-index:0 的子堆叠上下文元素以及“positioned”且层叠级数为0的后代元素；
+    7.拥有正 z-index: 的子堆叠上下文元素（正的越低越堆叠层级越低）
+
+规则有点多，但简单说，就是父元素会先绘制，接着是z-index为负值的子元素，然后是“non-positioned”元素，最后是按照层叠级数从0开始逐级绘制（这样说比较简单，省略了大量细节，因此并不是很准确）。如果层级相同，则按照元素在DOM树中的顺序来进行绘制。
+
+例子1：
+```
+其中DIV#1和DIV#4是粉色框，position设置为absolute；
+DIV#2和DIV#3是粉色框，position设置为relative；
+DIV#5是黄色框，position为设置，默认static；
+<body>
+	<div id="absdiv1">DIV #1</div>
+	<div id="reldiv1">DIV #2</div>
+	<div id="reldiv2">DIV #3</div>
+	<div id="absdiv2">DIV #4</div>
+	<div id="normdiv">DIV #5</div>
+</body>
+```
+层叠的效果div5肯定是在最下面。但是
+是浏览器在解析HTML的时候仍然是按照HTML文档流的顺序来解析的，实际的绘制顺序仍然是DIV#1->DIV#2->DIV#3->DIV#4->DIV#5。
+只不过，要绘DIV#5的时候，会对影响到的元素进行重新绘制，
+其渲染的效果看上去的顺序是DIV#5->DIV#1->DIV#2->DIV#3->DIV#4，将DIV#5提到了最前。
+
+例子2：---上面的比较是基于两个 div 都没有形成 堆叠上下文 这个为基础的
+```
+<div class="container">
+    <div class="inline-block">#divA display:inline-block</div>
+    <div class="float"> #divB float:left</div>
+</div>
+
+.container{
+    position:relative;
+    background:#ddd;
+}
+.container > div{
+    width:200px;
+    height:200px;
+}
+.float{
+    float:left;
+    background-color:deeppink;
+}
+.inline-block{
+    display:inline-block;
+    background-color:yellowgreen;
+    margin-left:-100px;
+}
+```
+
+大概描述起来，意思就是拥有共同父容器的两个 DIV 重叠在一起，是 display:inline-block 叠在上面，还是float:left 叠在上面？
+
+注意这里 DOM 的顺序，是先生成 display:inline-block ，再生成 float:left 。当然也可以把两个的 DOM 顺序调转如下:
+
+```
+<div class="container">
+    <div class="float"> #divB float:left</div>
+    <div class="inline-block">#divA display:inline-block</div>
+</div>
+```
+
+会发现，无论顺序如何，始终是 display:inline-block 的 div 叠在上方。
+
+3.触发一个元素形成堆叠上下文的方法
+
+1.根元素 (HTML),
+2.z-index 值不为 “auto”的 绝对/相对定位，
+3.一个 z-index 值不为 “auto”的 flex 项目 (flex item)，即：父元素 display: flex|inline-flex，
+4.opacity 属性值小于 1 的元素（参考 the specification for opacity），
+5.transform 属性值不为 “none”的元素，
+6.mix-blend-mode 属性值不为 “normal”的元素，
+7.filter值不为“none”的元素，
+8.perspective值不为“none”的元素，
+9.isolation 属性被设置为 “isolate”的元素，
+10.position: fixed
+11.在 will-change 中指定了任意 CSS 属性，即便你没有直接指定这些属性的值
+12.-webkit-overflow-scrolling 属性被设置 “touch”的元素
+
+```
+.container{
+    position:relative;
+    background:#ddd;
+}
+.container > div{
+    width:200px;
+    height:200px;
+    opacity:0.9; // 注意这里，增加一个 opacity
+}
+.float{
+    float:left;
+    background-color:deeppink;
+}
+.inline-block{
+    display:inline-block;
+    background-color:yellowgreen;
+    margin-left:-100px;
+}
+```
+会看到，inline-block 的 div 不再一定叠在 float 的 div 之上，而是和 HTML 代码中 DOM 的堆放顺序有关，后添加的 div 会 叠在先添加的 div 之上。
+
+这里的关键点在于，添加的 opacity:0.9 这个让两个 div 都生成了 stacking context（堆叠上下文） 的概念。此时，要对两者进行层叠排列，就需要 z-index ，z-index 越高的层叠层级越高。
 
 ##### 44.png、jpg、gif 这些图片格式解释一下，分别什么时候用。有没有了解过webp？
 
@@ -2279,7 +2398,6 @@ Flash Of Unstyled Content无样式内容的闪退
 你会使用哪些技术和处理方法？
 有哪些的隐藏内容的方法 (如果同时还要保证屏幕阅读器可用呢)？
 你用过栅格系统 (grid system) 吗？如果使用过，你最喜欢哪种？
-你用过媒体查询，或针对移动端的布局/CSS 吗？
 你熟悉 SVG 样式的书写吗？
 如何优化网页的打印样式？
 在书写高效 CSS 时会有哪些问题需要考虑？
@@ -2294,3 +2412,16 @@ Flash Of Unstyled Content无样式内容的闪退
 为什么响应式设计 (responsive design) 和自适应设计 (adaptive design) 不同？
 你有兼容 retina 屏幕的经历吗？如果有，在什么地方使用了何种技术？
 请问为何要使用 translate() 而非 absolute positioning，或反之的理由？为什么？
+1.写出下列代码在各个浏览器中的颜色值?
+
+background: red;_background: green;*background: blue;background: black\9;
+2.添加些css让其水平垂直居中。
+
+<div style="____________________________">    颜海镜</div>
+3.如下代码，在空白处填写代码，是其点击时，前景色为白色，背景色为黑色。
+
+<div onclick="_________________">颜海镜</div>
+4.书写代码，点击时从1分钟开始，每秒递减到0。
+
+<div onclick="test();">颜海镜</div>
+5.简述在IE下mouseover和mouseenter的区别？

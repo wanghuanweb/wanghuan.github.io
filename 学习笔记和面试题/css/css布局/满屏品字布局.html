@@ -1,0 +1,47 @@
+<!--
+1.上边一个div，下边两个div
+
+2.上边一个div高：50%，宽100%
+
+3.下边两个div，高：50%，宽50%，一个是float:left;一个float:right;
+或者是设置下边两个div的display:inline-block;注意不能用inline因为这样是行内元素，宽高设置会无效
+-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <link href="index.css" rel="stylesheet"
+        <style>
+            *{
+                margin: 0;
+                padding: 0;
+            }
+            html,body{
+                height: 100%;
+            }
+            .top{
+                width: 100%;
+                height: 50%;
+                border: 1px solid black;
+            }
+            .bottom{
+                width: calc(50% - 2px);
+                height: 50%;
+                border: 1px solid black;
+
+            }
+            .bottom1{
+                float: left;
+            }
+            .bottom2{
+                float: right;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="top"></div>
+        <div class="bottom bottom1"></div>
+        <div class="bottom bottom2"></div>
+    </body>
+</html>

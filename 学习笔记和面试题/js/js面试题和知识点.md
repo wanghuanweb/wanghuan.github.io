@@ -11,7 +11,172 @@
 
 3. js是弱类型语言，弱类型语言就是不要求进行类型声明的语言。
 
-##### 2.script标签位置和属性
+##### 2.先讲一下浏览器是如何加载，解析，渲染的?回流reflow和重绘repaint？
+
+**基础概念：**
+
+DOM:浏览器将HTML代码解析成树形的数据结构
+
+CSSOM:浏览器将CSS代码解析成树形的数据结构
+
+DOM 和 CSSOM： 都是以 Bytes → characters → tokens → nodes → object model. 这样的方式生成最终的数据。
+DOM 树的构建过程是一个深度遍历过程：当前节点的所有子节点都构建好后才会去构建当前节点的下一个兄弟节点。
+
+RENDER TREE:DOM和CSSOM合并生成渲染树
+
+**浏览器的渲染过程：**
+
+下载解析html以构建dom树 -> 下载解析css样式表构建CSSOM -> 构建render树 -> 布局render树 -> 绘制render树
+
+当浏览器获得一个html文件时，会“自上而下”加载，并在加载过程中进行解析渲染。
+
+1.Create/Update DOM And request css/image/js：浏览器请求到HTML代码后，在生成DOM的最开始阶段（应该是 Bytes → characters 后），并行发起css、图片、js的请求，无论他们是否在HEAD里。
+注意：发起 js 文件的下载 request 并不需要 DOM 处理到那个 script 节点，比如：简单的正则匹配就能做到这一点，虽然实际上并不一定是通过正则：）。这是很多人在理解渲染机制的时候存在的误区。
+
+2.Create/Update Render CSSOM：CSS文件下载完成，开始构建CSSOM
+
+3.Create/Update Render Tree：所有CSS文件下载完成，CSSOM构建结束后，和 DOM 一起生成 Render Tree。
+
+4.Layout：有了Render Tree，浏览器已经能知道网页中有哪些节点、各个节点的CSS定义以及他们的从属关系。下一步操作称之为Layout，顾名思义就是计算出每个节点在屏幕中的位置。
+
+5.Painting：Layout后，浏览器已经知道了哪些节点要显示（which nodes are visible）、每个节点的CSS属性是什么（their computed styles）、每个节点在屏幕中的位置是哪里（geometry）。就进入了最后一步：Painting，按照算出来的规则，通过显卡，把内容画到屏幕上。
+
+以上五个步骤前3个步骤之所有使用 “Create/Update” 是因为DOM、CSSOM、Render Tree都可能在第一次Painting后又被更新多次，比如JS修改了DOM或者CSS属性。
+
+Layout 和 Painting 也会被重复执行，除了DOM、CSSOM更新的原因外，图片下载完成后也需要调用Layout 和 Painting来更新网页。
+
+**回流reflow和重绘repaint**
+
+回流reflow：浏览器要花时间去渲染，当它发现了某个部分发生了变化影响了布局，那就需要倒回去重新渲染。
+
+重绘repaint：如果只是改变了某个元素的背景颜色，文字颜色等，不影响元素周围或内部布局的属性，将只会引起浏览器的repaint，重画某一部分。
+
+Reflow要比Repaint更花费时间，也就更影响性能。所以在写代码的时候，要尽量避免过多的Reflow。
+
+**回流reflow的原因：**
+
+1.改变窗囗大小
+
+2.改变文字大小
+
+3.添加/删除样式表
+
+4.内容的改变，如用户在输入框中敲字
+
+5.激活伪类，如:hover (IE里是一个兄弟结点的伪类被激活)
+
+6.操作class属性
+
+7.脚本操作DOM
+
+8.计算offsetWidth和offsetHeight
+
+9.设置style属性
+
+**怎样回避回流reflow**
+
+1.css的定位和隐藏巧妙使用
+
+需要频繁操作的地方，不妨使用position：absolute/fixee定位，或者是display：none让脱离文档流，操作完之后再重新进入到文档流中。实现元素的动画，它的position属性应当设为fixed或absolute，这样不会影响其它元素的布局。
+
+2.动画的速度
+
+权衡速度的平滑。比如实现一个动画，以1个像素为单位移动这样最平滑，但reflow就会过于频繁，CPU很快就会被完全占用。如果以3个像素为单位移动就会好很多。
+
+3.CSS中的顽固属性合并
+
+ 以下这些属性，只要是改动了他们的值，就会造成回流，建议将他们合并到一起操作，可以减少回流的次数。这些属性包括：offsetTop、offsetLeft、 offsetWidth、offsetHeight；scrollTop、scrollLeft、scrollWidth、scrollHeight；clientTop、clientLeft、clientWidth、clientHeight；getComputedStyle() 、currentStyle（）。
+
+4.Javascript通过设置class来改变样式
+
+ 我们在利用Javascript进行样式控制的时候，不妨只是改变被控制者的class，而非在函数内部直接修改具体的样式。因为浏览器在我们用Javascript修改每一个具体样式的时候，都会进行一次重绘，如果是修改了2.2中的顽固属性，还会进行回流，这给浏览器造成了巨大的负担。例如，我们需要用这样的代码：
+
+ ```
+ //坏代码
+function selectAnchor(element){
+    var changeDiv = document.getElementById(element);
+    changeDiv.style.color = ‘#093′;
+    changeDiv.style.background = ‘#eee’;
+    changeDiv.style.height = ’200px’;
+}
+
+//好代码：
+CSS:
+changeDiv {
+    background: #eee;
+    color: #093;
+    height: 200px;
+}
+JavaScript:
+function selectAnchor(element) {
+    document.getElementById(element).className = ‘changeDiv’;
+}
+ ```
+
+5.避免使用表格布局（记住只是布局哦，我们数据还是应该用表格的）
+
+不要用tables布局的另一个原因就是tables中某个元素一旦触发reflow就会导致table里所有的其它元素reflow。在适合用 table的场合，可以设置table-layout为auto或fixed，这样可以让table一行一行的渲染，这种做法也是为了限制reflow的 影响范围。
+
+6.绝对不要使用CSS表达式，性能杀手啊，特别是IE
+
+**加载，解析，渲染**
+
+上述5个步骤的这个过程是逐步完成的，为了更好的用户体验，渲染引擎将会尽可能早的将内容呈现到屏幕上，并不会等到所有的html都解析完成之后再去构建和布局render树。它是解析完一部分内容就显示一部分内容，同时，可能还在通过网络下载其余内容。
+
+HTML页面加载和解析流程：
+
+1. 用户输入网址（假设是个html页面，并且是第一次访问），浏览器向服务器发出请求，服务器返回html文件；
+
+2. 浏览器开始载入html代码，发现＜head＞标签内有一个＜link＞标签引用外部CSS文件；
+
+3. 浏览器又发出CSS文件的请求，服务器返回这个CSS文件；
+
+4. 浏览器继续载入html中＜body＞部分的代码，并且CSS文件已经拿到手了，可以开始渲染页面了；
+
+5. 浏览器在代码中发现一个＜img＞标签引用了一张图片，向服务器发出请求。此时浏览器不会等到图片下载完，而是继续渲染后面的代码；
+
+6. 服务器返回图片文件，由于图片占用了一定面积，影响了后面段落的排布，因此浏览器需要回过头来重新渲染这部分代码；
+
+7. 浏览器发现了一个包含一行Javascript代码的＜script＞标签，赶快运行它；
+
+8. Javascript脚本执行了这条语句，它命令浏览器隐藏掉代码中的某个＜div＞ （style.display=”none”）。突然少了这么一个元素，浏览器不得不重新渲染这部分代码；
+
+9. 终于等到了＜/html＞的到来，浏览器泪流满面……
+
+10. 等等，还没完，用户点了一下界面中的“换肤”按钮，Javascript让浏览器换了一下＜link＞标签的CSS路径；
+
+11. 浏览器召集了在座的各位＜div＞＜span＞＜ul＞＜li＞们，“大伙儿收拾收拾行李，咱得重新来过……”，浏览器向服务器请求了新的CSS文件，重新渲染页面。
+
+##### 3.script标签位置和属性，把 Script 标签 放在页面的最底部的body封闭之前 和封闭之后有什么区别？浏览器会如何解析它们？
+
+浏览器接收到一半就开始解析还是全部以后再解析
+把js放在css之前，浏览器会先解析什么
+
+**为什么把<script src=""></script>这样的代码放在body最底部？**
+
+js的下载和执行会阻塞Dom树的构建。js载入后马上执行；且执行时会阻塞页面后续的内容（包括页面的渲染、其它资源的下载）。原因：因为浏览器需要一个稳定的DOM树结构，而JS中很有可能有 代码直接改变了DOM树结构，比如使用 document.write 或 appendChild,甚至是直接使用的location.href进行跳转，浏览器为了防止出现JS修 改DOM树，需要重新构建DOM树的情况，所以 就会阻塞其他的下载和呈现。
+
+**减少 JavaScript 对性能的影响的方法**
+
+1.将所有的script标签放到页面底部，也就是body闭合标签之前，这能确保在脚本执行前页面已经完成了DOM树渲染。
+
+2.尽可能地合并脚本。页面中的script标签越少，加载也就越快，响应也越迅速。无论是外链脚本还是内嵌脚本都是如此。
+
+3.采用无阻塞下载 JavaScript 脚本的方法：
+
+（1）使用script标签的 defer 属性（仅适用于 IE 和 Firefox 3.5 以上版本）
+
+（2）使用动态创建的script元素来下载并执行代码；
+
+**script标签的位置会影响首屏时间么？**
+
+不影响（如果这里里的首屏指的是页面从白板变成网页画面——也就是第一次Painting），但有可能截断首屏的内容，使其只显示上面一部分。
+
+**script标签一定要放在body最后面么？**
+
+如果用了Tiny-Loader，JS可以不放在Body最底部
+
+**总结：**
 
 1. script标签放在head标签中，意味着js文件被下载执行完成后，且按照先后顺序依次解析，才显示页面的内容。
 
@@ -23,9 +188,22 @@
 
     **异步脚本async** 属性也是立即下载，但不保证他们的先后顺序执行，故一定要确保js文件不相互依赖。
 
-##### 3.介绍JavaScript的数据类型。
 
-  5种基本数据类型: Undefined Null Boolean Number String--基本类型占用固定大小的空间，保存在栈内存中
+**s延迟加载的方式有哪些？异步加载的方式？**
+
+    defer和async、动态创建DOM方式（用得最多）、按需异步载入js
+
+    **异步加载的方式**
+
+    (1) defer，只支持IE
+
+    (2) async：
+
+    (3) 创建script，插入到DOM中，加载完毕后callBack
+
+##### 4.介绍JavaScript的数据类型。
+
+5种基本数据类型: Undefined Null Boolean Number String--基本类型占用固定大小的空间，保存在栈内存中
 
  引用类型: Object
 
@@ -91,7 +269,7 @@ parseFloat()--字符串第一个小数点有效，和parseInt()区别是会忽�
  2. 若值是null，则返回"null"
  3. 若值是undefined,则返回"undefined"
 
-##### 4.JavaScript的类型转换
+##### 5.JavaScript的类型转换
 
 NaN==NaN也返回false
 0==false //true
@@ -499,11 +677,13 @@ Infinity == -Infinity
 false
 ```
 
-##### 5.检测JavaScript的数据类型。安全的类型检测。
+##### 6.检测JavaScript的数据类型。安全的类型检测。
 
 typeof检测基本类型，instanceof检测引用类型
+
 但typeof会有一些不可预知的结果，蔽日safari(直到第四版)在对正则表达式应用typeof操作符还是返回function，因此很难做出判断。
 若用instanceof，value instanceof Array 若Array是在另一个frame中定义的数组，那么返回的则是false，因为Array毕竟是window的属性。
+
 所以typeof instanceof都是不安全的检测，其实可以利用Object原生的toString方法。
 
   **typeof操作符来检测基本数据类型**
@@ -520,6 +700,25 @@ typeof检测基本类型，instanceof检测引用类型
   typeof null --返回object
   ```
 
+或者用下面的方法判断：
+ ```
+    function type(obj) {
+    var toString = Object.prototype.toString;
+    var map = {
+        '[object Boolean]'  : 'boolean',
+        '[object Number]'   : 'number',
+        '[object String]'   : 'string',
+        '[object Function]' : 'function',
+        '[object Array]'    : 'array',
+        '[object Date]'     : 'date',
+        '[object RegExp]'   : 'regExp',
+        '[object Undefined]': 'undefined',
+        '[object Null]'     : 'null',
+        '[object Object]'   : 'object'
+    };
+    return map[toString.call(obj)];
+    }
+ ```
   **instanceof操作符来检测引用数据类型**
 
   语法：variable instanceof constructor(Array等)
@@ -563,9 +762,10 @@ function isRegExp(value) {
 }
 ```
 
-##### 6.JavaScript的作用域。
+##### 7.JavaScript的作用域。
 
-js通过函数来管理作用域， **无块级作用域**,只是把变量声明添加到 **最近的执行环境** 当中(函数执行环境或者全局执行环境)
+js通过函数来管理作用域， **无块级作用域**,只有函数作用域和全局作用域，
+只是把变量声明添加到 **最近的执行环境** 当中(函数执行环境或者全局执行环境)
 
 也就是所谓的var hoisting变量声明提升，但是变量初始化不提升
 
@@ -592,7 +792,7 @@ for (var i = 0;i < 10;i++) {
 
 alert(i); //10
 
-无块级作用域，变量声明提升，相当于
+无块级作用域，变量声明提升，但是初始化不提升
 var i;
 for (i = 0;i < 10;i++) {
     doSomething(i);
@@ -609,14 +809,27 @@ function func() {
 }
 func();
 
-
+相当于如下，声明提升，但是初始化不提升
 myname = "global"; // global variable
 function func() {
    var myname; // 等同于 -> var myname = undefined;
    alert(myname); // "undefined"
    myname = "local";
-   alert(myname); // "local"}
+   alert(myname); // "local"
+}
 func();
+```
+
+```
+var name = 'zach'
+
+while (true) {
+    var name = 'obama'
+    console.log(name)  //obama
+    break
+}
+
+console.log(name)  //obama
 ```
 
 ```
@@ -643,7 +856,7 @@ Goodbye Jack
 注意js的var hoisting变量声明提升，虽然声明提升，但是初始化并不提升
 则上述代码相当于
 
-##### 7.介绍js有哪些内置对象？内置对象(build-in objects),原生对象(native objects),宿主对象(host bojects)的区别？
+##### 8.介绍js有哪些内置对象？内置对象(build-in objects),原生对象(native objects),宿主对象(host bojects)的区别？
 
 基本数据类型：null，undefined，boolean，number，string
 引用数据类型：object，function
@@ -785,11 +998,11 @@ indexOf(),lastIndexOf()
 
 toUpperCase(),toLowerCase()
 
-##### 8.js数组和js数组合并的方法？
-
-http://blog.csdn.net/github_34514750/article/details/51049935
+##### 9.js数组方法？
 
 数组基本方法：
+检测数组：instanceof或者Array.isArray()
+转换方法：toString(),valueOf(),toLocaleString()
 栈方法：push()、pop()
 队列方法：push()、shift()
 重排序方法：sort()、
@@ -798,7 +1011,334 @@ http://blog.csdn.net/github_34514750/article/details/51049935
 迭代方法：every()、some()、forEach()、filter()、map()
 归并方法：reduce()、reduceRight()
 
-http://blog.csdn.net/github_34514750/article/details/51320982
+1.检测数组
+
+方法一：
+
+```
+value instanceof Array
+```
+但若在两个以上不同的全局执行环境下，会存在两个以上版本的Array构造函数，当一个框架向另外一个框架传入数组时，传入的数组和第二个框架中原生创建的数组分别具有不同的构造函数，从而会出错。
+
+方法二：
+
+```
+Array.isArray(value)
+```
+这个是ECMAScript5新增的方法，此方法目的是最终确定某个值是否为数组，不管是在哪个全局执行环境中创建
+
+方法三：
+
+```
+functionisArray(obj){
+    return Object.prototype.toString.call(obj) === '[object Array]' ;
+}
+```
+
+
+2.转换方法
+
+```
+toString(),valueOf(),toLocaleString()
+var colors=["red","blue","green"];
+alert(colors.toString());
+alert(colors.valueOf());
+alert(colors);
+```
+
+3.栈方法
+
+栈是后进先出的数据结构，栈中项的插入和弹出都在栈的顶部。用push()和pop()
+
+**push():** 此方法接收任意数目的参数，将它们逐个添加到数组末尾，返回修改后的数组的长度。
+
+**pop():** 此方法从数组末尾移除最后一项，减少数组的长度，然后返回移除的项。
+
+```
+var colors = new Array();
+var count = colors.push("red","green");//count=2
+var item = colors.pop();//item=green
+```
+
+4.队列方法
+
+队列是先进先出。用push()和shift()
+
+**shift():** 此方法从数组对头移除最后一项，减少数组的长度，然后返回移除的项。
+因此，unshift()和pop()可以从相反的队列来模拟队列
+
+5.重排序方法（important）
+
+arr.sort([compareFunction])
+
+**参数:**
+
+compareFunction,可选。用来指定按某种顺序进行排列的函数。
+如果省略，元素按照转换为的字符串的诸个字符的Unicode位点进行排序
+如果指明了 compareFunction ，那么数组会 **按照调用该函数的返回值排序**。
+
+记 a 和 b 是两个将要被比较的元素：
+```
+var values=[0,1,5,10,15];
+alert(values.sort());//0，1，10，15，5是排序结果
+```
+
+sort()排序先调用toString()转型方法，然后比较字符串进行排序，数字排序应该写成
+```
+function compare(a,b){
+	return a-b;//返回升序序列
+	return b-a;//返回降序序列
+}
+var values = [0,1,5,10,15];
+alert(values.sort(compare));
+```
+
+6.操作方法
+
+concat();复制数组之后，在元素尾部添加元素
+
+**方法：**
+array.concat(value1, value2, ..., valueN)
+
+**参数：**
+valueN需要与原数组合并的数组或非数组值.
+
+```
+var num = [1,2,3];
+alert(num.concat(4,5));//1,2,3,4,5
+```
+
+如下例子是合并三个数组
+```
+var num1 = [1, 2, 3];
+var num2 = [4, 5, 6];
+var num3 = [7, 8, 9];
+
+// 组成新数组[1, 2, 3, 4, 5, 6, 7, 8, 9]; 原数组 num1, num2, num3 未被修改
+var nums = num1.concat(num2, num3);
+```
+
+多个数组和多个非数组值合并为一个新数组:
+```
+var alpha = ['a', 'b', 'c'];
+// 组成新数组 ["a", "b", "c", 1, 2, 3], 原alpha数组未被修改
+var alphaNumeric = alpha.concat(1, [2, 3]);
+```
+
+slice();划分数组，不影响原数组
+
+**语法：**
+
+array.slice([begin[,end]])，提取数组begin到end的元素，但是包含begin不包含end
+
+**参数：**
+一个或者两个参数，就是返回项的起始位置和结束位置
+
+```
+var colors = ["green","yellow","orange","blue"];
+alert(colors.slice(1,3));//yellow,orange
+```
+
+splice();可以用来删除，插入，替换数组中的元素，影响原数组
+
+**语法：**
+array.splice(start, deleteCount[, item1[, item2[, ...]]])
+
+**参数：**
+
+**start:**
+从数组的哪一位开始修改内容。如果超出了数组的长度，则从数组末尾开始添加内容；如果是负值，则表示从数组末位开始的第几位。
+
+**deleteCount:**
+整数，表示要移除的数组元素的个数。如果 deleteCount 是 0，则不移除元素。这种情况下，至少应添加一个新元素。如果 deleteCount 大于start 之后的元素的总数，则从 start 后面的元素都将被删除（含第 start 位）。
+
+**items:**
+要添加进数组的元素。如果不指定，则 splice() 只删除数组元素。
+```
+//splice()可以用于删除数组中的某个元素
+ for(var i = 0;i < array.length;i++) {
+   if(content === array[i]) {
+   //第一个参数是要删除的第一项，第二个参数是要删除的项数
+     array.splice(i,1);
+   }
+ }
+
+```
+```
+ //splice()可以用于插入元素到数组中
+ //参数：1.插入的位置2.删除项数3.插入元素
+ var colors = ["green","blue"];
+ colors.splice(1,0,"yellow","orange");
+ alert(colors);//green,yellow,orange,blue
+```
+```
+ //splice()可以用于替换元素到数组中
+ //参数：1.起始位置2.删除项数3.插入元素
+ var colors = ["green","yellow","orange","blue"];
+ colors.splice(1,1,"red","purple");
+ alert(colors);//green,red,purple,orange,blue
+```
+
+7.位置方法
+
+indexOf();
+
+**语法：**
+arr.indexOf(searchElement[, fromIndex = 0])
+
+**参数：**
+
+**searchElement**
+要查找的元素
+
+**fromIndex**
+开始查找的位置。如果该索引值大于或等于数组长度，意味着不会在数组里查找，返回-1。如果参数中提供的索引值是一个负值，则将其作为数组末尾的一个抵消，即-1表示从最后一个元素开始查找，-2表示从倒数第二个元素开始查找 ，以此类推。 注意：如果参数中提供的索引值是一个负值，仍然从前向后查询数组。如果抵消后的索引值仍小于0，则整个数组都将会被查询。其默认值为0.
+
+```
+var array = [2, 5, 9];
+array.indexOf(2);     // 0
+array.indexOf(7);     // -1
+array.indexOf(9, 2);  // 2
+array.indexOf(2, -1); // -1
+array.indexOf(2, -3); // 0
+```
+
+lastIndexOf();
+ 二者都返回查找的项在数组中的位置；
+
+接收参数：1. 要查找的项 2. 查找起点位置的索引（可选）
+
+8.迭代方法
+
+**语法：**
+
+arr.every(callback[, thisArg])ps：其他几个类似
+
+**参数：**
+
+1.callback要在每一项上运行的函数
+
+2.运行该函数的作用域对象（可选）
+
+**callback 被调用时传入的参数**
+
+1.数组项的值
+
+2.该项在数组中的位置
+
+3.数组对象本身
+
+**every():**
+
+对数组中的每一项运行给定函数，若该函数对每一项都返回true，则返回true，若有一个返回false，则不执行接下来的回调，立即返回false
+
+```
+var isNum = function(item,index,array) {
+    	return (item>2);
+    }
+    var res = arr.every(isNum);
+    console.log(res);//false;
+    或者
+    var res = arr.every(function(item,index,array){
+      return (item>2);
+    });
+    console.log(res);//false;
+```
+
+**some():**
+
+    对数组中的每一项运行给定函数，若该函数对某一项返回true，则立即返回true，不执行接下来的回调。
+
+**forEach():**
+
+ 对数组中的每一项运行给定函数，这个方法 **没有返回值**
+
+```
+function logArrayElements(element, index, array) {
+    console.log("a[" + index + "] = " + element);
+}
+[2, 5, 9].forEach(logArrayElements);
+// logs:
+// a[0] = 2
+// a[1] = 5
+// a[2] = 9
+```
+
+**filter():**
+
+ 对数组中的每一项运行给定函数，返回该函数会返回true的项组成的数组，**被删除或从来未被赋值的元素不会被遍历到。**
+
+```
+function isBigEnough(element) {
+  return element >= 10;
+}
+var filtered = [12, 5, 8, 130, 44].filter(isBigEnough);
+// filtered is [12, 130, 44]
+```
+
+**map():**
+
+对数组中的每一项运行给定函数，返回每次函数调用的结果组成的数组
+
+```
+var numbers = [1, 4, 9];
+var roots = numbers.map(Math.sqrt);
+/* roots的值为[1, 2, 3], numbers的值仍为[1, 4, 9] */
+```
+
+9.归并方法
+
+EMCAScript5新添了reduce()和reduceRight()两个方法都迭代数组中所有的项，然后构建一个最终返回的值。
+
+**reduce()：** 从第一项遍历到最后
+
+**reduceRight()**按降序索引顺序处理元素。
+
+**语法**
+array1.reduce(callbackfn[, initialValue])
+
+**参数：**
+
+**callbackfn：回调函数**
+
+（传入这些方法中的函数会接收四个参数：previousValue，currentValue，currentIndex和array）
+通过上一次调用回调函数获得的值。如果向 reduce 方法提供 initialValue，则在首次调用函数时，previousValue 为 initialValue。
+
+**initialValue**
+作为归并基础的初始值（可选）
+如果指定 initialValue，则它将用作初始值来启动累积。第一次调用 callbackfn 函数会将此值作为参数而非数组值提供。
+
+**返回值**
+通过最后一次调用回调函数获得的累积结果。
+
+```
+function addDigitValue(previousValue, currentDigit, currentIndex, array) {
+    var exponent = (array.length - 1) - currentIndex;
+    var digitValue = currentDigit * Math.pow(10, exponent);
+    return previousValue + digitValue;
+}
+var digits = [4, 1, 2, 5];
+// Determine an integer that is computed from values in the array.
+var result = digits.reduce(addDigitValue, 0);
+document.write (result);
+// Output: 4125
+```
+
+10.二元数组的创建
+
+```
+var data = [];
+for(var i = 0;i < len;i++){
+	//二元数组
+	data[i] = [];
+	//二元数组赋值方法1
+	data[i][0] = arr[i].firstChild.substringData(0,2);
+    data[i][1] = arr[i].lastChild.innerHTML;
+    //二元数组赋值方法2
+    data[i].push(arr[i].firstChild.substringData(0,2));
+    data[i].push(arr[i].lastChild.innerHTML);
+}
+```
 
 **关联数组**
 
@@ -816,6 +1356,336 @@ stus["stu1"] = lennon;
 
 //访问stus["stu1"]["name"]值是wanghuan
 ```
+##### 10.数组新增，删除，替换元素的方法
+
+影响原数组：：push()/pop()/shift()/unshift()/splice()
+
+不影响原数组：concat()/slice()
+
+**新增**
+
+影响原数组：push(),unshift()
+
+不影响原数组：concat()，或者使用展开（spread）操作符，展开操作符是三个点（…）
+
+```
+const arr1 = ['a', 'b', 'c', 'd', 'e'];
+const arr2 = [...arr1, 'f']; // ['a', 'b', 'c', 'd', 'e', 'f']  
+const arr3 = ['z', ...arr1]; // ['z', 'a', 'b', 'c', 'd', 'e']
+```
+展开操作符会复制原来的数组，从原数组取出所有元素，然后存入新的环境。
+
+**移除**
+
+影响原数组：pop(),shift(),splice()
+
+```
+let mutatingRemove = ['a', 'b', 'c', 'd', 'e'];  
+mutatingRemove.pop(); // ['a', 'b', 'c', 'd']  
+mutatingRemove.shift(); // ['b', 'c', 'd']
+```
+不影响原数组：slice()，filter()
+
+**替换**
+
+影响原数组：splice()
+
+```
+let mutatingRemove = ['a', 'b', 'c', 'd', 'e'];  
+mutatingRemove.pop(); // ['a', 'b', 'c', 'd']  
+mutatingRemove.shift(); // ['b', 'c', 'd']
+```
+
+不影响原数组：可以使用 array.map() 创建一个新数组，并且可以检查每一个元素，根据特定的条件替换它们。
+
+##### 11.js数组合并的方法
+
+###### 1.concat合并数组
+
+concat是生成一个新数组，内存则是a和b的和
+
+```
+var a = [1,2,3],
+	b = ["ab","cd","ef"],
+	c = a.concat(b);
+console.log(c);
+```
+如图：
+
+![这里写图片描述](http://img.blog.csdn.net/20160505101405193)
+
+###### 2.push循环合并数组
+
+push是一个数组的内容加入到另一个中
+
+```
+var a = [1,2,3],
+	b = ["ab","cd","ef"],
+	i,
+	len;
+for(i = 0,len = b.length;i < len;i++) {
+	a.push(b[i]);
+}
+b = null;//b可以清空
+```
+![这里写图片描述](http://img.blog.csdn.net/20160505101913320)
+
+###### 3.unshift循环合并数组
+
+若a比较少，则希望a插入到b前边，这样节省时间
+
+```
+var a = [1,2,3],
+	b = ["ab","cd","ef"],
+	i;
+for(i = a.length-1;i >= 0;i--) {
+	b.unshift(a[i]);
+}
+console.log(b);
+a = null;//a可以清空
+```
+
+![这里写图片描述](http://img.blog.csdn.net/20160505101913320)
+
+###### 4.reduce合并数组
+
+```
+var a = [1,2,3],
+	b = ["ab","cd","ef"],
+	i;
+b.reduce(function(prev,curr){
+   prev.push(curr);
+   return prev;
+},a);
+console.log(a);
+```
+
+![这里写图片描述](http://img.blog.csdn.net/20160505101913320)
+
+###### 5.reduceRight合并数组
+
+```
+var a = [1,2,3],
+	    b = ["ab","cd","ef"],
+	    i;
+    a.reduceRight(function(prev,curr){
+        prev.unshift(curr);
+        return prev;
+    },b);
+    console.log(b);
+```
+![这里写图片描述](http://img.blog.csdn.net/20160505101913320)
+
+###### 6.用Array.prototype.push.apply合并数组
+
+```
+var a = [1,2,3],
+	b = ["ab","cd","ef"];
+// call和apply可以用来重新定义函数的执行环境，apply中的第一个参数a用于指定将要调用函数push的对象，参数是b
+// 其实就是在a的上下文环境中执行Array.prototype.push函数，参数是b
+Array.prototype.push.apply(a,b);
+console.log(a);
+```
+
+![这里写图片描述](http://img.blog.csdn.net/20160505101913320)
+
+###### 7.用Array.prototype.unshift.apply合并数组
+
+```
+var a = [1,2,3],
+	b = ["ab","cd","ef"];
+// 其实就是在b的上下文环境中执行Array.prototype.unshift函数，参数是a
+Array.prototype.unshift.apply(b,a);
+console.log(b);
+```
+
+![这里写图片描述](http://img.blog.csdn.net/20160505101913320)
+
+**问题**
+
+1.js引擎都会有拷贝数据长度的限制，若数组很大，肯定会超出push或unshift允许调用堆栈的限制，则可以结合splice使用
+
+```
+function combineInto(a,b) {
+     var len = a.length;
+     for (var i=0; i < len; i=i+5000) {
+         b.unshift.apply( b, a.slice( i, i+5000 ) );
+     }
+ }
+```
+
+##### 12.js实现数组的简单复制，深度复制？(浅拷贝和深拷贝)
+
+对于简单复制中对象只是简单的=复制，也就是只是保存了内存地址，不是完全复制，这样修改对象的时候，会把原对象和复制对象一起修改。
+
+深度复制则是修改复制后的对象不会影响原始对象。
+
+**简单复制**
+
+对于数组，对象，函数等引用类型的数据，等号只是保存了内存地址，而不是完全复制。
+
+1.使用 slice 或 contcat 方法实现简单复制
+
+简单数组如下：
+```
+var arr1 = [1, 2, 3, 4],
+arr2 = arr1.slice(0),
+arr3 = arr1.concat();
+
+console.log(arr1, arr2, arr3);//[1, 2, 3, 4] [1, 2, 3, 4] [1, 2, 3, 4],
+arr2[2] = 10;
+arr3[2] = 11;
+console.log(arr1[2], arr2[2], arr3[2]); //3 10 11
+```
+
+有对象和函数或者数组的数组，简单值不一起改变，但是引用类型则原来对象和复制对象一起改变
+```
+var fun = function(log) {console.log},
+arr1 = [1, 2, [3, 4], {a: 5, b: 6}, fun],
+arr2 = arr1.slice(0),
+arr3 = arr1.concat();
+
+arr1[0] = 10;
+arr3[2][1] = 5;
+arr2[3].a = 100;
+
+console.log(arr1, arr2, arr3);
+```
+![这里写图片描述](http://img.blog.csdn.net/20170223182839766?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvZ2l0aHViXzM0NTE0NzUw/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast)
+
+**深度复制**
+
+1.使用jq的$.extend(true,target,obj)
+
+```
+var arr1 = [1, 2, [3, 4], {a: 5, b: 6}, 7],
+arr2 = $.extend(true, [], arr1);
+```
+
+2.深度复制的完全实现
+
+考虑多维数组的嵌套，以及数组值为对象的情况，可以作如下原型扩展
+
+newobj = Object.create(sourceObj)
+
+```
+Object.prototype.clone = function() {
+    var obj = {};
+
+    for(var i in this) {
+        obj[i] = this[i];
+    }
+
+    return obj;
+}
+
+Array.prototype.clone = function() {
+    var len = this.lenght,
+        arr = [];
+
+    for(var i = 0;i < len;i++) {
+        if(typeof this[i] !== "object") {
+            arr.push(this[i]);
+        } else {
+            arr.push(this[i].clone());
+        }
+    }
+    return arr;
+}
+
+//测试Object
+var obj1 = {
+    name: 'Rattz',
+    age: 20,
+    hello: function () {
+        return "I'm " + name;
+    }
+};
+var obj2 = obj1.clone();
+obj2.age++;
+console.log(obj1.age);//20
+
+//测试2 Array
+var fun = function(log) {console.log},
+arr1 = [1, 2, [3, 4], {a: 5, b: 6}, fun],
+arr2 = arr1.clone();
+```
+
+3.使用JSON方法
+
+newObj = JSON.parse(JSON.stringify(sourceObj));
+
+```
+var arr1 = [1, 2, [3, 4], {a: 5, b: 6}, 7],
+    arr2 = JSON.parse(JSON.stringify(arr1));
+
+console.log(arr1, arr2);//[1, 2, [3, 4], {a: 5, b: 6}, 7] [1, 2, [3, 4], {a: 5, b: 6}, 7],
+arr2[1] = 10;
+arr2[3].a = 20;
+console.log(arr1[1], arr2[1]);//2 10
+console.log(arr1[3], arr2[3]);//{a: 5, b: 6} {a:20,b:6}
+```
+
+##### 13.NodeList转换成数组的方法？
+
+但是我们能通过 Array.prototype.slice.call 转换为真正的数组的带有 length 属性的对象，这样 NodeList 就可以应用 Array 下的所有方法了。
+
+```
+<!--  一般用此方法转换成数组，但是在IE8及更早版本吧nodelist实现成一个COM对象，不能用js对象的方法，所以IE8之前需要枚举所有对象 -->
+Array.prototype.slice.call(someNode.childNodes,0);
+
+<!-- 通用的方法 -->
+
+function convertListToArray(nodes) {
+    var array = null;
+    try{
+        array = Array.prototype.slice.call(nodes,0);
+    }catch(ex){
+        array = new Array();
+        for(var i = 0,len = nodes.length;i < len;i++) {
+            array.push(nodes[i]);
+        }
+    }
+
+    return array;
+}
+```
+
+
+##### 14.扁平化多维数组
+
+1、老方法
+
+```
+var result = []
+function unfold(arr){
+     for(var i=0;i< arr.length;i++){
+      if(typeof arr[i]=="object" && arr[i].length>1) {
+       unfold(arr[i]);
+     } else {        
+       result.push(arr[i]);
+     }
+  }
+}
+var arr = [1,3,4,5,[6,[0,1,5],9],[2,5,[1,5]],[5]];
+unfold(arr)
+```
+
+2、使用tostring
+
+```
+var c=[1,3,4,5,[6,[0,1,5],9],[2,5,[1,5]],[5]];
+var b = c.toString().split(',')
+```
+
+3、使用es6的reduce函数
+
+```
+var arr=[1,3,4,5,[6,[0,1,5],9],[2,5,[1,5]],[5]];
+const flatten = arr => arr.reduce((a, b) => a.concat(Array.isArray(b) ? flatten(b) : b), []);
+var result = flatten(arr)
+```
+
 ##### 9.说说写JavaScript的基本规范？或者说如何编写高质量的可维护的js代码？
 
 **1.注意编程规范**
@@ -945,7 +1815,18 @@ console.log(typeof trois); // "undefined"
 
 相关问题：如何继承性地创建一个对象？JS 怎么实现一个类。怎么实例化这个类?
 
-请指出以下代码的区别：function Person(){}、var person = Person()、var person = new Person()？(可结合下列知识点回答)
+对象分类(纯对象/实例对象/其他对象)：
+
+纯对象：使用纯对象指代由字面量生成的、成员中不含函数和日期、正则表达式等类型的对象
+
+实例对象：指通过构造函数（类）生成的对象
+
+其他对象：主要指数组、日期、正则表达式等这类在Object基础上派生出来的对象
+
+请指出以下代码的区别：
+function Person(){}、
+var person = Person()、
+var person = new Person()？(可结合下列知识点回答)
 
 ###### 1.使用Object构造函数创建对象
 
@@ -2004,7 +2885,9 @@ VO(globalContext) === global;
 VO(functionContext) === AO;
 ```
 
-Arguments对象是活动对象的一个属性，它包括如下属性：
+**arguments**
+
+Arguments对象是活动对象的一个属性，它是一个类数组对象，实际不是数组的实例，它包括如下属性：
 
 callee — 指向当前函数的引用
 
@@ -2085,7 +2968,8 @@ var x = 10;
 
 ##### 19.谈谈this对象的理解。(全局和函数代码中的this)--且有函数调用的方式
 
-如上，this是执行上下文的一个属性，this值在 **进入** 上下文时确定，并且在上下文运行期间永久不变。
+this是执行上下文的一个属性，this值在 **进入** 上下文时确定，并且在上下文运行期间永久不变。
+this是为了寻找拥有当前上下文（context）的对象（context object）
 
 也就是this 是动态绑定，或称为运行期绑定的
 
@@ -2234,7 +3118,8 @@ function Point(x, y){
 
 **call和apply**
 
-call,apply都是改变了被调用函数的执行上下文环境，并且直接执行了函数
+call,apply都是改变了被调用函数的执行上下文环境，并且直接执行了函数。
+call 需要把参数按顺序传递进去，而 apply 则是把参数放在数组里
 
 ```
 var zlw = {
@@ -2270,9 +3155,50 @@ apply(thisArg [,arg1,arg2,... ] );
 call(thisArg,arg1,arg2,...);
 ```
 
+参数个数不确定的apply用法：
+
+定义一个 log 方法，让它可以代理 console.log 方法，常见的解决方法是：
+
+```
+function log(msg)　{
+    console.log(msg);
+}
+log(1); //1
+log(1,2); //1
+```
+
+上面方法可以解决最基本的需求，但是当传入参数的个数是不确定的时候，上面的方法就失效了，这个时候就可以考虑使用 apply 或者 call，注意这里传入多少个参数是不确定的，所以使用apply是最好的，方法如下：
+
+```
+function log(){
+    console.log.apply(console, arguments);
+};
+log(1); //1
+log(1,2); //1 2
+```
+
+接下来的要求是给每一个 log 消息添加一个"(app)"的前辍，比如：
+
+```
+log("hello world"); //(app)hello world
+```
+
+该怎么做比较优雅呢?这个时候需要想到arguments参数是个伪数组，通过 Array.prototype.slice.call 转化为标准数组，再使用数组方法unshift，像这样：
+
+```
+function log(){
+    var args = Array.prototype.slice.call(arguments);
+    args.unshift('(app)');
+
+    console.log.apply(console, args);
+};
+```
+
 **bind**  -- (请解释 Function.prototype.bind？)
 
 bind()方法会创建一个新函数,称为绑定函数,新函数与被调函数（绑定函数的目标函数）具有相同的函数体。只是返回一个函数但不直接执行该函数。当调用这个绑定函数时,绑定函数会以创建它时传入bind()方法的第一个参数作为 this,传入 bind() 方法的第二个以及以后的参数加上绑定函数运行时本身的参数按照顺序作为原函数的参数来调用原函数(所以有下面多种写法)。
+
+也就是说，区别是，当你希望改变上下文环境之后并非立即执行，而是回调执行的时候，使用 bind() 方法。而 apply/call 则会立即执行函数。
 
 19个知识点中讲到了函数调用的方式(为函数调用，对象方法调用，构造函数调用，call或者apply调用)--函数调用中涉及到了函数中的内部函数，this指向全局对象
 
@@ -2293,6 +3219,10 @@ alice.distractedGreeting();
 ```
 
 以前的方法是缓存this，因为它使得setTimeout函数中可以访问Person的上下文，和上述19知识点类同
+
+由于 Javascript 特有的机制，上下文环境在 distractedGreeting:function(){ } 过渡到 setTimeout(function(){})发生了改变，上述使用变量保存 this 这些方式都是有用的，也没有什么问题。
+
+当然使用 bind() 可以更加优雅的解决这个问题
 
 ```
 function Person(name){
@@ -2348,8 +3278,20 @@ var boundGetX = getX.bind(module);
 boundGetX(); // 81
 ```
 
+总结：
+
+1.apply 、 call 、bind 三者都是用来改变函数的this对象的指向的；
+
+2.apply 、 call 、bind 三者第一个参数都是this要指向的对象，也就是想指定的上下文；
+
+3.apply 、 call 、bind 三者都可以利用后续参数传参；
+
+4.bind是返回对应函数，便于稍后调用；apply、call则是立即调用 。
+
 ##### 21.什么是闭包（closure）？如何使用闭包？为什么要用它？
+
 相关问题：闭包优点缺点
+
 导致闭包出现的原因是JavaScript的哪种机制？(因为作用域链原理，不能从外部读取其他函数的内部变量，所以引出了闭包)
 
 **背景：**
@@ -3091,28 +4033,6 @@ while(node != null) {
 }
 ```
 
-##### 26.NodeList转换成数组的方法？
-
-```
-<!--  一般用此方法转换成数组，但是在IE8及更早版本吧nodelist实现成一个COM对象，不能用js对象的方法，所以IE8之前需要枚举所有对象 -->
-Array.prototype.slice.call(someNode.childNodes,0);
-
-<!-- 通用的方法 -->
-
-function convertListToArray(nodes) {
-    var array = null;
-    try{
-        array = Array.prototype.slice.call(nodes,0);
-    }catch(ex){
-        array = new Array();
-        for(var i = 0,len = nodes.length;i < len;i++) {
-            array.push(nodes[i]);
-        }
-    }
-
-    return array;
-}
-```
 
 ##### 27."attribute" 和 "property" 的区别是什么？
 
@@ -3140,6 +4060,19 @@ http://www.codeceo.com/article/javascript-property-attribute.html
 
 ##### 28.事件流(事件冒泡和事件捕获)
 
+**哪些事件冒泡**
+
+支持冒泡事件：
+click/dblclick/focusin/focusout/input/keydown/keyup/mousedown/mousemove/mouseout/mouseover/mouseup
+
+不支持冒泡事件：
+blur: 在元素失去焦点时触发，该事件不支持冒泡
+focus: 在元素获得焦点时触发，该事件不支持冒泡
+mouseenter: 当鼠标移入元素时触发，该事件不支持冒泡
+mouseleave: 当鼠标移出元素时触发，该事件不支持冒泡
+blur、focus、load、unload不支持
+当你在需要的冒泡的时候，绑定了这些事件，而你恰好不知道居然还有事件天生就不支持冒泡的，那么你可能就悲剧了。
+
 事件流描述的是从页面中接受事件的顺序。
 
 事件冒泡机制：当一个元素接收到事件的时候，会把他接收到的所有事件传播给他的父级，一直到顶层window
@@ -3147,6 +4080,57 @@ http://www.codeceo.com/article/javascript-property-attribute.html
 事件捕获机制：当触发目标元素时，会从目标元素的最顶层的祖先元素事件往下执行到目标元素为止。
 
 “DOM2级事件”规定的事件流的三个阶段：事件捕获阶段，处于目标阶段，事件冒泡阶段(无论是冒泡事件还是捕获事件，元素都会先执行捕获阶段 )
+
+**事件捕获的坑**
+
+1.坑一：新插入的子元素没有绑定点击事件
+
+可能不少同学在初学js的时候遇到过这样一个坑。一个ul元素中初始的状态有4个li元素，我们可以循环给li元素添加click事件，执行我们想要的动作。这个例子的坑就在于，新添加的li元素不会有我们绑定的click事件。
+
+其实就是用事件委托
+
+```
+<ul class="container">
+
+    <!-- 先循环给原有的4个li绑定click事件 -->
+    <li class="item"></li>
+    <li class="item"></li>
+    <li class="item"></li>
+    <li class="item"></li>
+
+    <!-- 这是新添加的li元素，但是该元素没绑定click事件 -->
+    <li class="item new"></li>
+</ul>
+
+是的，就是这么坑，为了解决这个问题，我们就要利用事件捕获的原理。
+
+$('ul.container').click(function(event) {
+    var target = event.target;
+    if (target.className == 'item') {
+        // dosomething
+    }
+})
+```
+
+2.坑二： 如果目标元素有子元素，那么怎么办？
+
+当我们在使用className判断目标元素时，会遇到这样的情况。
+```
+<li class="item">
+    <div class="title">xxx</title>
+    <p class="desc">xxxxxxs</p>
+</li>
+```
+当我们试图使用事件委托希望给所有的li添加元素时，在利用className判断的过程中发现，目标event.target元素居然是li.item的子元素，这个时候就没办法准确的将事件绑定到li上了，这个时候我们应该怎么办？
+
+这种情况，我们要做的，就是阻止事件捕获的传递，那么，要如何阻止呢？
+
+我知道的一种方式，利用css，给li所有子元素添加如下css属性即可
+```
+li.item >  * {
+  pointer-events: none;
+}
+```
 
 **所有事件的顺序是**(注意本元素代码的顺序执行)
 
@@ -3303,7 +4287,9 @@ alert('four');
 ```
 
 ##### 29.事件处理程序(HTML事件处理程序，DOM0事件处理程序，DOM2事件处理程序，IE事件处理程序，跨浏览器事件处理程序)
-相关问题：给元素绑定点击事件怎么绑定，有哪几种方法，区别是什么
+
+相关问题：给元素绑定点击事件怎么绑定，有哪几种方法，区别是什么？
+         dom0和dom2的区别
 
 在以下几点进行对比和了解：
 1.各种事件处理程序的添加和删除
@@ -3764,6 +4750,32 @@ eg：setTimeout(fn, 1000);其中的setTimeout就是异步过程的发起函数�
 
 事件循环：主线程通过事件循环过程去取消息（消息队列中的每条消息实际上都对应着一个事件。），事件循环是指主线程重复从消息队列中取消息、执行的过程。实际上，主线程只会做一件事情，就是从消息队列里面取消息、执行消息，再取消息、再执行。当消息队列为空时，就会等待直到消息队列变成非空。而且主线程只有在将当前的消息执行完成后，才会去取下一个消息。这种机制就叫做事件循环机制，取一个消息并执行的过程叫做一次循环。
 
+**异步函数，回调函数，setTimeOut**
+
+```
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+
+    <script>
+        alert(1);
+        setTimeout("alert(2)", 0);
+        alert(3);
+    </script>
+</body>
+</html>
+```
+打印出来是1 3 2
+
+js引擎是基本事件驱动单线程执行的，它的执行顺序是遵循一个叫做事件队列的机制。有一个主线程，但有很多工作线程。
+js引擎处理到与其他线程相关的代码,就会分发给其他工作线程，这里比如就是遇到了settimeout(0)，就开启了定时器线程，主线程继续执行下边的代码。
+工作线程处理完之后，事件队列种会增加一个任务。
+主线程执行完下边的代码，空闲后从事件队列种取消息执行，取消息执行。所以settimeout(0)里面的操作会放在所有主线程任务之后
+
 ##### 34.请解释事件代理 (event delegation)or事件委托。
 
 事件委托和移除事件处理程序都是考虑到了----内存和性能。
@@ -3775,6 +4787,7 @@ eg：setTimeout(fn, 1000);其中的setTimeout就是异步过程的发起函数�
 对于“事件处理程序过多”问题的解决方案就是事件代理或者说事事件委托。
 在传统的事件处理中，你按照需要为每一个元素添加或者是删除事件处理器。然而，事件处理器将有可能导致内存泄露或者是性能下降——你用得越多这种风险就越大。如下：
 
+以下就是利用了事件捕获和事件委托
 ```
 <ul id="parent-list">
   <li id="post-1">Item 1</li>
@@ -4349,8 +5362,16 @@ window.open(URL,name,features,replace)
 
 name：第二个参数是创建一个新窗口的名字，也可以是任何一个特殊的窗口名称：(self, parent, top, blank)
 
+4.alert()、confirm()和prompt()警告-确认-提示框
+
+http://blog.csdn.net/sjf0115/article/details/7578722
+
 **location对象**
+
+可用来在浏览器窗口中载入一个新网址:window.location
+
 **navigator对象**
+
 **screen对象**
 
 screen对象是js中用处不大的对象之一。可以包含浏览器窗口外部的显示器的信息。
@@ -4675,6 +5696,8 @@ Function.prototype._new_ = function() {
 
 ##### 44.那些操作会造成内存泄漏？
 
+内存泄露：应用程序不再需要占用内存的时候，由于某些原因，内存没有被操作系统或可用内存池回收。
+
 1.不规范的js代码
 
 比如意外的全局变量，不使用var来定义，js中如果不用 var 声明变量,该变量将被视为 window 对象(全局对象)的属性,也就是全局变量.
@@ -4683,14 +5706,18 @@ Function.prototype._new_ = function() {
 
 ###### 1.什么是JSON
 
-1. JSON:JavaScript Object Notation，javascript对象表示法
-2. json是一种数据结构
-3. 不从属于javascript
-4. 很多语言都有针对JSON的解析器和序列化器
+1.JSON:JavaScript Object Notation，javascript对象表示法
+
+2.json是一种数据结构
+
+3.不从属于javascript
+
+4.很多语言都有针对JSON的解析器和序列化器
 
 **JSON流行的原因**
 
 1.和js语法类似，容易理解
+
 2.可以将JSON数据结构解析成有用的js对象
 
 ###### 2.JSON语法
@@ -4698,8 +5725,11 @@ Function.prototype._new_ = function() {
 **JSON的语法可以表示以下三种类型的值：**
 
 简单值：字符串、数值、布尔值、null，但不支持js的undefined
+
 对象：表示一组无序的键值对儿
+
 数组：有序的值的列表
+
 JSON不支持变量，函数，对象实例，只是一种表示结构化数据的格式
 
 **JSON的对象**
@@ -4714,13 +5744,17 @@ JSON不支持变量，函数，对象实例，只是一种表示结构化数据�
 	}
 }
 ```
+
 与js对象字面量的不同：
+
 1.对象属性必须加上""
 2.无末尾的分号；
 3.没有声明变量（json只是数据结构，没有变量的概念）
 
 **JSON的数组**
+
 [23,"wanghuan",true]
+
 与js数组字面量的不同：
 1.无声明变量
 2.无分号
@@ -4749,6 +5783,7 @@ JSON不支持变量，函数，对象实例，只是一种表示结构化数据�
 ###### 3.序列化
 
 JSON对象的方法：
+
 **stringify()**
 
 用于把js对象序列化为JSON字符串,默认情况下，此函数输出的JSON字符串不包含任何空格字符或缩进，同时会忽略js对象的函数和原型对象。
@@ -4796,6 +5831,7 @@ var jsonText = JSON.stringify(book,function(key,value) {
 });
 //{"title":"bupt","author":"wanghuan","year":5000}
 ```
+
 参数3：字符串缩进（可以是数值等），可选
 
 ```
@@ -4812,7 +5848,9 @@ var jsonText = JSON.stringify(book,null,4);
 	"year":2011
 }
 ```
+
 **toJSON()方法**--对过滤器的补充
+
 JSON.stringify()有时不能满足某些对象进行自定义序列化的需求，则给对象定义toJSON()方法
 ```
 var book = {
@@ -4827,6 +5865,7 @@ var jsonText = JSON.stringify(book);
 ```
 
 **序列化对象的顺序**
+
 1.若存在toJSON()方法而且能通过它取得有效的值，则调用这个方法。否则，返回对象本身
 2.如果提供了第二个参数，应用此函数过滤器。传入函数过滤器的值是第1步返回的值
 3.对第2步返回的每个值进行相应的序列化
@@ -4867,8 +5906,91 @@ var bookCopy = JSON.parse(jsonText,function(key,value){
 alert(bookCopy.releaseDate.getFullYear());
 ```
 
+##### 46.在JS方法中返回多个值的三种方法
+
+1.使用数组的方式
+
+```
+<html>
+<head>
+    <title>JS函数返回多个值--oec2003</title>
+</head>
+<body>
+    <input type="button" onclick="getNames()" value="test" />
+    <script type="text/javascript">
+function getData()
+{
+    var names=new Array("oec2003","oec2004");
+    return names;
+}
+function getNames()
+{
+    var names=getData();
+    alert(getData()[0]); //返回oec2003
+}
+</script>
+</body>
+</html>
+```
+
+2.将数据封装到Json中返回
+
+```
+<html>
+<head>
+<title>JS函数返回多个值--oec2003</title>
+</head>
+<body>
+<input type="button" onclick="getInfo()" value="test"/>
+<script type="text/javascript">
+function getData()
+{
+    var info={"name":"oec2003","age":"25"};
+    return info;
+}
+function getInfo()
+{
+    var info=getData();
+    var name=info["name"];
+    var age=info["age"];
+    alert("姓名："+name+" 年龄："+age);
+}
+</script>
+</body>
+</html>
+```
+
+3.这是最简单的一种方法，看下面代码
+
+```
+<html>
+<head>
+<title>JS函数返回多个值--oec2003</title>
+</head>
+<body>
+<input type="button" onclick="getInfo()" value="test"/>
+<script type="text/javascript">
+    function getData()
+    {
+        return ["oec2003", 25]
+    }
+    function getInfo()
+    {
+        var info = getData();
+        alert("姓名：" + info[0] + "年龄：" + info[1]);
+    }
+</script>
+</body>
+</html>
+```
+
 ##### 46.Ajax 是什么? 如何创建一个Ajax？请尽可能详尽的解释 Ajax 的工作原理？使用 Ajax 都有哪些优劣？
 
+ajax可以跨域吗？怎么跨域？
+ajax怎么向服务器发送请求
+ajax原理﻿
+ajax的优点和缺点
+什么是跨域资源共享 (CORS)？它用于解决什么问题？
 
 ajax的全称：Asynchronous Javascript And XML。
 
@@ -4932,12 +6054,684 @@ for(var city in aqiData) {
 而点表示法是直接存取属性值，理论上执行效率会比数组表示法高。
 
 
+##### 49.谈一谈你对ECMAScript6的了解？ECMAScript6的基础知识。
+
+ECMAScript 6（以下简称ES6）是JavaScript语言的下一代标准.
+因为当前版本的ES6是在2015年发布的，所以又称ECMAScript 2015。
+若是2016年发布的，就是ECMAScript 2016。
+
+Babel是一个广泛使用的ES6转码器，可以将ES6代码转为ES5代码。目前并不是所有浏览器都能兼容ES6全部特性
+
+###### 1.let和const
+
+let定义块级作用域，声明的变量不具备变量提升（hoisting）特性
+
+const定义块级作用域，是定义常量，const 在声明时必须被赋值
+
+ES5只有全局作用域和函数作用域，没有块级作用域，ES6用let则实际上为JavaScript新增了块级作用域
+
+块级作用域：1.防止变量在作用域外被访问 2.防止重复声明变量 3.不再需要立即执行的函数表达式(IIFE) 4.循环种的闭包不会有问题
+
+```
+var name = 'zach'
+防止重复声明变量
+
+while (true) {
+    var name = 'obama'
+    console.log(name)  //obama
+    break
+}
+
+console.log(name)  //obama
+用let如下：
+let name = 'zach'
+
+while (true) {
+    let name = 'obama'
+    console.log(name)  //obama
+    break
+}
+
+console.log(name)  //zach
+```
+
+```
+//另外一个var带来的不合理场景就是用来计数的循环变量泄露为全局变量
+var a = [];
+for (var i = 0; i < 10; i++) {
+  a[i] = function () {
+    console.log(i);
+  };
+}
+a[6](); // 10
+
+//上面代码中，变量i是var声明的，在全局范围内都有效。
+//因为 let 语句会使该变量处于一个块级作用域中，从而让事件监听回调函数中的变量引用得到保持
+//其实若用es5的话，其实可以用闭包就可以解决这个问题
+var a = [];
+for (let i = 0; i < 10; i++) {
+  a[i] = function () {
+    console.log(i);
+  };
+}
+a[6](); // 6
+```
+
+const也用来声明变量，但是声明的是常量。一旦声明，常量的值就不能改变。
+
+```
+const MY_CONSTANT = 1;
+MY_CONSTANT = 2 // Error
+const SOME_CONST; // Error
+```
+
+注意，对象的属性或数组成员还是可以改变的。
+
+```
+const MY_OBJECT = {some: 1};
+MY_OBJECT.some = 'body'; // Cool
+```
+
+###### 2.箭头函数
+
+箭头函数是函数的一种简写方式，括号包裹参数，跟随一个=>，紧接着函数体
+
+**箭头函数好处**
+
+1.箭头函数可以让代码变得简洁
+
+2.函数体this总是指向对象自身
+
+3.可以为参数设置默认值
+
+对于函数中的函数this指向全局对象，之前的解决方法是1.用that缓存 2.用bind(this)绑定 3.用箭头函数
+
+```
+function Person(){
+  this.age = 0;
+
+  setInterval(() => {
+    // |this| 指向 person 对象
+    this.age++;
+  }, 1000);
+}
+
+var person = new Person();
+```
+
+默认参数：
+
+```
+let getFinalPrice = (price, tax=0.7) => price + price * tax;
+getFinalPrice(500); // 850
+```
+###### 3.字符串
+
+1.新增的字符串方法
+
+ES6提供了3种可以替代indexof方法，可以用来确定一个字符串是否包含在另一个字符串中
+includes()：返回布尔值，表示是否找到了参数字符串。
+startsWith()：返回布尔值，表示参数字符串是否在源字符串的头部。
+endsWith()：返回布尔值，表示参数字符串是否在源字符串的尾部。
+```
+'my string'.startsWith('my'); //true
+'my string'.endsWith('my'); // false
+'my string'.includes('str'); // true
+```
+
+repeat():返回一个新字符串，表示将原字符串重复n次
+```
+'x'.repeat(3) // "xxx"
+'hello'.repeat(2) // "hellohello"
+'na'.repeat(0) // ""
+```
+
+2.字符串模板--提供一个简洁的方式来实现字符串插值
+
+ES5:在其它语言中，使用模板和插入值是在字符串里面输出变量的一种方式。因此，在ES5，我们可以这样组合一个字符串：
+
+ES6:幸运的是，在ES6中，我们可以使用新的语法$ {NAME}，并把它放在反引号里：
+```
+//es5
+var name = 'Your name is ' + first + ' ' + last + '.';
+var url = 'http://localhost:3000/api/messages/' + id;
+//es6
+var name = `Your name is ${first} ${last}. `;
+var url = `http://localhost:3000/api/messages/${id}`;
+```
+
+3.多行字符串
+
+```
+//ES6的多行字符串是一个非常实用的功能。在ES5中，我们不得不使用以下方法来表示多行字符串：
+
+var roadPoem = 'Then took the other, as just as fair,nt'
+    + 'And having perhaps the better claimnt'
+    + 'Because it was grassy and wanted wear,nt'
+    + 'Though as for that the passing therent'
+    + 'Had worn them really about the same,nt';
+var fourAgreements = 'You have the right to be you.n
+    You can only be you when you do your best.';
+
+//然而在ES6中，仅仅用反引号就可以解决了：
+
+var roadPoem = `Then took the other, as just as fair,
+    And having perhaps the better claim
+    Because it was grassy and wanted wear,
+    Though as for that the passing there
+    Had worn them really about the same,`;
+var fourAgreements = `You have the right to be you.
+    You can only be you when you do your best.`;
+```
+###### 4.数组
+
+Array 对象增加了一些新的静态方法，Array 原型上也增加了一些新方法。
+
+1.Array.from
+
+Array.from方法用于将两类对象转为真正的数组：类似数组的对象（函数中的 arguments/由 document.getElementByTagName() 返回的 nodeList/新增加的 Map 和 Set 数据结构）和可遍历（iterable）的对象（包括ES6新增的数据结构Set和Map）。
+
+```
+let itemElements = document.querySelectorAll('.items');
+let items = Array.from(itemElements);
+items.forEach(function(element) {
+    console.log(element.nodeType)
+});
+
+// A workaround often used in ES5:
+let items = Array.prototype.slice.call(itemElements);
+```
+
+2.Array.of()
+
+Array.of方法用于将一组值，转换为数组。
+
+```
+Array.of(3, 11, 8) // [3,11,8]
+Array.of(3) // [3]
+Array.of(3).length // 1
+Array.of() // []
+Array.of(undefined) // [undefined]
+Array.of(1) // [1]
+Array.of(1, 2) // [1, 2]
+```
+这个方法的主要目的，是弥补数组构造函数Array()的不足。因为参数个数的不同，会导致Array()的行为有差异。
+
+```
+Array() // []
+Array(3) // [, , ,]
+Array(3, 11, 8) // [3, 11, 8]
+```
+
+Array.of基本上可以用来替代Array()或new Array()，并且不存在由于参数不同而导致的重载。它的行为非常统一。
+
+3.find()和findIndex()
+
+find 返回回调返回 true 的第一个元素。
+findIndex 返回回调函数返回 true的第一个元素的下标。
+fill 用所给参数“覆盖”数组的元素。
+
+数组实例的find方法，用于找出第一个符合条件的数组成员。它的参数是一个回调函数，所有数组成员依次执行该回调函数，直到找出第一个返回值为true的成员，然后返回该成员。如果没有符合条件的成员，则返回undefined。
+
+```
+[1, 4, -5, 10].find((n) => n < 0)
+// -5
+
+[1, 5, 10, 15].find(function(value, index, arr) {
+  return value > 9;
+}) // 10
+[5, 1, 10, 8].find(n => n === 10) // 10
+
+[5, 1, 10, 8].findIndex(n => n === 10) // 2
+
+[0, 0, 0].fill(7) // [7, 7, 7]
+[0, 0, 0, 0, 0].fill(7, 1, 3) // [0, 7, 7, 7, 0]
+```
+###### 5.Spread和Rest操作符(...)
+
+spread操作符主要用于数组构造和解构，在调用时将数组填入函数参数
+rest操作符主要用于获得传递给函数的参数列表
+
+```
+//rest操作符
+function countArguments(...args) {  
+　　return args.length;
+}
+// 获得参数的数量
+countArguments('welcome', 'to', 'Earth'); // => 3  
+
+//spread操作符
+let cold = ['autumn', 'winter'];  
+let warm = ['spring', 'summer'];  
+// 构造一个数组
+[...cold, ...warm] // 真正数组值是 ['autumn', 'winter', 'spring', 'summer']
+// 解构一个数组
+let otherSeasons, autumn;  
+[autumn, ...otherSeasons] = cold;
+otherSeasons      // 值是 ['winter']  
+// 代表一个数组的函数参数
+cold.push(...warm);  
+cold              // 值是 ['autumn', 'winter', 'spring', 'summer']  
+```
+
+其实可以很好的简化之前的代码，因为arguments是类数组
+
+```
+function f(x, y, z) {
+    return x + y + z;
+}
+
+var args = [1, 2, 3];
+
+// Old method
+func.apply(this, args);
+// New method
+func(...args);
+```
+###### 6.解构
+
+解构提供了一个方便地从对象或数组中提取数据的方法
+
+```
+let [x, y] = [1, 2]; // x = 1, y = 2
+// ES5 equivalent:
+var arr = [1, 2];
+var x = arr[0];
+var y = arr[1];
+
+let x = 1,
+   y = 2;
+[x, y] = [y, x]; // x = 2, y = 1
+
+let obj = {x: 1, y: 2};
+let {x, y} = obj; // x = 1, y = 2
+
+let obj = {x: 1, y: 2};
+let {x: a, y: b} = obj; // a = 1, b = 2
+
+function doSomething() {
+   return [1, 2]
+}
+let [x, y] = doSomething(); // x = 1, y = 2
+```
+###### 7.Promise以及和回调比较的优缺点
+
+Promise 是异步编程的一种解决方案，避免因为异步函数调用而导致回调函数一环套一环的场景，从而改善代码的可读性。
+Promise 简单说就是一个容器，里面保存着某个未来才会结束的事件（通常是一个异步操作）的结果。从语法上说，Promise 是一个对象，从它可以获取异步操作的消息。Promise 提供统一的 API，各种异步操作都可以用同样的方法进行处理。
+
+下面是一个简单的用setTimeout()实现的异步延迟加载函数:(异步+回调)
+
+```
+//ES5
+setTimeout(function(){
+  console.log('Yay!');
+}, 1000);
+//ES6
+var wait1000 =  new Promise(function(resolve, reject) {
+  setTimeout(resolve, 1000);
+}).then(function() {
+  console.log('Yay!');
+});
+```
+
+```
+//ES5
+setTimeout(function(){
+  console.log('Yay!');
+  setTimeout(function(){
+    console.log('Wheeyee!');
+  }, 1000)
+}, 1000);
+//ES6
+var wait1000 =  ()=> new Promise((resolve, reject)=> {setTimeout(resolve, 1000)});
+wait1000()
+    .then(function() {
+        console.log('Yay!')
+        return wait1000()
+    })
+    .then(function() {
+        console.log('Wheeyee!')
+    });
+```
+
+promise对象的三个状态：pending执行中，fulfilled成功，reject拒绝(其中pending为初始状态，fulfilled和rejected为结束状态（结束状态表示promise的生命周期已结束）。)
+
+状态转换关系为：pending->fulfilled，pending->rejected。随着状态的转换将触发各种事件（如执行成功事件、执行失败事件等）
+
+**基本用法**
+
+Promise构造函数接受一个函数作为参数，该函数的两个参数分别是resolve和reject。它们是两个函数，由JavaScript引擎提供，不用自己部署。
+
+Promise实例生成以后，可以用then方法分别指定Resolved状态和Reject状态的回调函数，用then后的回调函数处理resolved或者reject的结果。
+```
+//promise实例--创建promise的时候就执行函数里边的逻辑了
+var promise = new Promise(function(resolve,reject) {
+    //...some code
+    if(success) {
+        resolve(value);
+    } else {
+        reject(error);
+    }
+});
+//Promise实例生成以后，可以用then方法分别指定Resolved状态和Reject状态的回调函数。
+promise.then(function(value){
+
+},function(error){
+
+});
+
+```
+**使用 Promises 而非回调 (callbacks) 优缺点是什么**
+
+优点：
+1.有了Promise对象，就可以将异步操作以同步操作的流程表达出来，避免了层层嵌套的回调函数。代码易读。
+2.Promise对象提供统一的接口，使得控制异步操作更加容易。
+3.Promise的作用是解决回调金字塔的问题，对于控制异步流程实际上没有起到很大的作用。真正使用Promise对异步流程进行控制，我们还要借助ES6 generator函数。
+
+缺点：
+1.无法取消Promise，一旦新建它就会立即执行，无法中途取消。
+
+```
+//Promise新建后立即执行，所以首先输出的是“Promise”。然后，then方法指定的回调函数，将在当前脚本所有同步任务执行完才会执行(就是所谓的主线程继续往下执行)，所以“Resolved”最后输出。
+let promise = new Promise(function(resolve, reject) {
+  console.log('Promise');
+  resolve();
+});
+
+promise.then(function() {
+  console.log('Resolved.');
+});
+
+console.log('Hi!');
+
+// Promise
+// Hi!
+// Resolved
+```
+
+2.如果不设置回调函数，Promise内部抛出的错误，不会反应到外部
+3.当处于Pending状态时，无法得知目前进展到哪一个阶段（刚刚开始还是即将完成）。
 
 
+###### 8.class, extends, super
 
+这三个特性涉及了ES5中最令人头疼的的几个部分：原型、构造函数，继承.
 
+**引入class目的**
 
+让对象原型的写法更加清晰、更像面向对象编程的语法而已
 
+ES6的类，完全可以看作构造函数的另一种写法,类的数据类型就是函数，类本身就指向构造函数。
+```
+class Point {
+  // ...
+}
+
+typeof Point // "function"
+Point === Point.prototype.constructor // true
+```
+
+**class如何写**
+
+1.class里面有一个constructor方法，这就是构造方法。
+
+2.定义class的方法的时候，前面不需要加上function这个关键字，直接把函数定义放进去了就可以了。
+
+3.方法之间不需要逗号分隔，加了会报错。
+
+```
+class baseModel {
+  constructor(options, data) { // class constructor，node.js 5.6暂时不支持options = {}, data = []这样传参
+    this.name = 'Base';
+    this.url = 'http://azat.co/api';
+    this.data = data;
+    this.options = options;
+   }
+    getName() { // class method
+        console.log(`Class name: ${this.name}`);
+    }
+}
+```
+
+AccountModel 从类baseModel 中继承而来:
+```
+class AccountModel extends baseModel {
+    constructor(options, data) {
+        //为了调用父级构造函数，可以毫不费力的唤起super()用参数传递
+       super({private: true}, ['32113123123', '524214691']); //call the parent method with super
+       this.name = 'Account Model';
+       this.url +='/accounts/';
+    }
+    //如果你想做些更好玩的，你可以把 accountData 设置成一个属性：
+    get accountsData() { //calculated attribute getter
+    // ... make XHR
+        return this.data;
+    }
+}
+```
+
+```
+let accounts = new AccountModel(5);
+accounts.getName();
+console.log('Data is %s', accounts.accountsData);
+```
+结果令人惊讶，输出是：
+
+Class name: Account Model
+Data is  32113123123,524214691
+
+###### 9.模块(export或者import)
+
+ES6之前：模块加载方案，最主要的有 CommonJS 和 AMD 两种。前者用于服务器，后者用于浏览器。
+为了实现 AMD 或 CommonJS，你通常需要一个构建步骤或加载器。解决这个问题的工具包括 RequireJS、Browserify 和 WebPack。
+
+ES6：模块功能可以取代 CommonJS 和 AMD 规范。模块设计围绕 export 和 import 关键词
+```
+// lib/math.js
+
+export function sum(x, y) {
+   return x + y;
+}
+export var pi = 3.141593;
+// app.js
+
+import { sum, pi } from "lib/math";
+console.log('2π = ' + sum(pi, pi));
+```
+正如你所见，可以存在多个 export 声明。每一个都要明确地指明输出值的类型（本例中的 function 和 var）。
+
+本例中的 import 声明使用一种语法（类似解构）来明确定义被导入的内容。可以使用 * 通配符，结合 as 关键词给模块提供一个本地名称，把模块当成一个整体导入。
+```
+// app.js
+
+import * as math from "lib/math";
+console.log('2π = ' + math.sum(math.pi, math.pi));
+```
+模块系统有一个 default 输出。它可以是一个函数。只需要提供一个本地名称就可以导入这个默认值（即无解构）：
+```
+
+// lib/my-fn.js
+
+export default function() {
+   console.log('echo echo');
+}
+
+// app.js
+
+import doSomething from 'lib/my-fn';
+doSomething();
+```
+请注意 import 声明是同步的，但是模块代码需在所有依赖加载完后才会运行。
+
+###### 10. Generators
+
+Generator 函数是 ES6 的新特性，它允许一个函数返回的可遍历对象生成多个值。
+
+在使用中你会看到 * 语法和一个新的关键词 yield:
+```
+function *infiniteNumbers() {
+  var n = 1;
+  while (true){
+    yield n++;
+  }
+}
+
+var numbers = infiniteNumbers(); // returns an iterable object
+
+numbers.next(); // { value: 1, done: false }
+numbers.next(); // { value: 2, done: false }
+numbers.next(); // { value: 3, done: false }
+```
+
+###### 11.迭代器（Iterators）
+迭代器允许每次访问数据集合的一个元素，当指针指向数据集合最后一个元素是，迭代器便会退出。它提供了 next() 函数来遍历一个序列，这个方法返回一个包含 done 和value 属性的对象。
+
+ES6 中可以通过 Symbol.iterator 给对象设置默认的遍历器，无论什么时候对象需要被遍历，执行它的 @@iterator 方法便可以返回一个用于获取值的迭代器。
+
+```
+var arr = [11,12,13];
+var itr = arr[Symbol.iterator]();
+
+itr.next(); // { value: 11, done: false }
+itr.next(); // { value: 12, done: false }
+itr.next(); // { value: 13, done: false }
+
+itr.next(); // { value: undefined, done: true }
+```
+你可以通过 [Symbol.iterator]() 自定义一个对象的迭代器。
+
+###### 12.Map 和 WeakMap
+ES6 中两种新的数据结构集：Map 和 WeakMap。事实上每个对象都可以看作是一个Map。
+
+一个对象由多个 key-val 对构成，在 Map 中，任何类型都可以作为对象的 key，如：
+```
+var myMap = new Map();
+
+var keyString = "a string",
+    keyObj = {},
+    keyFunc = function () {};
+
+// 设置值
+myMap.set(keyString, "value 与 'a string' 关联");
+myMap.set(keyObj, "value 与 keyObj 关联");
+myMap.set(keyFunc, "value 与 keyFunc 关联");
+
+myMap.size; // 3
+
+// 获取值
+myMap.get(keyString);    // "value 与 'a string' 关联"
+myMap.get(keyObj);       // "value 与 keyObj 关联"
+myMap.get(keyFunc);      // "value 与 keyFunc 关联"
+```
+WeakMap
+
+WeakMap 就是一个 Map，只不过它的所有 key 都是弱引用，意思就是 WeakMap 中的东西垃圾回收时不考虑，使用它不用担心内存泄漏问题。
+
+另一个需要注意的点是，WeakMap 的所有 key 必须是对象。它只有四个方法delete(key),has(key),get(key) 和 set(key, val)：
+```
+let w = new WeakMap();
+w.set('a', 'b');
+// Uncaught TypeError: Invalid value used as weak map key
+
+var o1 = {},
+    o2 = function(){},
+    o3 = window;
+
+w.set(o1, 37);
+w.set(o2, "azerty");
+w.set(o3, undefined);
+
+w.get(o3); // undefined, because that is the set value
+
+w.has(o1); // true
+w.delete(o1);
+w.has(o1); // false
+```
+
+###### 13.Set 和 WeakSet
+Set 对象是一组不重复的值，重复的值将被忽略，值类型可以是原始类型和引用类型：
+```
+let mySet = new Set([1, 1, 2, 2, 3, 3]);
+mySet.size; // 3
+mySet.has(1); // true
+mySet.add('strings');
+mySet.add({ a: 1, b:2 });
+
+可以通过 forEach 和 for...of 来遍历 Set 对象：
+
+mySet.forEach((item) => {
+  console.log(item);
+    // 1
+    // 2
+    // 3
+    // 'strings'
+    // Object { a: 1, b: 2 }
+});
+
+for (let value of mySet) {
+  console.log(value);
+    // 1
+    // 2
+    // 3
+    // 'strings'
+    // Object { a: 1, b: 2 }
+}
+```
+
+Set 同样有 delete() 和 clear() 方法。
+
+WeakSet
+类似于 WeakMap，WeakSet 对象可以让你在一个集合中保存对象的弱引用，在WeakSet 中的对象只允许出现一次：
+```
+var ws = new WeakSet();
+var obj = {};
+var foo = {};
+
+ws.add(window);
+ws.add(obj);
+
+ws.has(window); // true
+ws.has(foo);    // false, foo 没有添加成功
+
+ws.delete(window); // 从结合中删除 window 对象
+ws.has(window);    // false, window 对象已经被删除
+```
+##### 50.如何解决跨域问题?js跨域请求的方式
+
+怎么跨域
+Jasonp跨域
+
+**js跨域请求的方式**
+
+1、通过jsonp跨域
+2、通过修改document.domain来跨子域
+3、使用window.name来进行跨域
+4、使用HTML5中新引进的window.postMessage方法来跨域传送数据（ie 67 不支持）
+5、CORS 需要服务器设置header ：Access-Control-Allow-Origin。
+6、nginx反向代理 这个方法一般很少有人提及，但是他可以不用目标服务器配合，不过需要你搭建一个中转nginx服务器，用于转发请求
+
+##### 51.请大概描述下页面访问cookie的限制条件
+
+1.跨域问题
+2.设置了HttpOnly
+
+##### 52.图片预览
+
+```
+<input type="file" name="file" onchange="showPreview(this)" />
+<img id="portrait" src="" width="70" height="75">
+
+function showPreview(source) {
+  var file = source.files[0];
+  if(window.FileReader) {
+      var fr = new FileReader();
+      fr.onloadend = function(e) {
+        document.getElementById("portrait").src = e.target.result;
+      };
+      fr.readAsDataURL(file);
+  }
+}
+```
 
 
 
@@ -4962,22 +6756,6 @@ http://www.jianshu.com/p/d851db5f2f30
 为何你会使用 load 之类的事件 (event)？此事件有缺点吗？你是否知道其他替代品，以及为何使用它们？
 
 
-
-##### 38.js延迟加载的方式有哪些？异步加载的方式？
-
-defer和async、动态创建DOM方式（用得最多）、按需异步载入js
-
-**异步加载的方式**
-
-(1) defer，只支持IE
-
-(2) async：
-
-(3) 创建script，插入到DOM中，加载完毕后callBack
-
-##### 27.如何解决跨域问题?
-
-
 ##### 28.页面编码和被请求的资源编码如果不一致如何处理？
 
 
@@ -4986,16 +6764,14 @@ defer和async、动态创建DOM方式（用得最多）、按需异步载入js
 
 ##### 30.AMD（Modules/Asynchronous-Definition）、CMD（Common Module Definition）规范区别？
 
+AMD，CMD规范什么的。二面问jQuery的事件代理实现，浏览器跨域方法，用JS实现Array的indexOf方法，还有一些杂七杂八的记不清了。三面跟腾讯二面一样，主要问项目的东西，外加了一些团队合作，学习方法的问题。
+
+ 阿里面试：一面面试官现场带电脑直接联网看作品，GitHub，博客什么的，然后从中挑一些东西来问，后面又顺带考了Tab组件的实现和JS的类继承实现等内容。二面也是看了作品，GitHub，博客什么的，跟一面不同的是还看了我pixiv帐号上的东东并称赞画得不错啥的
 
 ##### 31.requireJS的核心原理是什么？（如何动态加载的？如何避免多次加载的？如何 缓存的？）
 
 
 requireJS就是模块化的管理和生成，且定义无依赖和有依赖的模块
-
-##### 32.谈一谈你对ECMAScript6的了解？
-
-
-##### 33.ECMAScript6 怎么写class，为什么会出现class这种东西?
 
 
 ##### 20.用原生JavaScript的实现过什么功能吗？
@@ -5015,12 +6791,14 @@ javaScript中hasOwnProperty函数方法是返回一个布尔值，指出一个�
 
 ##### 62.如何判断当前脚本运行在浏览器还是node环境中？（阿里）
 
+十三、iframe有那些缺点？
+
+iframe会阻塞主页面的Onload事件；
+搜索引擎的检索程序无法解读这种页面，不利于SEO;
+iframe和主页面共享连接池，而浏览器对相同域的连接有限制，所以会影响页面的并行加载。
+使用iframe之前需要考虑这两个缺点。如果需要使用iframe，最好是通过javascript动态给iframe添加src属性值，这样可以绕开以上两个问题。
 
 ##### 63.移动端最小触控区域是多大？
-
-
-
-##### 65.把 Script 标签 放在页面的最底部的body封闭之前 和封闭之后有什么区别？浏览器会如何解析它们？
 
 
 ##### 66.移动端的点击事件的有延迟，时间是多久，为什么会有？ 怎么解决这个延时？（click 有 300ms 延迟,为了实现safari的双击事件的设计，浏览器要知道你是不是要双击操作。）
@@ -5070,7 +6848,7 @@ javaScript中hasOwnProperty函数方法是返回一个布尔值，指出一个�
 
 
 ##### 80.用js实现千位分隔符?(来源：前端农民工，提示：正则+replace)
-
+请举出一个匿名函数的典型用例？
 
 ##### 82.What is a Polyfill?
 What is the extent of your experience with Promises and/or their polyfills?
@@ -5079,17 +6857,76 @@ What is the extent of your experience with Promises and/or their polyfills?
 
 
 你怎么看 AMD vs. CommonJS？
-请举出一个匿名函数的典型用例？
 请指出浏览器特性检测，特性推断和浏览器 UA 字符串嗅探的区别？
 你使用过 JavaScript 模板系统吗？
 如有使用过，请谈谈你都使用过哪些库？
 请解释 JavaScript 的同源策略 (same-origin policy)。
 为何通常会认为保留网站现有的全局作用域 (global scope) 不去改变它，是较好的选择？
 请解释什么是单页应用 (single page app), 以及如何使其对搜索引擎友好 (SEO-friendly)。
-使用 Promises 而非回调 (callbacks) 优缺点是什么？
 使用一种可以编译成 JavaScript 的语言来写 JavaScript 代码有哪些优缺点？
 请解释可变 (mutable) 和不变 (immutable) 对象的区别。
 请举出 JavaScript 中一个不变性对象 (immutable object) 的例子？
 不变性 (immutability) 有哪些优缺点？
 如何用你自己的代码来实现不变性 (immutability)？
 请问调用栈 (call stack) 和任务队列 (task queue) 的区别是什么？
+#### 6.画圆的方法
+可以用html、css、js不同的方法画出圆
+
+css：
+```
+{
+  width:100px;
+  height:100px;
+  border-radius:50px;
+}
+```
+
+html5 canvas和js：
+```
+<canvas id="drawing" width="200px" height="200px">A drawing of something</canvas>
+if(drawing1.getContext){
+    var context1 = drawing1.getContext("2d");
+    //开始路径
+    context1.beginPath();
+    //绘制外圆
+    context1.arc(100,100,99,0,2*Math.PI,false);
+    //描边路径
+    context1.strokeStyle = "#ff0000";
+    context1.stroke();
+}
+```
+
+#### 7.请写出一些前端性能优化的方式
+
+1.减少dom操作
+2.部署前，图片压缩，代码压缩
+3.优化js代码结构，减少冗余代码
+4.减少http请求，合理设置 HTTP缓存
+5.使用内容分发cdn加速
+6.静态资源缓存
+7.图片延迟加载
+
+
+#### 8.对前端工程化的理解
+
+开发规范
+模块化开发
+组件化开发
+组件仓库
+性能优化
+项目部署
+开发流程
+开发工具
+
+#### 9.vue生命周期钩子
+
+1.beforcreate
+2.created
+3.beformount
+4.mounted
+5.beforeUpdate
+6.updated
+7.actived
+8.deatived
+9.beforeDestroy
+10.destroyed

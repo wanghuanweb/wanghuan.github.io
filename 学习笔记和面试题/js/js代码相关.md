@@ -623,3 +623,144 @@ parseInt("3", 2)--NaN--数值都超过了进制3>2不合理，无法解析
 ##### 24.[1,2,3,4,5].duplicator(); // [1,2,3,4,5,1,2,3,4,5]
 
 ##### 25.请实现一个遍历至 100 的 for loop 循环，在能被 3 整除时输出 "fizz"，在能被 5 整除时输出 "buzz"，在能同时被 3 和 5 整除时输出 "fizzbuzz"。
+##### 26.
+
+```
+var foo = {  
+  bar: function() { return this.baz; },  
+  baz: 1
+};
+
+(function(){  
+  return typeof arguments[0]();
+})(foo.bar);
+
+答案： "undefined"
+```
+虽然 foo.bar 传递给了函数，但是真正执行的时候，函数 bar 的上下文环境是 arguments ，并不是 foo
+arguemnts[0] 可以理解为 arguments.0（不过写代码就不要这样了，语法会错误的），所以这样看来，上下文环境是 arguemnts 就没问题了,所以在执行baz的时候自然this就是window了,window 上没有baz属性,返回的就是undefined, typeof调用的话就转换成"undefined"了
+
+##### 27.
+```
+var f = (function f(){ return "1"; }, function g(){ return 2; })();
+typeof f;
+
+答案 "number"
+```
+
+逗号操作符的使用可以很混淆，但这段说明它的行为:
+var x = (1, 2, 3);
+x;
+
+x的值是3,这表明，当你有一系列的组合在一起，并由逗号分隔的表达式，它们从左到右进行计算，但只有最后一个表达式的结果保存。由于同样的原因，这个问题可以改写为减少混乱：
+
+var f = (function g(){ return 2; })();
+typeof f;
+
+##### 28.
+```
+<script>
+    var m= 1, j = k = 0;
+    function add(n) {
+        return n = n+1;
+　 }
+    y = add(m);
+    function add(n) {
+        return n = n + 3;
+    }
+z = add(m);
+</script>
+//y和z都是4，因为函数表达式和函数声明有区别，函数声明FD在进入上下文阶段创建，在代码执行阶段就已经可用了
+  函数表达式则是在代码执行阶段创建，也就是函数声明有提升
+```
+
+##### 29.
+
+function g(){ return 23; }是函数表达式,事实上只有事一个名字,不是一个函数声明
+会说g未被定义
+```
+var f = function g(){ return 23; };
+typeof g();//会报错
+```
+
+下面代码不报错
+```
+function g(){ return 23; };
+    console.log(typeof g());//number
+```
+
+##### 30.
+
+因为函数f不是函数声明，他在if中，所以是true。因为函数声明只能存在于函数或者全局中，不能在block中
+```
+var x = 1;
+  if (function f(){}) {
+    x += typeof f;
+  }
+  x;//1undefined
+```
+
+##### 31.
+
+```
+var x = [typeof x, typeof y][1];
+typeof typeof x;
+```
+
+这题目比较简单,注意下返回类型即可
+x = [,][1];
+即 x = typeof y = 'undefind'.
+typeof 返回的是string类型就可以了
+typeof typeof必然就是'string'了.
+
+##### 32.
+
+```
+function(foo){
+  return typeof foo.bar;
+})({ foo: { bar: 1 } });
+
+答案 "undefined"
+{ foo: { bar: 1 }}对象中只有foo属性，没有bar属性
+```
+
+##### 33.|| 和 $$
+
+||运算符
+1、只要“||”前面为false,不管“||”后面是true还是false，都返回“||”后面的值。
+
+2、只要“||”前面为true,不管“||”后面是true还是false，都返回“||”前面的值。
+
+$$运算符
+1、只要“&&”前面是false，无论“&&”后面是true还是false，结果都将返“&&”前面的值;
+
+2、只要“&&”前面是true，无论“&&”后面是true还是false，结果都将返“&&”后面的值;
+```
+alert(1&&2);//2
+```
+
+##### 34.
+
+```
+function A() {
+
+}
+function B(a){
+    this.a = a;
+}
+function C(a)
+{
+    if (a) {
+        this.a = a;
+}}
+A.prototype.a = 1;
+B.prototype.a = 1;
+C.prototype.a = 1;
+console.log(new A());
+console.log(new B());
+console.log(new C(2));
+```
+
+index.html:26 A __proto__: Object
+index.html:27 B a: undefined__proto__: Object
+index.html:28 C a: 2__proto__: Object
