@@ -764,3 +764,58 @@ console.log(new C(2));
 index.html:26 A __proto__: Object
 index.html:27 B a: undefined__proto__: Object
 index.html:28 C a: 2__proto__: Object
+
+##### 35.
+
+```
+function Foo() {
+    var i = 0;
+    return function() {
+        console.log(i++);
+    }
+}
+
+var f1 = Foo(),
+    f2 = Foo();
+f1();
+f1();
+f2();// 0 1 0
+```
+调用Food()的时候会生成一个新的作用域s1， 返回的内部函数f1使s1保持不被销毁。
+再次调用Food()，又生成一个作用域s2，返回的内部函数f2使其不被销毁。
+运行两次f1()会使作用域s1中的i增加，变成2， 打印结果是0, 1
+运行一次f2()会使作用域s2中的i增加，变成1，打印结果是0
+也就是说f1和f2是两个闭包，其实是互不关联的,并不是指向同一个引用，故f1的状态不影响f2的状态
+
+```
+var i = 0;
+function Foo() {
+return function() {
+    console.log(i++);
+}
+}
+
+var f1 = Foo(),
+f2 = Foo();
+f1();
+f1();
+f2();//0 1 2
+```
+把i定义在函数外部，那么f1,f2之间的i就会有关联
+
+
+```
+var i = 0;
+function Foo() {
+return function() {
+    console.log(i++);
+}
+}
+
+var f1=Foo();
+f2 = f1;
+f1();
+f1();
+f2();//0 1 2
+```
+这样f1,f2都是指向同一个引用，i也会是相同的。

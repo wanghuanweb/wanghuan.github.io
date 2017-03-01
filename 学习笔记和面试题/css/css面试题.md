@@ -10,29 +10,29 @@
 
 1.3区别（IE的content部分把 border 和 padding计算了进去）
 
-###### W3C的标准Box Model:
+**W3C的标准Box Model**
 
-###### 外盒尺寸计算：
+外盒尺寸计算：
 
 Element空间高度 = content height + padding + border + margin   
 
-Element 空间宽度 = content width + padding + border + margin   
+Element空间宽度 = content width + padding + border + margin   
 
-###### 内盒尺寸计算：
+内盒尺寸计算：
 
  Element Height = content height + padding + border
 
  Element Width = content width + padding + border
 
-###### 传统下Box Model
+**传统下Box Model**
 
-###### 外盒尺寸计算：
+外盒尺寸计算：
 
 Element空间高度 = content Height + margin
 
 Element空间宽度 = content Width + margin
 
-###### 内盒尺寸计算：
+内盒尺寸计算：
 
  Element Height = content Height(Height包含了元素内容宽度，边框宽度，内距宽度)   
 
@@ -773,6 +773,8 @@ Vertical-align is similar. It also applies to table cells and it works with some
 
 ##### 8.display有哪些值？说明他们的作用。
 
+bloc/inline/inline-block/none/table/inherit
+
 **block**
 
 像块类型元素一样显示
@@ -804,6 +806,8 @@ Vertical-align is similar. It also applies to table cells and it works with some
 规定应该从父元素继承 display 属性的值
 
 ##### 9.position的值relative和absolute定位原点是？position有几个属性？
+
+static/relative/absolute/fixed/inherit
 
 **static**
 
@@ -883,10 +887,19 @@ transition
 
 gradient线性渐变
 
-**4.文字特效**
+**4.颜色模式**
+
+rgba()
+
+**5.文字特效**
 
 文字特效      （text-shadow、）
 文字渲染      （Text-decoration）
+
+**6.新增文本功能**
+
+direction 定义文字排列方式(全兼容) ---rtl 从右向左排列,ltr 从右向左排列  注意要配合unicode-bidi:bidi-override; 一块使用
+text-overflow 定义省略文本的处理方式--clip 无省略号  Ellipsis 省略号 (注意配合overflow:hidden和white-space:nowrap一块使用)
 
 **5.阴影和反射**
 
@@ -2387,11 +2400,40 @@ Flash Of Unstyled Content无样式内容的闪退
 
 解决方法：把样式表放到文档的head
 
+#### 51.请解释 CSS sprites，以及你要如何在页面或网站中实现它。
+
+它允许你将一个页面涉及到的所有零星图片都包含到一张大图中去。客户端每显示一张图片都会向服务器发送请求。所以，图片越多请求次数越多，造成延迟的可能性也就越大。
+这样添加到一个大图中，减少请求服务器的次数。
+
+**原理**
+
+利用CSS的“background-image”，“background- repeat”，“background-position”的组合进行背景定位，background-position可以用数字精确的定位出背景图片的位置。
+
+```
+.bg_sprite{background-image:url(/整图地址); background-repeat:no-repeat}
+　　　　#ico1 {width:容器宽度;height:容器高度;background-position:X坐标 Y坐标}
+　　　　#ico2 {width:容器宽度;height:容器高度;background-position:X坐标 Y坐标}
+　　　　#ico3 {width:容器宽度;height:容器高度;background-position:X坐标 Y坐标}
+　　　　.nav {width:容器宽度;height:容器高度;background-position:X坐标 Y坐标}
+```
+
+**优点**
+
+1.利用CSS Sprites能很好地减少网页的http请求，从而大大的提高页面的性能，这也是CSS Sprites最大的优点，也是其被广泛传播和应用的主要原因；
+2.CSS Sprites能减少图片的字节，曾经比较过多次3张图片合并成1张图片的字节总是小于这3张图片的字节总和。
+3.解决了网页设计师在图片命名上的困扰，只需对一张集合的图片上命名就可以了，不需要对每一个小元素进行命名，从而提高了网页的制作效率。
+4.更换风格方便，只需要在一张或少张图片上修改图片的颜色或样式，整个网页的风格就可以改变。维护起来更加方便。
+
+**缺点**
+
+1.在图片合并的时候，你要把多张图片有序的合理的合并成一张图片，还要留好足够的空间
+2.CSS Sprites在维护的时候比较麻烦，如果页面背景有少许改动，一般就要改这张合并的图片
+
+
 
 请问 "resetting" 和 "normalizing" CSS 之间的区别？你会如何选择，为什么？
 请解释浮动 (Floats) 及其工作原理。
 描述z-index和叠加上下文是如何形成的。
-请解释 CSS sprites，以及你要如何在页面或网站中实现它。
 你最喜欢的图片替换方法是什么，你如何选择使用。
 你会如何解决特定浏览器的样式问题？
 如何为有功能限制的浏览器提供网页？

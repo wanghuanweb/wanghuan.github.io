@@ -2207,7 +2207,7 @@ function A(){
 ```
 
 ##### 12.Javascript如何实现继承？
-相关问题：对象的继承
+相关问题：对象的继承，手写一个js继承？(美团面试)
 
 ###### 1.使用原型链实现继承
 继承实际是依靠原型链来实现的，原型链是实现继承的主要方法。
@@ -5324,7 +5324,7 @@ selectbox.insertBefore(optionToMove,selectbox.options[optionToMove.index-1]);
 ##### 38.BOM
 
 **window对象**
-
+Window 对象表示浏览器中打开的窗口
 BOM就是浏览器窗口对象模型，顶级对象就是window，window对象表示浏览器中一个打开的窗口，也就是窗体，所有的全局对象和函数都属于window对象的属性和方法。
 
 1.窗口位置window.screenLeft,window.screenTop：
@@ -5368,9 +5368,13 @@ http://blog.csdn.net/sjf0115/article/details/7578722
 
 **location对象**
 
+Location 对象包含有关当前 URL 的信息
+
 可用来在浏览器窗口中载入一个新网址:window.location
 
 **navigator对象**
+
+Navigator 对象包含有关浏览器的信息
 
 **screen对象**
 
@@ -5379,6 +5383,7 @@ screen.height screent.width
 
 **history对象**
 
+History 对象包含用户（在浏览器窗口中）访问过的 URL
 history对象保存了用户上网的历史激励吗，从窗口被打开的那一刻算起。
 ```
 history.go(-1);//后退一页
@@ -5991,6 +5996,7 @@ ajax怎么向服务器发送请求
 ajax原理﻿
 ajax的优点和缺点
 什么是跨域资源共享 (CORS)？它用于解决什么问题？
+jquery ajax中都支持哪些返回类型？xml，html，json，jsonp
 
 ajax的全称：Asynchronous Javascript And XML。
 
@@ -6698,6 +6704,8 @@ ws.has(window);    // false, window 对象已经被删除
 ```
 ##### 50.如何解决跨域问题?js跨域请求的方式
 
+只要 协议 、 域名 、 端口 有任何一个 不同, 都被当作是 不同 的域。
+
 怎么跨域
 Jasonp跨域
 
@@ -6709,6 +6717,7 @@ Jasonp跨域
 4、使用HTML5中新引进的window.postMessage方法来跨域传送数据（ie 67 不支持）
 5、CORS 需要服务器设置header ：Access-Control-Allow-Origin。
 6、nginx反向代理 这个方法一般很少有人提及，但是他可以不用目标服务器配合，不过需要你搭建一个中转nginx服务器，用于转发请求
+
 
 ##### 51.请大概描述下页面访问cookie的限制条件
 
