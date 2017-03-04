@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>问卷编辑页面</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+</head>
+
+<body>
+    <script src="script/Calendar.min.js"></script>
+    <header class='header'>
+            <img src="./imgs/log_50x50.png" />
+            <h3>问卷管理</h3>
+            <a href="index.html" class='go-home'><span title="主页">我的问卷</span></a>
+            <a href="https://github.com/pkjy/ife-task/tree/gh-pages/2016_spring/part4/task50/task50_plainJS" class="go-github" ><span title="跳转至Github">源码</span></a>
+    </header>
+    <section>
+        <div class="edit">
+            <div class="edit-header" >
+                <input type="text" value="标题" id="page_subject"/>
+            </div>
+            <div class="edit-qbox" id="edit-qbox">
+            </div>
+            <div class="edit-body">
+                <ul class='hide'>
+                    <li onClick="myQuestionaire.edit.newRadio(event)"><img src="imgs/radio-16.png" alt="q-icon" /><span>单选</span></li>
+                    <li onClick="myQuestionaire.edit.newCheckbox(event)"><img src="imgs/check-16.png" alt="q-icon" /><span>多选</span></li>
+                    <li onClick="myQuestionaire.edit.newTextarea(event)"><img src="imgs/text-16.png" alt="q-icon" /><span>文本题</span></li>
+                </ul>
+                <span onClick='myQuestionaire.edit.toggleShowBtn(event)'>+ 添加问题</span>
+            </div>
+            <div class="edit-footer">
+                <div>
+                    <span>问卷截至日期</span>
+                    <input type="text" class="date" data-calendar/>
+                </div>
+                <div>
+                    <input type="button" value="保存问卷" onclick="myQuestionaire.edit.save()" />
+                    <input type="button" value="发布问卷" onClick="myQuestionaire.edit.confirmPost()" />
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="maskControl" class="hide">
+        <div class="mask"></div>
+        <div class="alert">
+            <div class="alert-top">
+                <span>提示</span>
+            </div>
+            <div class="alert-bottom">
+                <p>是否发布问卷？</p>
+                <p>问卷截止日期到<span id="limitedDate">未选择时间</span></p>
+                <div>
+                    <input type="button" value="确定" onClick="myQuestionaire.edit.post(event)" />
+                    <input type="button" value="取消" onClick="myQuestionaire.edit.confirmPost(event)" />
+                </div>
+            </div>
+        </div>
+    </section>
+    <script type="text/javascript" src='script/Questionaire.min.js'></script>
+    
+    <script>
+    var options = {
+        'calendarClass': 'calendar',
+        'inputClass': 'input',
+        'cellClass': 'cell',
+        'uesdClass': 'used',
+    }
+    new Calendar(options);
+    </script>
+</body>
+
+</html>

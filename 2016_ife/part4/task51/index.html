@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>task51 多功能相册</title>
+	<link rel="stylesheet" type="text/css" href="css/VarietyAlbum.css">
+</head>
+<body>
+	<div class="mask"></div>
+	<div class='tool-control'>
+		<select name="selectLayout" id="selectLayout">
+			<option value="1">拼图布局</option>
+			<option value="2">瀑布布局</option>
+			<option value="3">木桶布局</option>
+		</select>
+		<div id='wrap'>
+			<select id="puzzleLayout">
+				<option value="1">一张照片</option>
+				<option value="2">两张照片</option>
+				<option value="3">三张照片</option>
+				<option value="4">四张照片</option>
+				<option value="5">五张照片</option>
+				<option value="6">六张照片</option>
+			</select>
+			<input type='button' value='添加' id='add'/>
+		</div>
+	</div>
+	<div id="container"></div>
+	<script src='script/VarietyAlbum.js'></script>
+</body>
+</html>

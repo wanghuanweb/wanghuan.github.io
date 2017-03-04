@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>task07 实现常见的技术产品官网的页面架构及样式布局</title>
+    <link rel="stylesheet" type="text/css" href="common/normalize.css">
+    <link rel="stylesheet" type="text/css" href="task07.css">
+</head>
+
+<body>
+    <div class="header" id="header">
+        <span><img src="img/task07-header02.png" alt="logo" /><strong>新世界@PKJY</strong></span>
+        <ul class="menu">
+            <li><a href="#">首页</a></li>
+            <li><a href="#">最新活动</a></li>
+            <li><a href="#">项目介绍</a></li>
+            <li><a href="#">爱心社区</a></li>
+            <li><a href="#">关于我们</a></li>
+            <li>
+                <a href="#"><img src="img/task07-header01.png" alt="login" />登录</a>
+            </li>
+        </ul>
+        <div class="mini-menu" id="mini-menu">
+            <img src="img/menu.png" alt="menu" />
+            <ul>
+                <li><a href="#">首页</a></li>
+                <li><a href="#">最新活动</a></li>
+                <li><a href="#">项目介绍</a></li>
+                <li><a href="#">爱心社区</a></li>
+                <li><a href="#">关于我们</a></li>
+                <li class="login">
+                    <a href="#"><img src="img/task07-header01.png" alt="login" />登录</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="part01">
+        <div class="part01-content">
+            <h2>Time of new life</h2>
+            <p>新时代，年轻的人们让我们一起</p>
+            <p>体验新生活，享受新生活</p>
+            <input type="button" value="开始体验" />
+        </div>
+    </div>
+    <div class="part02">
+        <ul>
+            <li><img src="img/task07-background02-01.png" alt="icon">
+                <p>打造全新世界观，让你更爱你的生活</p>
+            </li>
+            <li><img src="img/task07-background02-02.png" alt="icon">
+                <p>丰富多彩的公益活动，发挥新世界的主人公意识</p>
+            </li>
+            <li><img src="img/task07-background02-03.png" alt="icon">
+                <p>时尚的新理念，超前体验未知的生活</p>
+            </li>
+            <li><img src="img/task07-background02-04.png" alt="icon">
+                <p>完善的培养机制，培养你全新的世界观</p>
+            </li>
+        </ul>
+    </div>
+    <div class="part03">
+        <img src="img/task07-background03-01.png" alt="icon">
+        <p>关于新世界，你不知道的还有什么？</p>
+    </div>
+    <div class="part04">
+        <h4>查找新世界城市活动信息</h4>
+        <p>每个城市的有不同的活动信息，请自主查询您所需要了解的城市</p>
+        <select name="国家" id="country">
+            <option>中国</option>
+            <option>美国</option>
+        </select>
+        <select name="省份" id="province" onchange="choosePro()">
+            <option>湖南省</option>
+            <option>湖北省</option>
+            <option>香港特别行政区</option>
+        </select>
+        <select name="市" id="city">
+            <option>长沙市</option>
+            <option>株洲市</option>
+            <option>湘潭市</option>
+            <option>衡阳市</option>
+            <option>邵阳市</option>
+            <option>岳阳市</option>
+            <option>张家界市</option>
+            <option>益阳市</option>
+            <option>常德市</option>
+            <option>娄底市</option>
+            <option>郴州市</option>
+            <option>永州市</option>
+            <option>怀化市</option>
+            <option>湘西土家族苗族自治州</option>
+        </select>
+        <a href="#">搜索</a>
+    </div>
+    <div class="part05">
+        <ul>
+            <li><img src="img/task07-background05-01.png" alt="display" />
+                <h2>北京活动</h2>
+                <p>新社区大联盟</p>
+            </li>
+            <li><img src="img/task07-background05-02.png" alt="display" />
+                <h2>上海活动</h2>
+                <p>夜上海新景观探索</p>
+            </li>
+            <li><img src="img/task07-background05-03.png" alt="display" />
+                <h2> 深圳活动</h2>
+                <p>全新海岸线观点站</p>
+            </li>
+            <li><img src="img/task07-background05-04.png" alt="display" />
+                <h2>香港活动</h2>
+                <p>奢侈消费大派送</p>
+            </li>
+        </ul>
+    </div>
+    <div class="part06">
+        <div class="part06-right">
+            <p class="part06-right-content"><span>新世界</span><span class="h2">TIME</span><span>@新世界－北京<br>2016.04.01</span></p>
+        </div>
+        <div class="part06-left">
+            <h3>新世界／<span style="color:#e74f4d;">01</span></h3>
+            <span>新世界是个新世界新世界是个新世界新世界是个新世界 新世界是个新世界新世界是个新世界新世界是个新世界 新世界是个新世界新世界是个新世界新世界是个新世界</span>
+            <a href="#">更多详情</a>
+            <ul>
+                <li></li>
+                <li></li>
+                <li></li>
+            </ul>
+        </div>
+    </div>
+    <div class="part07">
+        <div class="part07-left">
+            <p>新时代
+                <br>关于爱生活的我们</p>
+            <a href="#">查看更多</a>
+        </div>
+        <div class="part07-middle">
+            <p>新时代
+                <br>关于爱生活的我们</p>
+            <a href="#">查看更多</a>
+        </div>
+        <div class="part07-right"></div>
+    </div>
+    <div class="part08">
+        <p><span>成为我们的志愿者</span>新世界的大家庭需要每一个爱生活的人的加入，如果你够年轻，有梦想，有激情 那就不要犹豫，快来加入我们，成为改变所有人生活的人 </p>
+        <div class="part08-bottom">
+            <div class="part08-bottom-left">
+                <div>
+                    <h5>新世界志愿者协议</h5>
+                    <span>加入新世界志愿者的人员必须遵守中华人民共共和国的 相关法律法规，并且本着平等资源的原则 ......</span>
+                    <a href="#"><img src="img/task07-background08-01.png" alt="pulldown" />&nbsp;more</a>
+                </div>
+                <div>
+                    <h5>新世界志愿者权利</h5>
+                    <span>新世界志愿者享受新世界内部所有资源共享的权利，并且享受所在四新世界活动的优先参与资格 ......</span>
+                    <a href="#"><img src="img/task07-background08-01.png" alt="pulldown" />&nbsp;more</a>
+                </div>
+                <div>
+                    <h5>更多条款</h5>
+                    <a href="#"><img src="img/task07-background08-01.png" alt="pulldown" />&nbsp;more</a>
+                </div>
+            </div>
+            <div class="part08-bottom-right">
+                <form method="post" action="#">
+                    <ul>
+                        <li>
+                            <label for="name">姓名:</label>
+                            <input type="text" name="name" id="name" />
+                        </li>
+                        <li>
+                            <label for="age">年龄:</label>
+                            <input type="text" name="age" id="age">
+                        </li>
+                        <li>
+                            <label for="contact">联系方式:</label>
+                            <input type="text" name="contact" id="contact">
+                        </li>
+                        <li>
+                            <label for="address">联系地址:</label>
+                            <input type="text" name="address" id="address">
+                        </li>
+                    </ul>
+                    <textarea name="text-content" cols="69" rows="8">请简单描述您梦想的生活</textarea>
+                    <input type="button" value="提交申请" name="submit" class="part08-sbumit" />
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        <h3>联系我们</h3>
+        <p>为了更好的获取我们最新的产品资讯，您可以留下您的电子邮箱快速订阅我们的产品资讯 也可以通过以下任何方式关注我们动态</p>
+        <input type="text" placeholder="someone@email.com" />
+        <a href="#" class="footer-email">提交</a>
+        <ul>
+            <li>
+                <a href="#"><img src="img/task07-footer01.png" alt="social-icon"></a>
+            </li>
+            <li>
+                <a href="#"><img src="img/task07-footer02.png" alt="social-icon"></a>
+            </li>
+            <li>
+                <a href="#"><img src="img/task07-footer03.png" alt="social-icon"></a>
+            </li>
+            <li>
+                <a href="#"><img src="img/task07-footer04.png" alt="social-icon"></a>
+            </li>
+        </ul>
+        <div class="footer-bottom">
+            <span>@2016新世界 by PKJY</span>
+            <a href="#header">Back to top</a>
+        </div>
+    </div>
+    <script type="text/javascript" src="task07.js"></script>
+</body>
+
+</html>

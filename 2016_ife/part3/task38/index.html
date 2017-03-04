@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Task38 UI组件之排序表格</title>
+    <style type="text/css">
+    * {
+        margin: 0;
+        padding: 0;
+        font-family: "Microsoft Yahei";
+        font-weight: bold;
+    }
+    
+    td:hover {
+        background-color: #eee;
+    }
+    
+    th {
+        background-color: #A768C7;
+        color: #fff;
+    }
+    .introduction{
+        width:560px;
+        margin:0 auto;
+    }
+    div{
+        margin:50px;
+
+    }
+    table{
+        box-shadow: 6px 19px 19px -9px rgba(0, 0, 0, 0.5);
+    }
+    </style>
+</head>
+
+<body>
+    <div class='introduction'>
+        <h3>/**<br>**引入JS文件，设置参数，new一个实例就OK了，具体参数如下<br>
+        **该控件接收两个参数
+        <br>**第一个参数是下方的对象<br>**第二个参数是表格要插入的容器ID<br>**如果没有指定容器则默认被DIV包裹后加入body
+        <br>**/</h3>
+        <p>table_name:"default", //表格名称</p>
+        <p>table_head: ["Name", "course1", "course2", "course3"], //表格首行</p>
+        <p>isSort: [0, 1, 1, 1], //1为有排序功能，0为没有</p>
+        <p>tbody_obj: { //表格详细数据</p>
+        <p>&nbsp&nbsp&nbsp&nbsp&nbsp1:["person1", 20, 90, 40],</p>
+        <p>&nbsp&nbsp&nbsp&nbsp&nbsp2:["person2", 90, 60, 90],</p>
+        <p>&nbsp&nbsp&nbsp&nbsp&nbsp3:["person3", 60, 100, 70],</p>
+        <p>},</p>
+        <p>tdWH: [200, 50], //表格宽和高</p>
+        <p>head_color: "#eee", //首栏背景颜色</p>
+        <p>table_color: "#F8C0FF", //表格背景色</p>
+        <p>isFrozen: 1 //1为冻结，0为不冻结</p>
+    </div>
+    <div id='test1'></div>
+    <div id='test2'></div>
+    <div id='test3'></div>
+    <script type="text/javascript" src="TableTool.js"></script>
+    <script type="text/javascript">
+    var table1 = new TableTool({
+        table_name: "table1",
+        table_head: ["Name", "Chinese", "Computer", "English"],
+        isSort: [0, 1, 1, 1],
+        tbody_obj: {
+            1: ["小明", 20, 90, 40],
+            2: ["小红", 90, 60, 90],
+            3: ["小肛", 60, 100, 70],
+            4: ["小3", 30, 50, 10],
+            5: ["小鸟", 10, 20, 30]
+        },
+        tdWH: [200, 50],
+        head_color: "#eee",
+        table_color: "#F8C0FF",
+        isFrozen:1
+    },'test1')
+
+    var table2 = new TableTool({
+        table_name: "table2",
+        table_head: ["Name", "Chinese", "Computer", "English"],
+        isSort: [0, 1, 1, 1],
+        tbody_obj: {
+            1: ["小2", 20, 90, 40],
+            2: ["小红", 90, 60, 90],
+            3: ["小4", 60, 100, 70],
+            4: ["小E", 60, 20, 70],
+            5: ["小W", 60, 100, 60],
+        },
+        tdWH: [200, 50],
+        head_color: "rgb(74,158,158)",
+        table_color: "rgb(28,170,125)",
+        isFrozen:0
+    },'test2')
+    var table3 = new TableTool({
+        table_name: "table3",
+        table_head: ["Name", "qwe", "ewq", "dsa"],
+        isSort: [0, 1, 1, 1],
+        tbody_obj: {
+            1: ["小1", 20, 90, 40],
+            2: ["小2", 90, 60, 90],
+            3: ["小3", 60, 100, 70],
+            4: ["小4", 60, 20, 70],
+            5: ["小5", 60, 100, 60],
+        },
+        tdWH: [200, 50],
+        head_color: "rgb(114,58,158)",
+        table_color: "rgb(28,70,125)",
+        isFrozen: 1
+    })
+    </script>
+</body>
+
+</html>

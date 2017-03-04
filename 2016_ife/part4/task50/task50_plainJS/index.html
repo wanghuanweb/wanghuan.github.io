@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Task50 微型调查问卷平台 plainJS</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+</head>
+<body>
+	<header class='header'>
+            <img src="./imgs/log_50x50.png" />
+            <h3>问卷管理</h3>
+            <a href="index.html" class='go-home'><span title="主页">我的问卷</span></a>
+            <a href="https://github.com/pkjy/ife-task/tree/gh-pages/2016_spring/part4/task50/task50_plainJS" class="go-github" ><span title="跳转至Github">源码</span></a>
+	</header>
+    <section>
+    	<table class="list-table">
+    	    <thead>
+    	    <tr>
+    	        <th></th>
+    	        <th>标题</th>
+    	        <th>时间</th>
+    	        <th>状态</th>
+    	        <th>操作</th>
+    	    </tr>
+    	    </thead>
+    	    <tbody id="checkBox">
+    	    
+    	    </tbody>
+    	    <tfoot>
+    	        <tr>
+    	            <td colspan="2"><input type="checkbox" id="checkAll" onChange="myQuestionaire.index.checkAll(event)"/><span class="check-all">全选</span></td>
+    	            <td><input type="button" value="删除" id="delete_some" onClick="myQuestionaire.index.toggleMask(event)"/></td>
+    	            <td colspan="2" class="addQn"><a href="add.html"><input type="button" id="addQn" value="+ 新增问卷"/></a></td>
+    	        </tr>
+    	    </tfoot>
+    	</table>
+    </section>
+    <section id="maskControl" class="hide">
+        <div class="mask"></div>
+        <div class="alert">
+            <div class="alert-top">
+                <span>提示</span>
+            </div>
+            <div class="alert-bottom">
+                <p>确认要删除选中的问卷？</p>
+                <div>
+                    <input type="button" value="确定" onclick="myQuestionaire.index.deleteQuestionaire()" />
+                    <input type="button" value="取消" onClick="myQuestionaire.index.toggleMask(event)"/>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script type="text/javascript" src='script/Questionaire.min.js'></script>
+</body>
+</html>

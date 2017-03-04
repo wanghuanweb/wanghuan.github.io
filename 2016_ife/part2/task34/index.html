@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>task34 听指令的小方块（二）</title>
+    <style type="text/css">
+    * {
+        padding: 0;
+        margin: 0;
+        font-family: Microsoft Yahei;
+    }
+    
+    .clear_border {
+        border: none;
+    }
+    
+    table {
+        border-spacing: 0;
+        border-collapse: collapse;
+    }
+    
+    td {
+        text-align: center;
+        font-weight: bold;
+        border: 1px solid #eee;
+        width: 50px;
+        height: 50px;
+        box-sizing: border-box;
+    }
+    
+    ul {
+        position: absolute;
+        right: 50px;
+        top: 50px;
+    }
+    
+    .robot-box {
+        transition: all .8s;
+        height: 50px;
+        width: 50px;
+        position: absolute;
+        top: 50px;
+        left: 50px;
+        transform: rotate(0deg);
+        background: url(box.jpg) no-repeat 40% 40%;
+    }
+    </style>
+</head>
+
+<body>
+    <table id="table"></table>
+    <div class="robot-box" id="robot_box"></div>
+    <input type="text" id="comand_input">
+    <input type="button" id="comand_button" value="GO">
+    <input type="button" id="turn_left" value="TUN LEF">
+    <input type="button" id="turn_right" value="TUN RIG">
+    <input type="button" id="turn_back" value="TUN BAC">
+    <ul>
+        <li>GO：确认按钮，不填任何指令则默认向头顶朝的方向前进一格</li>
+        <li>TUN LEF：向左转（逆时针旋转90度）</li>
+        <li>TUN RIG：向右转（顺时针旋转90度）</li>
+        <li>TUN BAC：向右转（旋转180度）</li>
+        <li>TRA LEF：向屏幕的左侧移动一格，方向不变</li>
+        <li>TRA TOP：向屏幕的上面移动一格，方向不变</li>
+        <li>TRA RIG：向屏幕的右侧移动一格，方向不变</li>
+        <li>TRA BOT：向屏幕的下面移动一格，方向不变</li>
+        <li>MOV LEF：方向转向屏幕左侧，并向屏幕的左侧移动一格</li>
+        <li>MOV TOP：方向转向屏幕上面，向屏幕的上面移动一格</li>
+        <li>MOV RIG：方向转向屏幕右侧，向屏幕的右侧移动一格</li>
+        <li>MOV BOT：方向转向屏幕下面，向屏幕的下面移动一格</li>
+    </ul>
+    <script type="text/javascript" src="task34.js"></script>
+</body>
+
+</html>

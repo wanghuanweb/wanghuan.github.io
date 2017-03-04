@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>task35 听指令的小方块（三）</title>
+    <style type="text/css">
+    * {
+        padding: 0;
+        margin: 0;
+        font-family: Microsoft Yahei;
+    }
+    
+    .clear_border {
+        border: none;
+    }
+    
+    table {
+        border-spacing: 0;
+        border-collapse: collapse;
+    }
+    
+    li {
+        list-style: none;
+    }
+    
+    td {
+        text-align: center;
+        font-weight: bold;
+        border: 1px solid #eee;
+        width: 50px;
+        height: 50px;
+        box-sizing: border-box;
+    }
+    
+    .wrapper {
+        display: flex;
+        flex-wrap: wrap;
+    }
+    
+    .table {
+        flex-shrink: 0;
+    }
+    
+    .robot-box {
+        transition: top 1s,left 1s,transform 0.9s;
+        height: 50px;
+        width: 50px;
+        position: absolute;
+        top: 50px;
+        left: 50px;
+        transform: rotate(0deg);
+        background: url(box.jpg) no-repeat 40% 40%;
+    }
+    
+    .command-part {
+        margin: 10px 10px;
+    }
+    
+    .command-part-display {
+        display: flex;
+        overflow: hidden;
+    }
+    
+    .command-part-button {
+        display: flex;
+        justify-content: space-around;
+    }
+    
+    .command-part-display-count {
+        background-color: #2C3E50;
+        color: #fff;
+        height: 500px;
+    }
+    
+    .command-part-display-count li {
+        display: block;
+        width: 40px;
+        text-align: center;
+    }
+    
+    #command_input {
+        border: none;
+        font-family: Microsoft Yahei;
+        background-color: #34495E;
+        color: rgb(0, 255, 0);
+        resize: none;
+        font-size: 16px;
+        min-height: 500px;
+        width: 300px;
+        max-height: 500px;
+    }
+    
+    input[type="button"] {
+        width: 50px;
+        height: 25px;
+        background-color:#6289AF;
+        border:none;
+        color:#fff;
+        cursor:pointer;
+    }
+    
+    .command-rules {
+        align-self: center;
+    }
+    </style>
+</head>
+
+<body>
+    <section class="wrapper">
+        <section class="table">
+            <table id="table"></table>
+            <div class="robot-box" id="robot_box"></div>
+        </section>
+        <section class="command-part">
+            <section class="command-part-button">
+                <input type="button" id="command_button" value="执行">
+                <input type="button" id="clean_buttun" value="清空">
+                <input type="button" id="refresh_button" value="刷新">
+            </section>
+            <section class="command-part-display">
+                <ul class="command-part-display-count" id="command_display_count">
+                    <li>1</li>
+                </ul>
+                <textarea id="command_input" onkeyup="updateLineNum()"></textarea>
+            </section>
+        </section>
+        <ul class="command-rules">
+            <li>支持大小写混写，但书写必需规范化。<br>PS：n如果为空，则默认为1。</li><br>
+            <li><strong>新增</strong>上下左右键输出TRA的命令</li><br>
+            <li>GO n：向当前方向前进n格</li>
+            <li>TRA LEF n：向屏幕的左侧平移 n 格</li>
+            <li>TRA TOP n：向屏幕的上面平移 n 格</li>
+            <li>TRA RIG n：向屏幕的右侧平移 n 格</li>
+            <li>TRA BOT n：向屏幕的下面平移 n 格</li>
+            <li>MOV LEF n：方向转向屏幕左侧，并向屏幕的左侧移动 n 格</li>
+            <li>MOV TOP n：方向转向屏幕上面，向屏幕的上面移动 n 格</li>
+            <li>MOV RIG n：方向转向屏幕右侧，向屏幕的右侧移动 n 格</li>
+            <li>MOV BOT n：方向转向屏幕下面，向屏幕的下面移动 n 格</li>
+        </ul>
+    </section>
+    <script type="text/javascript" src="task35.js"></script>
+</body>
+
+</html>

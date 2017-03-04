@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>task32 表单（四）实现表单自动生成工厂</title>
+    <style type="text/css">
+    p {
+        font-family: "Microsoft Yahei";
+        font-size: .8rem;
+        color: #888;
+        display: inline-block;
+    }
+    
+    p[class="rules"] {
+        color: #888;
+    }
+    
+    input[class="rules"] {
+        border: 1px solid #888;
+    }
+    
+    p[class="success"] {
+        color: #0f0;
+    }
+    
+    input[class="success"] {
+        border: 2px solid #0f0;
+    }
+    
+    p[class="fail"] {
+        color: #f00;
+    }
+    
+    input[class="fail"] {
+        border: 2px solid #f00;
+    }
+    
+    div {
+        margin: auto;
+    }
+    
+    .factory {
+        border: 5px solid gray;
+        margin: 40px 20px;
+    }
+    </style>
+</head>
+
+<body>
+    <input type="checkbox" id="checkbox_name" value="checkbox_name" checked="checked" disabled="true">
+    <label id="checkbox_name">账号</label>
+    <input type="checkbox" id="checkbox_password" value="checkbox_password" checked="checked" disabled="true">
+    <label id="checkbox_password">密码</label>
+    <input type="checkbox" id="checkbox_password_confirm" value="checkbox_password_confirm" checked="checked" disabled="true">
+    <label id="checkbox_password_confirm">确认密码</label>
+    <input type="checkbox" id="checkbox_email" value="checkbox_email">
+    <label id="checkbox_email">邮箱</label>
+    <input type="checkbox" id="checkbox_phone" value="checkbox_phone">
+    <label id="checkbox_phone">手机号码</label>
+    <input type="button" id="create" value="创建表单">
+    <input type="button" id="reset" value="重置">
+    <form id="form"></form>
+    <script type="text/javascript" src="task32.js"></script>
+</body>
+
+</html>

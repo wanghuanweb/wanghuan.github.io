@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Task39 UI组件之冻结行列表格</title>
+    <style type="text/css">
+    *{
+        margin:0;
+        padding:0;
+        font-family: "Microsoft Yahei";
+        font-weight:bold;
+        text-align: center;
+    }
+    td,
+    th {
+        border: 1px solid #505050;
+        padding: 20px;
+        width: 40px;
+        background-color:#F8C0FF;
+    }
+    
+    td:hover{
+        background-color:#eee;
+    }
+    th {
+        background-color: #A768C7;
+        color: #fff;
+    }
+    table {
+        border-collapse: collapse;
+    }
+    .wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    </style>
+</head>
+
+<body>
+    <div class="wrapper">
+    <p>占位</p>
+    <br/>
+    
+        <table id="fixed_table">
+            <tr id="table_head">
+                <th>姓名</th>
+                <th>语文</th>
+                <th>数学</th>
+                <th>英语</th>
+                <th>总分</th>
+            </tr>
+            <tr>
+                <td>小亮</td>
+                <td>80</td>
+                <td>10</td>
+                <td>50</td>
+                <td>60</td>
+            </tr>
+            <tr>
+                <td>小狗</td>
+                <td>80</td>
+                <td>10</td>
+                <td>50</td>
+                <td>60</td>
+            </tr>
+            <tr>
+                <td>小猪</td>
+                <td>80</td>
+                <td>10</td>
+                <td>50</td>
+                <td>60</td>
+            </tr>
+            <tr>
+                <td>小六</td>
+                <td>80</td>
+                <td>10</td>
+                <td>50</td>
+                <td>60</td>
+            </tr>
+            <tr>
+                <td>小七</td>
+                <td>80</td>
+                <td>10</td>
+                <td>50</td>
+                <td>60</td>
+            </tr>
+            <tr>
+                <td>小八</td>
+                <td>80</td>
+                <td>10</td>
+                <td>50</td>
+                <td>60</td>
+            </tr>
+            <tr>
+                <td>小九</td>
+                <td>80</td>
+                <td>10</td>
+                <td>50</td>
+                <td>60</td>
+            </tr>
+        </table>
+    
+    <p>占位</p><br/><p>占位</p><br/><p>占位</p><br/><p>占位</p><br/><p>占位</p><br/><p>占位</p><br/><p>占位</p><br/><p>占位</p><br/><p>占位</p><br/><p>占位</p><br/><p>占位</p><br/><p>占位</p><br/><p>占位</p><br/><p>占位</p><br/><p>占位</p><br/><p>占位</p><br/><p>占位</p><br/><p>占位</p><br/><p>占位</p><br/><p>占位</p><br/><p>占位</p><br/><p>占位</p><br/><p>占位</p><br/><p>占位</p><br/><p>占位</p><br/><p>占位</p><br/><p>占位</p><br/><p>占位</p><br/><p>占位</p><br/><p>占位</p><br/><p>占位</p><br/><p>占位</p><br/><p>占位</p><br/><p>占位</p><br/><p>占位</p><br/><p>占位</p><br/><p>占位</p><br/><p>占位</p><br/><p>占位</p><br/><p>占位</p><br/><p>占位</p><br/><p>占位</p><br/><p>占位</p><br/><p>占位</p><br/><p>占位</p><br/><p>占位</p><br/><p>占位</p><br/><p>占位</p><br/><p>占位</p><br/><p>占位</p><br/><p>占位</p><br/><p>占位</p><br/><p>占位</p><br/><p>占位</p><br/><p>占位</p><br/><p>占位</p><br/><p>占位</p><br/><p>占位</p><br/><p>占位</p><br/><p>占位</p><br/><p>占位</p><br/><p>占位</p><br/><p>占位</p><br/><p>占位</p><br/><p>占位</p><br/><p>占位</p><br/>
+    </div>
+    <script type="text/javascript">
+    var table_head = document.getElementById('table_head');
+    var fixed_table = document.getElementById("fixed_table");
+    /**
+     * [scrollTableHead]滚动首行函数
+     * @param  {string} table 对应的表格
+     * @param  {string} head  对应的首行
+     * @return {function}       对鼠标滚动进行监控
+     */
+    function scrollTableHead (table,head){
+        return window.onscroll = function() {
+        /**
+         * [兼容浏览器]
+         */
+            var scrolltop = document.documentElement.scrollTop || document.body.scrollTop;
+            
+            if (scrolltop > table.clientHeight) {
+                head.style.display = "none";
+            } else if (scrolltop > table.offsetTop) {
+                head.style.display = "table-row";
+                head.style.position = "fixed";
+                head.style.top = 0;
+            } else {
+                head.style.position = "inherit";
+                head.style.display = "table-row";
+            }
+        }
+
+    }
+    scrollTableHead(fixed_table,table_head);
+    </script>
+</body>
+
+</html>
+

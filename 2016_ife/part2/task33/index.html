@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>task33 听指令的小方块（一）</title>
+    <style type="text/css">
+    * {
+        padding: 0;
+        margin: 0;
+    }
+    
+    .clear_border {
+        border: none;
+    }
+    
+    table {
+        border-spacing: 0;
+        border-collapse: collapse;
+    }
+    
+    td {
+        font-family: Microsoft Yahei;
+        text-align: center;
+        font-weight: bold;
+        border: 1px solid #eee;
+        width: 50px;
+        height: 50px;
+        box-sizing: border-box;
+    }
+    
+    .blank {
+        border: none;
+    }
+    
+    .robot-box {
+        transition: all .8s;
+        height: 50px;
+        width: 50px;
+        position: absolute;
+        top: 50px;
+        left: 50px;
+        transform: rotate(0deg);
+        background: url(box.jpg) no-repeat 40% 40%;
+    }
+    </style>
+</head>
+
+<body>
+    <table id="table"></table>
+    <div class="robot-box" id="robot_box"></div>
+    <input type="text" id="comand_input">
+    <input type="button" id="comand_button" value="GO">
+    <input type="button" id="turn_left" value="TUN LEF">
+    <input type="button" id="turn_right" value="TUN RIG">
+    <input type="button" id="turn_back" value="TUN BAC">
+    <script type="text/javascript" src="task33.js"></script>
+</body>
+
+</html>

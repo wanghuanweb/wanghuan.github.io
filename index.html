@@ -7,63 +7,18 @@
 </head>
 <body>
 
-    <form name="form1" action="" method="" target="">
-        <p>用户姓名：<input type="text"></p>
-        <p>用户密码：<input type="password"></p>
-        <p>性别：
-            <input type="radio" name="sex" value="男">男
-            <input type="radio" name="sex" value="女">女
-        </p>
-        <p>兴趣爱好：
-            <input type="checkbox" name="habits" value="吃">吃
-            <input type="checkbox" name="habits" value="喝">喝
-            <input type="checkbox" name="habits" value="玩">玩
-            <input type="checkbox" name="habits" value="乐">乐
-        </p>
-        <p>按钮：
-            <input type="submit" name="btnsbt" value="提交">
-            <input type="reset" name="btnrst"  value="重置">
-            <input type="button" name="btnbtn" value="普通按钮">
-        </p>
-        <p>请上传文件：
-            <input type="file" name="txtFile">
-        </p>
-        <p>自我介绍：
-            <textarea name="txt" rows="8" cols="80"></textarea>
-        </p>
-        <p>意向选择城市：
-            <select name="cities">
-                <option value="北京">北京</option>
-                <option value="上海">上海</option>
-                <option value="广州">广州</option>
-            </select>
-        </p>
-        <!--  label-->
-        <p>用户性别：
-            <input type="radio" name="sex" value="男" id="man"> <label for="man">男</label>
-            <input type="radio" name="sex" value="女" id="woman"> <label for="woman">女</label>
-        </p>
 
-
-    </form>
 
     <script type="text/javascript">
-    Array.prototype.distinct = function() {
-    var ret = [];
-    for (var i = 0; i < this.length; i++)
-    {
-        for (var j = i+1; j < this.length;) {
-            if (this[i] === this[j]) {
-                ret.push(this.splice(j, 1)[0]);
-            } else {
-                j++;
-            }
-        }
-     }
-     return ret;
-}
-//for test
-console.log(['a','b','c','d','b','a','e','a','b'].distinct());
+    var name = 'zach'
+    
+    while (true) {
+        var name = 'obama'
+        console.log(name)  //obama
+        break
+    }
+
+    console.log(name)  //obama
 
     </script>
 </body>

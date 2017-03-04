@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<title>Task40 UI组件之日历组件（一）</title>
+	<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+	<input type="text" class="date" data-calendar/>
+	<p>下拉，日期界面均可选择日期</p>
+	<script src="js/jquery-1.11.3.min.js"></script>
+	<script src="js/calendar.js"></script>
+	<script>
+		var options = {
+		    'calendarClass': 'calendar',
+		    'inputClass': 'input',
+		    'cellClass': 'cell',
+		    'uesdClass': 'used',
+		}
+		new Calendar(options);
+	</script>
+</body>
+</html>

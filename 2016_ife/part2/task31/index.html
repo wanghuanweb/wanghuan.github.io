@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>task31 表单（三）联动</title>
+    <style type="text/css">
+    #social_group {
+        display: none;
+    }
+    
+    #schoolList {
+        display: inline-block;
+    }
+    
+    #beijing {
+        display: none;
+    }
+    </style>
+</head>
+
+<body>
+    <div>
+        <input type="radio" checked="checked" id="internal" name="student">
+        <label for="internal">在校生</label>
+        <input type="radio" id="social" name="student">
+        <label for="social">在校生</label>
+    </div>
+    <div>
+        <div id="internal_group">
+            <label for="city">学校</label>
+            <select id="city">
+                <option value="hunan">湖南</option>
+                <option value="beijing">北京</option>
+            </select>
+            <div id="schoolList">
+                <select id="hunan">
+                    <option value="湖南人文科技学院">湖南人文科技学院</option>
+                    <option value="怀化学院">怀化学院</option>
+                </select>
+                <select id="beijing">
+                    <option value="清华大学">清华大学</option>
+                    <option value="北京大学">北京大学</option>
+                </select>
+            </div>
+        </div>
+        <div id="social_group">
+            <label for="company">就业单位</label>
+            <select id="company">
+                <option value="百度">百度</option>
+                <option value="阿里">阿里</option>
+            </select>
+        </div>
+    </div>
+    <script type="text/javascript">
+    var social_check = document.getElementById('social');
+    var internal_check = document.getElementById('internal');
+    var city_select = document.getElementById('city')
+
+    //radio功能
+    var studentCheck = function() {
+        var newName = this.getAttribute("id") + "_group";
+        if (newName == "internal_group") {
+            internal_group.style.display = "block";
+            social_group.style.display = "none";
+        } else {
+            internal_group.style.display = "none";
+            social_group.style.display = "block";
+        }
+    }
+
+    //select功能
+    var schoolShow = function() {
+        var index = this.selectedIndex; // 选中Select的索引
+        var city_name = this.options[index].value;
+        for (var i = 0, j = document.getElementById('schoolList').getElementsByTagName('select'); i < j.length; i++) { //将所有学校select隐藏
+            j[i].style.display = "none";
+        }
+        document.getElementById(city_name).style.display = "block"; //把选中的select的选项显示出来
+    }
+
+    //绑定事件
+    city_select.addEventListener("change", schoolShow, false)
+    social_check.addEventListener("change", studentCheck, false);
+    internal_check.addEventListener("change", studentCheck, false);
+    </script>
+</body>
+
+</html>

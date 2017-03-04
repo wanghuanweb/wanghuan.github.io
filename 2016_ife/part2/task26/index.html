@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Task26 行星与飞船（一）</title>
+</head>
+<body>
+    <canvas id="myCanvas" width="600px" height="600px" style="border:1px solid red"></canvas>
+    <input type="button" value="创建飞船" name="create"><input type="button" value="新的飞船开始飞行" id="newShipFly" name="fly"><input type="button" value="停止飞行" name="stop" id="stopShip1"><input type="button" name="destroy" value="摧毁飞船">
+
+    <script type="text/javascript">
+        var canvas = document.getElementById("myCanvas");
+        var canvas_width = parseInt(canvas.getAttribute("width"));//画布的宽,无PX单位
+        var canvas_height = parseInt(canvas.getAttribute("height"));//画布的高,无PX单位
+        var canvas_circle = {//画布的圆心坐标
+            x: canvas_width/2,
+            y: canvas_height/2,
+            radius:50,
+            angle:0,
+        }
+
+        var spaceship_size = 30;//飞船图片是30*30尺寸
+        var spaceship_temp_x =0;
+        var spaceship_temp_y =0;
+
+        //初始化宇宙地图
+        var initMap = (function(){
+            if(canvas.getContext){
+
+                var ctx = canvas.getContext("2d");
+                ctx.beginPath();
+                ctx.fillStyle = "#eee";
+                ctx.fillRect(0,0,canvas_width,canvas_height);
+                ctx.fill();
+                ctx.closePath();
+
+                ctx.strokeStyle = "#bbb";
+
+                var Circle = function(x,y,r){
+                    this.x = x;
+                    this.y = y;
+                    this.r = r;
+                }
+
+                //画地球
+                ctx.fillStyle = "#0fe";
+                ctx.beginPath();
+                var earth = new Circle(300,300,50);
+                ctx.arc(earth.x,earth.y,earth.r,0,Math.PI*2,true);
+                ctx.fill();
+                ctx.closePath();
+                
+                //画第一个圈
+                ctx.beginPath();
+                var circle1 = new Circle(300,300,100);
+                ctx.arc(circle1.x,circle1.y,circle1.r,0,Math.PI*2,true);
+                ctx.stroke();
+                ctx.closePath();
+                
+                //画第二个圈
+                ctx.beginPath();
+                var circle2 = new Circle(300,300,150)
+                ctx.arc(circle2.x,circle2.y,circle2.r,0,Math.PI*2,true);
+                ctx.stroke();
+                ctx.closePath();
+
+                //画第三个圈
+                ctx.beginPath();
+                var circle3 = new Circle(300,300,200)
+                ctx.arc(circle3.x,circle3.y,circle3.r,0,Math.PI*2,true);
+                ctx.stroke();
+                ctx.closePath();
+
+                //画第四个圈
+                ctx.beginPath();
+                var circle4 = new Circle(300,300,250)
+                ctx.arc(circle4.x,circle4.y,circle4.r,0,Math.PI*2,true);
+                ctx.stroke();
+                ctx.closePath();
+            }
+        })()
+
+        /**
+         * [DynamicFactory]动力工厂
+         * @param  {[type]} drawSpaceship() 绘制飞船动画
+         * @return {Object} return startLoop 返回开始循环的对象
+         * @return {Object} return stopLoop 返回停止循环的对象
+         */
+        var DynamicFactory = function (id){
+            this.ship = id;
+            this.speed = 1.5 ;
+            this.consume = 0.5;
+            this.timer = "null";
+
+        };
+
+        DynamicFactory.prototype.fly = function(ship){
+            var startLoop = function(){
+                // if(ship.currentState=="fly")return;
+                
+                start_timeout = setTimeout(startLoop,1600);
+                console.log(ship);
+                drawSpaceship();
+            }
+            return startLoop();
+        };
+        DynamicFactory.prototype.stop = function(ship){
+            var stopLoop = function(){
+            ship.currentState = "stop";
+            clearTimeout(start_timeout);
+            }
+            return stopLoop();
+        };
+        
+        DynamicFactory();
+
+        /**
+         * [DestroyFactory]摧毁工厂
+         * @param {string} ship [对应的飞船]
+         */
+        var DestroyFactory = function(id){
+            this.ship = id;
+        }
+
+        DestroyFactory.prototype.destroy = function(){
+            this.currentState = "null";
+            console.log("已改成NULL状态",this.ship);
+            // delete this.ship;
+        };
+
+        /**
+         * [Mediator]指挥台
+         * @param {[type]} id [description]
+         */
+        var Mediator = function(id){
+            this.ship = id;
+            var ships = {};
+
+            return {
+                registerShip:function(id,ship){
+                    ships[id] = ship;
+                    console.log(ships)
+                },
+                message:function(msg){
+                    switch(msg){
+                        case "fly":
+                        console.log(this);
+                        break;
+                    }
+                },
+            }
+        }
+
+
+        /**
+         * [SpaceshipFactory]船厂
+         * @param {string} id [当前飞船的代号]
+         */
+        var SpaceshipFactory = (function(){
+            var ships = [];
+            var count = 1;
+
+            var Ship = function(id){
+                this.id = id
+                this.power = 100;//飞船初始电量
+                this.currentState = "null";//飞船当前状态
+                this.orbit = 50 + 50*id;//飞船的轨道半径
+                this.deg = 0;//飞船初始角度
+                this.dynamicFactory = new DynamicFactory(this.id);
+                // this.supplyfactory = new SupplyFactory(this);
+                this.destroyFactory = new DestroyFactory(this.id);
+                this.mediator = new Mediator(this.id);
+            }
+            return {
+                create:function(){
+                    if(count>4) return;//只能注册4艘飞船
+                    var ship = new Ship(count);
+                    ships.push(ship);
+                    console.log("create success",ship);
+
+                    return count++;
+                },
+                getShips:function(){
+                    return ships;
+                },
+
+            }
+        })()
+       
+        
+        var drawShip = function(that){
+            if(that.currentState == "null") return
+
+                //背景图
+                var ctx = canvas.getContext("2d");
+                ctx.beginPath();
+                ctx.fillStyle = "#eee";
+                ctx.fillRect(0,0,canvas_width,canvas_height);
+                ctx.fill();
+                ctx.closePath();
+
+                ctx.strokeStyle = "#bbb";
+
+                var Circle = function(x,y,r){
+                    this.x = x;
+                    this.y = y;
+                    this.r = r;
+                }
+
+                //画地球
+                ctx.fillStyle = "#0fe";
+                ctx.beginPath();
+                var earth = new Circle(300,300,50);
+                ctx.arc(earth.x,earth.y,earth.r,0,Math.PI*2,true);
+                ctx.fill();
+                ctx.closePath();
+                
+                //画第一个圈
+                ctx.beginPath();
+                var circle1 = new Circle(300,300,100);
+                ctx.arc(circle1.x,circle1.y,circle1.r,0,Math.PI*2,true);
+                ctx.stroke();
+                ctx.closePath();
+                
+                //画第二个圈
+                ctx.beginPath();
+                var circle2 = new Circle(300,300,150)
+                ctx.arc(circle2.x,circle2.y,circle2.r,0,Math.PI*2,true);
+                ctx.stroke();
+                ctx.closePath();
+
+                //画第三个圈
+                ctx.beginPath();
+                var circle3 = new Circle(300,300,200)
+                ctx.arc(circle3.x,circle3.y,circle3.r,0,Math.PI*2,true);
+                ctx.stroke();
+                ctx.closePath();
+
+                //画第四个圈
+                ctx.beginPath();
+                var circle4 = new Circle(300,300,250)
+                ctx.arc(circle4.x,circle4.y,circle4.r,0,Math.PI*2,true);
+                ctx.stroke();
+                ctx.closePath();
+
+            //飞船
+            var ship_img = new Image();
+            ship_img.src = "spaceship.png";
+            
+            ship_img.onload = function drawScreen(){//飞船图片加载好就开始
+
+                var ctx = canvas.getContext("2d");
+                var _ctx = canvas.getContext("2d");
+
+                ctx.save();
+
+                that.deg += that.dynamicFactory.speed;
+                
+                spaceship_temp_x = 300-spaceship_size/2+Math.sin(2*Math.PI / 360*that.deg)*that.orbit;
+                spaceship_temp_y = 300-spaceship_size/2+Math.cos(2*Math.PI / 360*that.deg)*that.orbit;
+                if(that.deg==360){that.deg=0;initMap();}
+
+                _ctx.drawImage(ship_img,spaceship_temp_x,spaceship_temp_y,spaceship_size,spaceship_size);
+                
+                ctx.restore()
+             
+                that.power -= 0.5;//起飞过程中能量值每秒减少3点
+            }
+        }
+
+        /**
+         * [画船]
+         * @param  {string} spaceship 飞船
+         * @return {Boolean}  [成功就返回true，失败返回false]
+         */
+        var drawSpaceship = function(){
+            var ships_arr = SpaceshipFactory.getShips();
+            for(var i=0;i<ships_arr.length;i++){
+                var that = SpaceshipFactory.getShips()[i];
+                drawShip(that);
+            }
+
+            if(that.power<=0){
+                that.currentState = "stop";
+            }else{
+                that.currentState = "fly"; //飞船状态改为起飞
+            }
+            // console.log(that.power,that.currentState,spaceship_temp_x,that);
+        }
+        
+       
+        /**
+         * 判断未飞行时可开始飞行行为
+         * @return {startLoop}       开始timeout，飞船变为飞行状态
+         */
+        for(var i=0,j=document.getElementsByName("fly");i<j.length;i++){
+            j[i].addEventListener("click",function(){
+                SpaceshipFactory.create();
+                for(var k=0;k<i;k++){
+                    var that = SpaceshipFactory.getShips()[k]
+                    if(that.currentState=="fly"){
+                        return;
+                    }else{
+                        that.dynamicFactory.fly(that);
+                    }
+                }
+            },false);
+        }
+         
+
+        /**
+         * [按钮绑定停止飞行事件]
+         * @return {function} stopLoop() [停止timeout，飞船变为停止状态]
+         */
+        
+        for(var i=0,j=document.getElementsByName("stop");i<j.length;i++){
+            j[i].addEventListener("click",function(){
+                    for(var k=0;k<i;k++){
+                        var that = SpaceshipFactory.getShips()[k];
+                        that.dynamicFactory.stop(that);
+                    }
+                
+            },false);
+        }
+
+        
+        for(var i=0,j=document.getElementsByName("create");i<j.length;i++){
+            j[i].addEventListener("click",function(){
+                var count = SpaceshipFactory.create();
+                console.log(count);
+            },false);
+        }
+
+        /**
+         * [绑定摧毁事件]
+         * @return {function} spaceship.destroyFactory.destroy() [摧毁工厂里的摧毁函数]
+         */
+        for(var i=0,j=document.getElementsByName("destroy");i<j.length;i++){
+            j[i].addEventListener("click",function(){
+                for(var k=0;k<i;k++){
+                var that = SpaceshipFactory.getShips()[k];
+                console.log(that.destroyFactory.destroy());
+                }
+            },false)
+        }
+
+    </script>
+</body>
+</html>

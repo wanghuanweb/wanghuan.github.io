@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>task19 基础JavaScript练习（二）</title>
+    <style type="text/css">
+    body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    li {
+        display: inline-block;
+        width: 50px;
+        background-color: red;
+        text-indent: -9999px;
+        margin: 0 1px;
+        line-height: 50px;
+    }
+    
+    li:hover {
+        cursor: pointer;
+    }
+    
+    ul {
+        padding-left: 0;
+        display: flex;
+        align-items: flex-end;
+    }
+    
+    input {
+        border: 1px #eee solid;
+        background-color: #fff;
+        border-radius: 20px;
+        padding: 20px;
+        cursor: pointer;
+    }
+    </style>
+</head>
+
+<body>
+    <div>
+        <input type="text" placeholder="请输入10-100的数字" id="inputText">
+        <input type="button" value="左侧入" id="inputLeftIn">
+        <input type="button" value="右侧入" id="inputRightIn">
+        <input type="button" value="左侧出" id="inputLeftOut">
+        <input type="button" value="右侧出" id="inputRightOut">
+        <input type="button" value="随机60个数字" id="randomNum">
+        <input type="text" placeholder="排序速度，默认50" id="ideNum">
+        <input type="button" value="排序" id="sort">
+        <input type="button" value="刷新页面" id="refresh">
+    </div>
+    <ul id="content"></ul>
+    <p>step1、自主输入60个数字或者点"随机60个数字"</p>
+    <p>step2、填写排序速度，默认50（可选）</p>
+    <p>step3、点击“排序”按钮</p>
+    <P>注：重来请按“刷新页面”</P>
+    <script type="text/javascript" src="task19.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,231 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+.album {
+    margin: 10px;
+    position: relative;
+    width: 600px;
+    height: 400px;
+}
+
+
+/***************
+***一图片样式***
+****************/
+
+.album1 img {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+
+/***************
+***两图片样式***
+****************/
+
+.album2 img:nth-child(1) {
+    -webkit-clip-path: polygon(0% 0%, 77.7777777% 0%, 33.3333333% 100%, 0% 100%);
+            clip-path: polygon(0% 0%, 77.7777777% 0%, 33.3333333% 100%, 0% 100%);
+}
+
+.album2 img:nth-child(2) {
+    -webkit-clip-path: polygon(77.7777777% 0%, 100% 0%, 100% 100%, 33.3333333% 100%);
+            clip-path: polygon(77.7777777% 0%, 100% 0%, 100% 100%, 33.3333333% 100%);
+}
+
+.album2 img:nth-child(1),
+.album2 img:nth-child(2) {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+}
+
+
+/***************
+***三图片样式***
+****************/
+
+.album3-right {
+    position: absolute;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    right: 0;
+    top: 0;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    height: 100%;
+    width: 200px;
+}
+
+.album3-right img {
+    display: inline-block;
+    height: 50%;
+    /*width: 100%;*/
+}
+
+.album3-left {
+    overflow: hidden;
+    height: 100%;
+}
+
+.album3-left img {
+    width: 100%;
+}
+
+
+/***************
+***四图片样式***
+****************/
+
+.album4-left img,
+.album4-right img {
+    width: 100%;
+    height: 50%;
+}
+
+.album4-left {
+    position: absolute;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    left: 0;
+    top: 0;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    height: 100%;
+    width: 300px;
+}
+
+.album4-right {
+    position: absolute;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    right: 0;
+    top: 0;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    height: 100%;
+    width: 300px;
+}
+
+
+/***************
+***五图片样式***
+****************/
+
+.album5-left {
+    position: absolute;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+    width: 66.6666667%;
+    height: 100%;
+}
+
+.album5-left-top {
+    height: 66.666666667%;
+}
+
+.album5-left-top img {
+    width: 100%;
+}
+
+.album5-left-bottom {
+    height: 33.333333332%;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+}
+
+.album5-left-bottom img {
+    width: 50%;
+}
+
+.album5-right {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 33.3333333%;
+    height: 100%;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+}
+
+.album5-right img:nth-child(1) {
+    height: 200px;
+}
+
+.album5-right img:nth-child(2) {
+    /*width: 300px;*/
+    height: 50%;
+}
+
+
+/***************
+***六图片样式***
+****************/
+
+.album6-left {
+    position: absolute;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+    width: 66.6666667%;
+    height: 100%;
+}
+
+.album6-left-top {
+    height: 66.666666667%;
+}
+
+.album6-left-top img {
+    width: 100%;
+}
+
+.album6-left-bottom {
+    height: 33.333333332%;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+}
+
+.album6-left-bottom img {
+    width: 50%;
+}
+
+.album6-right {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 33.3333333%;
+    height: 100%;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+}
+
+.album6-right img {
+    height: 33.333333333%;
+}

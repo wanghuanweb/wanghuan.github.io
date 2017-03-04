@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<title>Task42 UI组件之日历组件（三）</title>
+	<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+	<input type="text" class="date" data-calendar1/>
+	<input type="button" id="confirmBtn" value="确认提交">
+	<!-- <input type="text" class="date" data-calendar2/> -->
+	<script src="js/calendar.js"></script>
+	<script>
+			var options1 = {
+				'id':'calendar1',
+				'dataCalendar':'[data-calendar1]',
+				'year':'calendar1year',
+				'month':'calendar1month',
+				'day':'calendar1day',
+				'calendarClass' : 'calendar',
+				'inputClass' : 'input',
+				'cellClass' : 'cell',
+				'uesdClass' : 'used',
+				'multiSelect': 1,//1：多选；0：单选
+			}
+			var calendar1 = new Calendar(options1);	
+
+			// var options2 = {
+			// 	'id':'calendar2',
+			// 	'dataCalendar':'[data-calendar2]',
+			// 	'calendarClass' : 'calendar',
+			// 	'year':'calendar2year',
+			// 	'month':'calendar2month',
+			// 	'day':'calendar2day',
+			// 	'inputClass' : 'input',
+			// 	'cellClass' : 'cell',
+			// 	'uesdClass' : 'used',
+			// 	'multiSelect': 0,//1：多选；0：单选
+			// }
+			// var calendar2 = new Calendar(options2);	
+	</script>
+</body>
+</html>

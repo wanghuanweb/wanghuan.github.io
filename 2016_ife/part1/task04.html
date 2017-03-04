@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>task04 定位和居中问题</title>
+    <link rel="stylesheet" type="text/css" href="common/normalize.css">
+    <style type="text/css">
+    .wrapper {
+        position: absolute;
+        margin: auto;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: 400px;
+        height: 200px;
+        background-color: #ccc;
+        overflow: hidden;
+    }
+    
+    .quater-circle {
+        position: absolute;
+        width: 100px;
+        height: 100px;
+        border-radius: 50px;
+        background: #fc0;
+    }
+    
+    .right-top {
+        top: -50px;
+        left: -50px;
+    }
+    
+    .left-bottom {
+        bottom: -50px;
+        right: -50px;
+    }
+    </style>
+</head>
+
+<body>
+    <div class="wrapper">
+        <div class="quater-circle right-top"></div>
+        <div class="quater-circle left-bottom"></div>
+    </div>
+</body>
+
+</html>

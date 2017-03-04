@@ -1,0 +1,118 @@
+th {
+    background-color: #56f0d5;
+    color: black;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #b1ffb1;
+}
+
+tbody tr:first-child,
+tbody tr:nth-child(2),
+tbody tr:nth-child(3) {
+    color: red;
+    font-weight: bold;
+}
+
+.part2 {
+    margin: 30px 0;
+}
+
+input {
+    width: 100px;
+    border: 1px solid #b1ffb1;
+    transition: all 1s;
+    text-indent: 5px;
+}
+
+input:focus {
+    width: 200px;
+    border: 1px solid #56f0d5;
+    transition: all 1s;
+}
+
+li {
+    list-style: none;
+}
+
+a {
+    text-decoration: none;
+    color: grey;
+}
+
+.part3 {
+    position: relative;
+    height: 200px;
+    width: 400px;
+}
+
+.change-btn {
+    position: absolute;
+    bottom: -17px;
+    left: 138px;
+    z-index: 5;
+}
+
+.change-btn li {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    background-color: rgba(177, 255, 177, .6);
+    line-height: 30px;
+    text-align: center;
+}
+
+.pics {
+    position: relative;
+    height: 200px;
+}
+
+.pics li:first-child,
+.pics li:nth-child(2),
+.pics li:nth-child(3) {
+    position: absolute;
+    width: 400px;
+    height: 100%;
+    /*新尝试*/
+    display: none;
+    left: 0;
+}
+
+.pics li:first-child {
+    background-color: red;
+}
+
+.pics li:nth-child(2) {
+    background-color: blue;
+}
+
+.pics li:nth-child(3) {
+    background-color: green;
+}
+
+.pics li:target {
+    /*-webkit-animation: change_color .8s;
+    animation: change_color .8s;
+    z-index: 2!important;*/
+    transition: all 2s;
+    display: block
+}
+
+
+/*@-webkit-keyframes change_color {
+    from {
+        left: -80px;
+    }
+    to {
+        left: 40px;
+    }
+}
+
+@keyframes change_color {
+    from {
+        left: -80px;
+    }
+    to {
+        left: 40px;
+    }
+}*/

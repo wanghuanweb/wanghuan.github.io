@@ -1,0 +1,308 @@
+img{
+	height:100%;
+}
+* {
+    margin: 0;
+    padding: 0;
+}
+.tool-control{
+    text-align: center;
+}
+.tool-control *{
+    margin:5px 0;
+}
+.hide{
+	display: none;
+}
+.show{
+	display: block;
+}
+
+/*拼图布局的样式*/
+.album {
+    margin: 10px;
+    position: relative;
+    width: 400px;
+    height: 300px;
+    overflow:hidden;/*任务要求比例不对时是裁剪，那就不用缩放了*/
+    box-shadow: 10px 10px 5px #888888;
+}
+
+
+/***************
+***一图片样式***
+****************/
+
+.album1 img {
+    position: absolute;
+    width: 100%;
+    /*height: 100%;任务要求比例不对时是裁剪，那就不用缩放了*/
+}
+
+
+/***************
+***两图片样式***
+****************/
+
+.album2 img:nth-child(1) {
+    -webkit-clip-path: polygon(0% 0%, 77.7777777% 0%, 33.3333333% 100%, 0% 100%);
+            clip-path: polygon(0% 0%, 77.7777777% 0%, 33.3333333% 100%, 0% 100%);
+}
+
+.album2 img:nth-child(2) {
+    -webkit-clip-path: polygon(77.7777777% 0%, 100% 0%, 100% 100%, 33.3333333% 100%);
+            clip-path: polygon(77.7777777% 0%, 100% 0%, 100% 100%, 33.3333333% 100%);
+}
+
+.album2 img:nth-child(1),
+.album2 img:nth-child(2) {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+}
+
+
+/***************
+***三图片样式***
+****************/
+
+.album3-right {
+    position: absolute;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    right: 0;
+    top: 0;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    height: 100%;
+    width: 37.5%;
+}
+
+.album3-right img {
+    height: 50%;
+    /*width: 100%;*/
+}
+
+.album3-left {
+    overflow: hidden;
+    height: 100%;
+}
+
+.album3-left img {
+    width: 100%;
+}
+
+
+/***************
+***四图片样式***
+****************/
+
+.album4-left img,
+.album4-right img {
+    width: 100%;
+    height: 50%;
+}
+
+.album4-left {
+    position: absolute;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    left: 0;
+    top: 0;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    height: 100%;
+    width: 50%;
+}
+
+.album4-right {
+    position: absolute;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    right: 0;
+    top: 0;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    height: 100%;
+    width: 50%;
+}
+
+
+/***************
+***五图片样式***
+****************/
+
+.album5-left {
+    position: absolute;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+    width: 66.6666667%;
+    height: 100%;
+}
+
+.album5-left-top {
+    height: 66.666666667%;
+}
+
+.album5-left-top img {
+    width: 100%;
+}
+
+.album5-left-bottom {
+    height: 33.333333332%;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+}
+
+.album5-left-bottom img {
+    width: 50%;
+}
+
+.album5-right {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 33.3333333%;
+    height: 100%;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+}
+
+.album5-right img:nth-child(1) {
+    height: 44.4444444%;
+}
+
+.album5-right img:nth-child(2) {
+    /*width: 300px;*/
+    height: 55.666667%;
+}
+
+
+/***************
+***六图片样式***
+****************/
+
+.album6-left {
+    position: absolute;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+    width: 66.6666667%;
+    height: 100%;
+}
+
+.album6-left-top {
+    height: 66.666666667%;
+}
+
+.album6-left-top img {
+    width: 100%;
+}
+
+.album6-left-bottom {
+    height: 33.333333332%;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+}
+
+.album6-left-bottom img {
+    width: 50%;
+}
+
+.album6-right {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 33.3333333%;
+    height: 100%;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+}
+
+.album6-right img {
+    height: 33.333333333%;
+}
+
+/*瀑布流样式*/
+#container {
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-justify-content: space-around;
+        -ms-flex-pack: distribute;
+            justify-content: space-around;
+    -webkit-flex-wrap: wrap;
+        -ms-flex-wrap: wrap;
+            flex-wrap: wrap;
+    min-width: 1000px;/*避免瀑布流的布局紊乱*/
+    margin-left:5px;
+}
+
+.wf-imgs {
+    box-shadow: 10px 10px 5px #888888;
+    cursor: -webkit-zoom-in;
+    cursor: zoom-in;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+#wf_mask {
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    -webkit-justify-content: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+    -webkit-align-items: center;
+        -ms-flex-align: center;
+            align-items: center;
+    z-index: -999;
+}
+
+.wf-mask-background {
+    background-color: rgba(0, 0, 0, 0.8);
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.wf-mask-zoomin {
+    display: block;
+    z-index: 999;
+}
+.mask{
+    display: block;
+    position:fixed;
+    width:100%;
+    height:100%;
+    background:#fff url('donwloading.gif') no-repeat 50% 50%;
+    z-index:999;
+}

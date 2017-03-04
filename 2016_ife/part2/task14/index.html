@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>task14 零基础JavaScript编码（二）</title>
+</head>
+
+<body>
+    <h3>污染城市列表</h3>
+    <ul id="aqi-list">
+        <!--   
+    <li>第一名：福州（样例），10</li>
+    <li>第二名：福州（样例），10</li> -->
+    </ul>
+    <script type="text/javascript">
+    var aqiData = [
+        ["北京", 90],
+        ["上海", 50],
+        ["福州", 10],
+        ["广州", 50],
+        ["成都", 90],
+        ["西安", 100]
+    ];
+
+    (function() {
+
+        /*
+        在注释下方编写代码
+        遍历读取aqiData中各个城市的数据
+        将空气质量指数大于60的城市显示到aqi-list的列表中
+        */
+
+        //筛选符合条件的数组并构成新的数组newArr
+        var newArr = [];
+        for (var i = 0, j = aqiData.length; i < j; i++) {
+            if (aqiData[i][1] > 60) {
+                newArr.push([aqiData[i][0], aqiData[i][1]]);
+            }
+        }
+        //数组大到小排序，注意数组里的第二项才是数字
+        newArr.sort(function(a, b) {
+            return b[1] - a[1];
+        })
+
+        var all = "";
+        for (var i = 0, j = newArr.length; i < j; i++) {
+            //名次中文化
+            var rank = i + 1
+            switch (rank) {
+                case 1:
+                    rank_numb = "一";
+                    break;
+                case 2:
+                    rank_numb = "二";
+                    break;
+                case 3:
+                    rank_numb = "三";
+                    break;
+                default:
+                    rank_numb = "前三以外忽略不计~~";
+                    break;
+            }
+            //添加文本
+            all += "<li>第" + rank_numb + "名" + "：" + newArr[i][0] + " " + newArr[i][1] + "</li>";
+            var ul = document.getElementById('aqi-list');
+            ul.innerHTML = all;
+        }
+
+    })();
+    </script>
+</body>
+
+</html>
