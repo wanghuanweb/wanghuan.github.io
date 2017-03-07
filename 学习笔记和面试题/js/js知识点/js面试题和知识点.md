@@ -403,16 +403,6 @@ function showPreview(source) {
 
 ##### 28.页面编码和被请求的资源编码如果不一致如何处理？
 
-
-##### 29.模块化开发怎么做？
-
-
-##### 30.AMD（Modules/Asynchronous-Definition）、CMD（Common Module Definition）规范区别？commonjs?你怎么看 AMD vs. CommonJS？?
-
-AMD，CMD规范什么的。二面问jQuery的事件代理实现，浏览器跨域方法，还有一些杂七杂八的记不清了。三面跟腾讯二面一样，主要问项目的东西，外加了一些团队合作，学习方法的问题。
-
- 阿里面试：一面面试官现场带电脑直接联网看作品，GitHub，博客什么的，然后从中挑一些东西来问，后面又顺带考了Tab组件的实现和JS的类继承实现等内容。二面也是看了作品，GitHub，博客什么的，跟一面不同的是还看了我pixiv帐号上的东东并称赞画得不错啥的
-
 ##### 31.requireJS的核心原理是什么？（如何动态加载的？如何避免多次加载的？如何 缓存的？）
 
 
@@ -479,19 +469,10 @@ iframe和主页面共享连接池，而浏览器对相同域的连接有限制�
 使用浏览器的前进，后退键的时候会重新发送请求，没有合理地利用缓存
 单页面无法记住之前滚动的位置，无法在前进，后退的时候记住滚动的位置
 
-
 ##### 76.如何测试前端代码么? 知道BDD, TDD, Unit Test么? 知道怎么测试你的前端工程么(mocha, sinon, jasmin, qUnit..)?
-
-
 ##### 77.前端templating(Mustache, underscore, handlebars)是干嘛的, 怎么用?
-
-
 ##### 78.简述一下 Handlebars 的基本用法？
-
-
 ##### 79.简述一下 Handlerbars 的对模板的基本处理流程， 如何编译的？如何缓存的？
-
-
 ##### 80.用js实现千位分隔符?(来源：前端农民工，提示：正则+replace)
 请举出一个匿名函数的典型用例？
 
@@ -502,7 +483,6 @@ What is the extent of your experience with Promises and/or their polyfills?
 
 请指出浏览器特性检测，特性推断和浏览器 UA 字符串嗅探的区别？
 你使用过 JavaScript 模板系统吗？
-如有使用过，请谈谈你都使用过哪些库？
 请解释 JavaScript 的同源策略 (same-origin policy)。
 为何通常会认为保留网站现有的全局作用域 (global scope) 不去改变它，是较好的选择？
 请解释什么是单页应用 (single page app), 以及如何使其对搜索引擎友好 (SEO-friendly)。

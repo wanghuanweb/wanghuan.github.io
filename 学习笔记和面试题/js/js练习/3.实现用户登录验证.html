@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <form name=”form1″ onsubmit=”javascript:return checkSubmit()”>
+    <input type=”text” name=”name”>
+    </form>
+    <script>
+    function checkSubmit()
+    {
+        if ((document.form1.name.value)==”)
+        {
+            window.alert (‘姓名必须填写’);
+            document.form1.name.select();
+            document.form1.name.focus();
+            return false;
+        }
+        else
+            return true;
+    }
+    </script>
+</body>
+</html>

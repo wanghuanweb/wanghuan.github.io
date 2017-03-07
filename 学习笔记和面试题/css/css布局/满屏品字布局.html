@@ -1,17 +1,21 @@
 <!--
 1.上边一个div，下边两个div
-
-2.上边一个div高：50%，宽100%
-
-3.下边两个div，高：50%，宽50%，一个是float:left;一个float:right;
+2.html和body高度设置成100%，这一步之前就忘记了，注意高度百分比有效的条件
+3.上边一个div高：50%，宽100%
+4.下边两个div，高：50%，宽50%，一个是float:left;一个float:right;
 或者是设置下边两个div的display:inline-block;注意不能用inline因为这样是行内元素，宽高设置会无效
--->
+
+或者是下边两个div用inline-block,但是inline-block有间隙，需要注意inline-block的解决间隔方法，比如去掉空格，
+
+高度百分比有效的条件：
+1.父标签有高度可寻，就是向上遍历父标签要找到一个定值高度（body，html另外讨论），如果中途有个height为auto或是没有设置height属性，则高度百分比不起作用；
+2.block或inline-block属性可以说是高度百分比起作用的前提条件之一吧。-->
 <!DOCTYPE html>
 <html>
     <head>
         <meta charset="utf-8">
-        <link href="index.css" rel="stylesheet"
         <style>
+
             *{
                 margin: 0;
                 padding: 0;
@@ -22,19 +26,19 @@
             .top{
                 width: 100%;
                 height: 50%;
-                border: 1px solid black;
+                background-color: red;
             }
             .bottom{
-                width: calc(50% - 2px);
+                width: 50%;
                 height: 50%;
-                border: 1px solid black;
-
             }
             .bottom1{
                 float: left;
+                background-color: yellow;
             }
             .bottom2{
                 float: right;
+                background-color: black;
             }
         </style>
     </head>
