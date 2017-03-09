@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1.0">
+        <meta http-equiv="x-ua-compatible" content="IE-edge">
+        <title>document</title>
+    </head>
+    <body>
+        <script>
+        // 其实最简单的方法应该是用字符串的模式匹配，replace方法
+        // function trim(str){
+        //     str.replace(/(^\s*)(^\s*$)/g,'');
+        // }
+            function trim(str){
+                var arr = str.split(""),
+                    len = arr.length;
+                while(true){
+                    if(arr[0] == " "){
+                        arr.shift();
+                        continue;
+                    }
+                    break;
+                }
+                while(true){
+                    if(arr[len - 1] == " "){
+                        arr.pop();
+                        continue;
+                    }
+                    break;
+                }
+            }
+            console.log(null instanceof Object);//false
+            console.log(undefined instanceof Object);//false
+            console.log("   wf   fg  ".trim());
+        </script>
+    </body>
+</html>

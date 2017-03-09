@@ -1,0 +1,81 @@
+<!--思路：
+ -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+    <style>
+        .mask{
+            position: absolute;
+            top: 0;
+            left: 0;
+            background-color: #ccc;
+            opacity: 0.5;
+            z-index: 1000;
+        }
+        .dialog{
+            position: fixed;
+            z-index: 1001;
+            border: 1px solid black;
+            width: 200px;
+            height:200px;
+        }
+    </style>
+</head>
+<body>
+    <script>
+        window.onload = function(){
+            // 获取页面的宽高給遮蔽罩使用
+            // 获取窗口的宽高給弹出框居中使用
+            var maskWidth = document.body.scrollWidth,
+                maskHeight = document.body.scrollHeight,
+                pageWidth = document.body.clientWidth;
+                pageHeight = document.body.clientHeight;
+            // //IE8更早版本中没提供取得当前浏览器窗口尺寸的属性，但可以通过DOM提供了页面可见区域的相关信息
+            // if (typeof pageWidth != "number") {
+            //     //判断是否是标准模式，标准模式则用document.documentElement
+            //     if(document.compatMode == "CSS1Compat") {
+            //         pageWidth = document.documentElement.clientWidth;
+            //         pageHeight = document.documentElement.clientHeight;
+            //     } else {
+            //         pageWidth = document.body.clientWidth;
+            //         pageHeight = document.body.clientHeight;
+            //     }
+            // }
+
+            // 创建元素
+            // 创建遮蔽罩
+            var fragment = document.createDocumentFragment(),
+                mask = document.createElement("div");
+            mask.style.height = maskHeight + "px";
+            mask.style.width = maskWidth + "px";
+            mask.className += "mask";
+            fragment.appendChild(mask);
+            // 创建弹窗框
+            // 创建弹出框标题
+            var dialog = document.createElement("div"),
+                text1 = document.createTextNode("title"),
+                header = document.createElement("header"),
+                content = document.createElement("div"),
+                footer = document.createElement("footer");
+            header.appendChild(text1);
+            dialog.appendChild(header);
+            dialog.appendChild(content);
+            dialog.appendChild(footer);
+            fragment.appendChild(dialog);
+            document.body.appendChild(fragment);
+
+            //获取登陆框的宽和高
+            var loginWidth = dialog.offsetWidth,
+                loginHeight = dialog.offsetHeight;
+            dialog.style.left = (maskWidth - loginWidth)/2 + "px";
+            dialog.style.top = (pageHeight - loginHeight)/2 + "px";
+            dialog.className += "dialog";
+        }
+    </script>
+</body>
+</html>
