@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" Content="text/html; charset=utf-8;">
+<title>层级上下文</title>
+<style>
+body{background:#aaa;color:#fff;}
+.box{margin:0 0 100px;overflow:hidden;}
+
+.wrap{width:300px;height:300px;margin-top:-100px;}
+.wrap-1{position:relative;z-index:-1;background:#f60;margin-top:0;}
+.wrap-2{display:block;background:#000;}
+.wrap-3{float:left;background:#23A42B;}
+.wrap-4{display:inline-block;background:#5171E4;}
+.wrap-5{position:relative;z-index:auto;background:#53D6EA;}
+.wrap-6{position:relative;z-index:2;background:#E68787;}
+.wrap-6-1{margin:0;}
+.wrap-6-1 .cnt{position:relative;z-index:2;}
+.wrap-6-2{z-index:1;background:#000;}
+.wrap-6-2 .cnt{position:relative;z-index:100;}
+</style>
+</head>
+
+<body>
+<div class="box">
+    <h2>Demo1：七个层级的元素</h2>
+    <div class="wrap wrap-1">z-index:-1的层</div>
+    <div class="wrap wrap-2">display:block的层</div>
+    <div class="wrap wrap-3">float的层</div>
+    <div class="wrap wrap-4">display:inline-block的层,当宽度变小时，次元素自然而然就跑到float:left下边并且覆盖上个元素的一部分</div>
+    <div class="wrap wrap-5">z-index:auto/0的层</div>
+    <div class="wrap wrap-6">z-index > 0的层</div>
+</div>
+
+<div class="box">
+    <h2>Demo2：inline-block的元素层级比block要高</h2>
+    <div class="wrap wrap-4">display:inline-block的层</div>
+    <div class="wrap wrap-2">display:block的层</div>
+</div>
+
+<div class="box">
+    <h2>Demo3：使用opacity使元素拥有层叠上下文</h2>
+    <div class="wrap wrap-4">display:inline-block的层</div>
+    <div class="wrap wrap-2" style="opacity:0.8;">display:block的层</div>
+</div>
+
+<div class="box">
+    <h2>Demo4：使用transform使元素拥有层叠上下文</h2>
+    <div class="wrap wrap-4">display:inline-block的层</div>
+    <div class="wrap wrap-2" style="transform:rotate(3deg);">display:block的层</div>
+</div>
+
+<div class="box">
+    <h2>Demo5：不同父元素的子节点的层级比较</h2>
+    <div class="wrap wrap-6 wrap-6-1">
+        <div class="cnt">z-index:2,子元素z-index:2的层</div>
+    </div>
+    <div class="wrap wrap-6 wrap-6-2">
+        <div class="cnt">z-index:1,子元素z-index:100的层<div>
+    </div>
+</div>
+</body>
+</html>

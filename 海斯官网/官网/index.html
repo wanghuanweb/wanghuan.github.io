@@ -10,9 +10,6 @@
         <link rel="stylesheet" type="text/css" href="css/index.css" />
         <link rel="stylesheet" type="text/css" href="css/jquery.fullPage.css" />
 
-        <script src="js/jquery.min.js" type="text/javascript"></script>
-        <script src="js/jquery.fullPage.js" type="text/javascript"></script>
-        <script src="js/index.js"></script>
     </head>
 
     <body>
@@ -21,12 +18,19 @@
             <div class="header-content">
                 <img  id="logo" src="image/logo.jpg"/>
 
-                <ul class="header-ul" id="myMenu">
-                    <li data-menuanchor = "firstPage"><a href="#firstPage">首页</a></li>
-                    <li data-menuanchor = "secondPage"><a href="#secondPage">产品功能</a></li>
-                    <li data-menuanchor = "thirdPage"><a href="#thirdPage">标准内容</a></li>
-                    <li data-menuanchor = "fourthPage"><a href="#fourthPage">服务介绍</a></li>
-                    <li data-menuanchor = "fifthPage"><a href="#fifthPage">联系我们</a></li>
+                <!-- <ul class="header-ul" id="myMenu">
+                    <li data-menuanchor = "page-1"><a href="#page-1">首页</a></li>
+                    <li data-menuanchor = "page-2"><a href="#page-2">产品功能</a></li>
+                    <li data-menuanchor = "page-3"><a href="#page-3">标准内容</a></li>
+                    <li data-menuanchor = "page-4"><a href="#page-4">服务介绍</a></li>
+                    <li data-menuanchor = "page-5"><a href="#page-5">联系我们</a></li>
+                </ul> -->
+                <ul class="header-ul" id="MyMenu">
+                    <li v-repeat="items" data-menuanchor = "page-{{$index+1}}">
+                    <a href="#page-{{index+1}}">
+                        {{childMsg}}
+                    </a>
+                    </li>
                 </ul>
 
                 <div class="buttons">
@@ -232,5 +236,10 @@
             </div>
 
         </div>
+
+        <script src="js/jquery.min.js" type="text/javascript"></script>
+        <script src="http://webapp.didistatic.com/static/webapp/shield/z/vue/vue/1.0.24/vue.min.js"></script>
+        <script src="js/jquery.fullPage.js" type="text/javascript"></script>
+        <script src="js/index.js"></script>
     </body>
 </html>

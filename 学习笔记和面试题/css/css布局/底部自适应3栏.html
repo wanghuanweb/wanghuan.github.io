@@ -1,0 +1,74 @@
+<!--  底部自适应
+      主文本区或侧边栏不满一页时，footer位于屏幕下端
+      如果主文本区和侧边栏高度超过一页时，footer将在两者之中height最大元素的下方
+三栏----底部自适应
+   1.main中min-height为100%，相对定位
+   2.header和footer绝对定位在页面最上边和下边
+   3.中间是三栏自适应布局(看两栏自适应布局方法)
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        html,body{
+            height: 100%;
+        }
+        .main{
+            min-height: 100%;
+            position: relative;
+        }
+        header,
+        footer{
+            width: 100%;
+            position: absolute;
+            height: 100px;
+            background: red;
+        }
+        header{
+            top: 0;
+        }
+        footer{
+            bottom: 0;
+        }
+        .content{
+            overflow: hidden;
+        }
+        .contentL{
+            float: left;
+            width: 300px;
+            height: 400px;
+            background: yellow;
+        }
+        .contentR{
+            float: right;
+            width: 200px;
+            height: 500px;
+            background: yellow;
+        }
+        .contentM{
+            margin: 0 200px 0 300px;
+            background: yellow;
+            height: 1000px;
+        }
+    </style>
+</head>
+<body>
+    <div class="main">
+        <header></header>
+        <div class="content">
+            <div class="contentL"></div>
+            <div class="contentR"></div>
+            <div class="contentM"></div>
+        </div>
+        <footer></footer>
+    </div>
+</body>
+</html>

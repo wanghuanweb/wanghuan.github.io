@@ -1,3 +1,10 @@
+Java
+java内存，堆栈特点与存放对象，值传递址传递（此处有坑），虚拟机GC算法原理
+常见数据结构的特性，链表与数组，平衡树排序树等，不过像红黑树这种我反正没被问到，我也没看过= =
+Set，Map，List等的原理特性，尤其是ArrayList，HashMap，HashTable，ConcurrentHashMap等，是否线程安全？如何解决hash冲突？等等
+设计模式，尤其是单例模式的饿汉子饱汉子各种写法，被考过n多次
+类加载过程，虚拟类与接口，等等
+synchronized，volatile原理，同步，原子性，多线程相关问题，进程线程
 #### 1.java三个体系：
 java SE standard edition标准版
 

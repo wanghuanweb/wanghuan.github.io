@@ -1,0 +1,62 @@
+<!-- 两列宽度自适应布局
+     思路一：绝对定位
+     1.left和right都用绝对定位，top为0，height为100%
+     2.left设置width，left为0
+     3.right的left为width，right为0
+     思路二：浮动(在宽度自适应2栏2)
+     1.left设置float：left
+     2.right元素设置overflow(触发新的BFC)
+     思路三：浮动(在宽度自适应2栏2)
+     1.left设置float：left
+     2.right元素设置margin-left
+     思路四：flex布局
+     1.父元素设置display:flex;和flex-direction
+     2.子元素左边的设置flex-basis：/-webkit-flex-basis:100px;
+     3.子元素右边的设置flex-grow1为1
+     思路五：圣杯布局和双飞翼布局(多列布局)
+     这两种其实是把主要的渲染元素放在前面-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        html,body{
+            height: 100%;
+        }
+        .left{
+            width: 200px;
+            left: 0;
+            background: red;
+        }
+        .left,
+        .right{
+            position: absolute;
+            top: 0;
+            height: 100%;
+        }
+        .right{
+            left: 200px;
+            right: 0;
+            background: yellow;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="left">
+
+    </div>
+
+    <div class="right">
+
+    </div>
+
+</body>
+</html>

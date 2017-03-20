@@ -1,22 +1,48 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width,initial-scale=1.0">
-        <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <title>Document</title>
-    </head>
+<html lang="en">
+<head>
+<style>
+    body{
+        margin:0;
+        padding:0;
+    }
+    .parent{
+        width:300px;
+        height:200px;
+        border:1px solid red;
+    }
+    /*浮动居中的方法需要有这么一个包裹的元素，需要浮动的就是这个元素*/
+    .wraper{
+        float:left;
+        position:relative;
+        left:50%;
+        clear:both;
+    }
+    .child{
+        border:1px solid blue;
+        position:relative;
+        left:-50%;
+        white-space:nowrap;
+    }
+    #triangle-topleft {
+        width: 0;
+        height: 0;
+        border-top: 100px solid lightblue;
+        border-right: 100px solid transparent;
+        /*border-bottom: 100px solid lightblue;*/
+        /*border-left: 100px solid red;*/
+    }
+</style>
 
-    <body>
-        <script type="text/javascript">
-        window.onload = function(){
-            console.log('1');
-            window.addEventListener('storage', function (evt) {
-                if(evt.key==='msg')
-                console.log(evt.value);
-            });
-        };
+</head>
+<body>
+    <div id="triangle-topleft">
 
-        </script>
-    </body>
+    </div>
+    <div class="parent">
+        <p>我是</p>
+        <p style="position:relative;top:10px;">王欢</p>
+        <p>哈哈哈</p>
+    </div>
+</body>
 </html>

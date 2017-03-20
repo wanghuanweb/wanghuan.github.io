@@ -5,7 +5,7 @@ define(function(){
 
     return {
 
-        addF : add;
+        add:add
     };
 
 });

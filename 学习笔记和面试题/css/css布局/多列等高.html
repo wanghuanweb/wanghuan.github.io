@@ -1,0 +1,56 @@
+<!-- 多列等高：左边高度增加，右边也跟着增加，右边高度增加，左边同样也要增加
+-->
+<!-- 思路1：不需要css样式，父元素使用背景图片
+     思路2：本文
+     使用margin和padding抵消的方法
+     1.給父元素设置overflow:hidden;高度是里边最大高度的列
+     2.給子元素设置padding-bottom为一个特别大的值，margin-bottom为较小值，抵消
+     3.较低子元素的高度被会用它们的padding-bottom来补偿这部分高度差
+     这种方法存在一个很大的缺陷，那就是如果要实现每列四周有边框效果，那么每列的底部（或顶部）将无法有边框效果。
+     思路3：
+     使用display:table-cell
+     1.父元素display:table;overflow:hidden
+     2.子元素display:table-cell-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        .container{
+            width: 400px;
+            overflow: hidden;
+        }
+        .left,
+        .right{
+            width: 200px;
+            float: left;
+            padding-bottom: 2000px;
+            margin-bottom: -2000px;
+        }
+        .left{
+            background: red;
+        }
+        .right{
+            background: yellow;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="left">
+            我是left
+        </div>
+        <div class="right">
+            我是右边，我看是不是换行，并且两者高度是一样变化的
+            <br/>
+            嗯，变高变高
+        </div>
+    </div>
+
+</body>
+</html>

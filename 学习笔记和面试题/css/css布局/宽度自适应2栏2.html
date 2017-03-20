@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        html,body{
+            height: 100%;
+        }
+        .left{
+            float: left;
+            width: 200px;
+            height: 150px;
+            background: red;
+        }
+        .right{
+            height: 100%;
+            background: yellow;
+            /*每个元素的margin box的左边，与包含块border box的左边相接触(对于从左往右的格式化，否则相反)。
+              即使存在浮动也是如此,
+              因为BFC的区域不会与float的元素区域重叠
+              所以设置overflow属性。*/
+            /*overflow: hidden;*/
+            margin-left: 200px;
+        }
+    </style>
+</head>
+<body>
+    <div class="left">
+
+    </div>
+
+    <div class="right">
+
+    </div>
+</body>
+</html>

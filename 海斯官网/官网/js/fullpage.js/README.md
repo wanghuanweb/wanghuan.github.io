@@ -143,7 +143,7 @@ $(document).ready(function() {
 		//Navigation
 		menu: '#menu',
 		lockAnchors: false,
-		anchors:['firstPage', 'secondPage'],
+		anchors:['page-1', 'page-2'],
 		navigation: false,
 		navigationPosition: 'right',
 		navigationTooltips: ['firstSlide', 'secondSlide'],
@@ -209,20 +209,20 @@ $(document).ready(function() {
 ### Creating links to sections or slides
 If you are using fullPage.js with anchor links for the sections (using the `anchors` option or the attribute `data-anchor` in each section), then you will be able to use anchor links also to navigate directly to a certain slide inside a section.
 
-This would be an example of a link with an anchor: http://alvarotrigo.com/fullPage/#secondPage/2 (which is the URL you will see once you access to that section/slide manually)
-Notice the last part of the URL ends in `#secondPage/2`.
+This would be an example of a link with an anchor: http://alvarotrigo.com/fullPage/#page-2/2 (which is the URL you will see once you access to that section/slide manually)
+Notice the last part of the URL ends in `#page-2/2`.
 
 Having the following initialization:
 
 ```javascript
 $(document).ready(function() {
 	$('#fullpage').fullpage({
-		anchors:['firstPage', 'secondPage', 'thirdPage']
+		anchors:['page-1', 'page-2', 'page-3']
 	});
 });
 ```
 
-The anchor at the end of the URL `#secondPage/2` defines the section and slide of destination respectively. In the previous URL, the section of destination will be the one defined with the anchor `secondPage` and the slide will be the 2nd slide, as we are using the index `2` for it. (the fist slide of a section has index 0, as technically it is a section).
+The anchor at the end of the URL `#page-2/2` defines the section and slide of destination respectively. In the previous URL, the section of destination will be the one defined with the anchor `page-2` and the slide will be the 2nd slide, as we are using the index `2` for it. (the fist slide of a section has index 0, as technically it is a section).
 
 We could have used a custom anchor for the slide instead of its index if we would have used the attribute `data-anchor` on the HTML markup like so:
 
@@ -234,7 +234,7 @@ We could have used a custom anchor for the slide instead of its index if we woul
 	<div class="slide" data-anchor="slide4"> Slide 4 </div>
 </div>
 ```
-In this last case, the URL we would use would be `#secondPage/slide3`, which is the equivalent to our previous `#secondPage/2`.
+In this last case, the URL we would use would be `#page-2/slide3`, which is the equivalent to our previous `#page-2/2`.
 
 Note that section anchors can also be defined in the same way, by using the `data-anchor` attribute, if no `anchors` array is provided.
 
@@ -259,7 +259,7 @@ Fullpage.js adds multiple classes in different elements to keep a record of the 
 
 - `active` is added the current visible section and slide.
 - `active` is added to the current menu element (if using the `menu` option).
-- A class of the form `fp-viewing-SECTION-SLIDE` is added to the `body` element of the site. (eg: [`fp-viewing-secondPage-0`](http://alvarotrigo.com/fullPage/#secondPage)) The `SECTION` and `SLIDE` parts will be the anchors (or indexes if no anchor is provided) of the current section and slide.
+- A class of the form `fp-viewing-SECTION-SLIDE` is added to the `body` element of the site. (eg: [`fp-viewing-page-2-0`](http://alvarotrigo.com/fullPage/#page-2)) The `SECTION` and `SLIDE` parts will be the anchors (or indexes if no anchor is provided) of the current section and slide.
 - `fp-responsive` is added to the `body` element when the entering in the responsive mode
 - `fp-enabled` is added to the `html` element when fullpage.js is enabled. (and removed when destroyed).
 - `fp-destroyed` is added to the fullpage.js container when the plugin is destroyed.
@@ -390,15 +390,15 @@ This won't generate a menu but will just add the `active` class to the element i
 In order to link the elements of the menu with the sections, an HTML 5 data-tag (`data-menuanchor`) will be needed to use with the same anchor links as used within the sections. Example:
 ```html
 <ul id="myMenu">
-	<li data-menuanchor="firstPage" class="active"><a href="#firstPage">First section</a></li>
-	<li data-menuanchor="secondPage"><a href="#secondPage">Second section</a></li>
-	<li data-menuanchor="thirdPage"><a href="#thirdPage">Third section</a></li>
-	<li data-menuanchor="fourthPage"><a href="#fourthPage">Fourth section</a></li>
+	<li data-menuanchor="page-1" class="active"><a href="#page-1">First section</a></li>
+	<li data-menuanchor="page-2"><a href="#page-2">Second section</a></li>
+	<li data-menuanchor="page-3"><a href="#page-3">Third section</a></li>
+	<li data-menuanchor="page-4"><a href="#page-4">Fourth section</a></li>
 </ul>
 ```
 ```javascript
 $('#fullpage').fullpage({
-	anchors: ['firstPage', 'secondPage', 'thirdPage', 'fourthPage', 'lastPage'],
+	anchors: ['page-1', 'page-2', 'page-3', 'page-4', 'lastPage'],
 	menu: '#myMenu'
 });
 ```
@@ -621,7 +621,7 @@ Example:
 
 ```javascript
 	$('#fullpage').fullpage({
-		anchors: ['firstPage', 'secondPage', 'thirdPage', 'fourthPage', 'lastPage'],
+		anchors: ['page-1', 'page-2', 'page-3', 'page-4', 'lastPage'],
 
 		afterLoad: function(anchorLink, index){
 			var loadedSection = $(this);
@@ -725,13 +725,13 @@ Example:
 
 ```javascript
 	$('#fullpage').fullpage({
-		anchors: ['firstPage', 'secondPage', 'thirdPage', 'fourthPage', 'lastPage'],
+		anchors: ['page-1', 'page-2', 'page-3', 'page-4', 'lastPage'],
 
 		afterSlideLoad: function( anchorLink, index, slideAnchor, slideIndex){
 			var loadedSlide = $(this);
 
 			//first slide of the second section
-			if(anchorLink == 'secondPage' && slideIndex == 1){
+			if(anchorLink == 'page-2' && slideIndex == 1){
 				alert("First slide loaded");
 			}
 

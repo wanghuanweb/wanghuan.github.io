@@ -1506,7 +1506,7 @@
             if (options.css3 && options.autoScrolling && !options.scrollBar) {
 
 
-                if (v.anchorLink == 'fifthPage')//判断当滚动到尾屏如何做
+                if (v.anchorLink == 'page-5')//判断当滚动到尾屏如何做
                 {
                     var footer_a = $('#section-footer').height();
                     var footer_h = $('#footer-text').height();

@@ -1,0 +1,101 @@
+nav{
+    ul{
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+    li{
+        display: inline-block;
+    }
+    a{
+        display: block;
+        padding: 6px 12px;
+        text-decoration: none;
+    }
+}
+
+@mixin border-radius{
+    -webkit-border-radius:5px;
+    border-radius: 5px;
+}
+
+div{
+    @include border-radius;
+}
+$grid-prefix:span !default;
+$grid-width:60px !default;
+$grid-gutter:20px !default;
+%grid{
+    float: left;
+    margin-left: $grid-gutter / 2;
+    margin-right: $grid-gutter / 2;
+}
+
+@for $i from 1 through 12{
+    .#{$grid-prefix}#{$i}{
+        width: $grid-width * $i + $grid-gutter * ($i - 1);
+        @extend %grid;
+    }
+}
+
+$types:4;
+$type-width:20px;
+@while $types > 0{
+    .whild-#{$types} {
+        width: $type-width + $types;
+    }
+    $types:$types - 1;
+}
+
+$list: adam john wynn mason kuroir;
+
+@mixin author-images {
+    @each $author in $list {
+        .photo-#{$author} {
+            background: url("/images/avatars/#{$author}.png") no-repeat;
+        }
+    }
+}
+
+.author-bio {
+    @include author-images;
+}
+
+.footer{
+    width : percentage(5px / 10px)
+}
+.footer1 {
+   width:round(15.8px)
+}
+.footer2 {
+   width:round(3.4em)
+}
+.footer3 {
+   width:ceil(18.1px);
+}
+.footer4 {
+   width:ceil(2.8em);
+}
+.footer5 {
+   width:floor(13.5px);
+}
+.footer6 {
+   width:abs(-8.9px);
+}
+$theme-color: (
+    default: (
+        bgcolor: #fff,
+        text-color: #444,
+        link-color: #39f
+    ),
+    primary:(
+        bgcolor: #000,
+        text-color:#fff,
+        link-color: #93f
+    ),
+    negative: (
+        bgcolor: #f36,
+        text-color: #fefefe,
+        link-color: #d4e
+    )
+);

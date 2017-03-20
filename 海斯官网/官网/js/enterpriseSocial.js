@@ -25,7 +25,7 @@ $(document).ready(function() {
     //     'loopBottom':true,
     //     'menu':'myMenu',
     //     // 'autoscrolling':false,
-    //     anchors: ['firstPage', 'secondPage', 'thirdPage', 'fifthPage'],
+    //     anchors: ['page-1', 'page-2', 'page-3', 'page-5'],
     //     'navigation': true,
     //     'navigationPosition': 'right',
     //     'navigationTooltips': ['System values', 'System features', 'Application scenes', 'contact us']

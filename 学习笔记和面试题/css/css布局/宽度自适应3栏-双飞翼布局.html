@@ -1,0 +1,76 @@
+<!--
+双飞翼布局：--比圣杯布局不一样的是，中间元素多嵌套了一个div
+  1.三个div都向左浮动，主元素也就是中间元素放在最重要，让其先渲染且宽度设置为100%
+  2.利用负边距让左盒子上去，左盒子左边距为负的中间盒子的宽度
+  3.利用负边距让右盒子上去，右盒子左边距为负的自身盒子的宽度
+  4.让中间自适应的盒子安全显示，
+     就是添加了一个div，给内部div添加margin，把内容放到中间栏，其实整个背景还是100%-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        html,body{
+            height: 100%;
+        }
+        header,footer{
+            background: #000;
+            height: 150px;
+        }
+        .container{
+            overflow: hidden;
+            height: 200px;
+        }
+        .main,
+        .left,
+        .right{
+            float: left;
+            /*注意給父元素设置高度，和这个设置高度，因为不设置高度，无内容的时候，就会不显示*/
+            height: 100%;
+        }
+        .main{
+            width: 100%;
+        }
+        .inside{
+            background: yellow;
+            margin: 0 200px;
+            height: 100%;
+        }
+        .left{
+            width: 200px;
+            margin-left: -100%;
+            background: red;
+        }
+        .right{
+            width: 200px;
+            margin-left: -200px;
+            background: red;
+        }
+        /*.footer{
+            clear: both;
+        }*/
+    </style>
+</head>
+<body>
+    <header>
+
+    </header>
+
+    <div class="container">
+        <div class="main">
+            <div class="inside">
+                哈哈哈哈
+            </div>
+        </div>
+        <div class="left"></div>
+        <div class="right"></div>
+    </div>
+
+    <footer>
+
+    </footer>
+</body>
+</html>

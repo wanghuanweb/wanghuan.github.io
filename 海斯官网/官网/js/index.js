@@ -80,7 +80,7 @@ $(document).ready(function() {
         'loopBottom':true,
         'menu':'myMenu',
         // 'autoscrolling':false,
-        'anchors': ['firstPage', 'secondPage', 'thirdPage', 'fourthPage','fifthPage'],
+        'anchors': ['page-1', 'page-2', 'page-3', 'page-4','page-5'],
         'navigation': true,
         'navigationPosition': 'right',
         'navigationTooltips': ['Focus and speciality', 'Product features', 'Standard features', 'Service content','Contact us']
@@ -98,7 +98,18 @@ $(document).ready(function() {
             }
         },2000);
     }
-
+    new Vue({
+        el:"#myMenu",
+        data:{
+            items:[
+                {childMsg:'首页'},
+                {childMsg:'产品功能'},
+                {childMsg:'标准内容'},
+                {childMsg:'服务介绍'},
+                {childMsg:'联系我们'}
+            ]
+        }
+    });
 
 
 });

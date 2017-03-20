@@ -35,7 +35,10 @@
  *    	translate(x,y)--将坐标原点移动到(x,y),即改变原点
  *     	transform()--
  * 	    setTransform()
+ * 	    save()存储状态到栈中
+ * 	    restore()返回之前的设置
  * 5.阴影:根据几个属性值画出阴影
+ * 只需要在绘制之前设置适应的值，iu能自动产生阴影
  * 		shadowOffsetX --x轴偏移量
  * 		shadowOffsetY --y轴偏移量
  * 		shadowBlur --模糊的像素数
@@ -43,6 +46,9 @@
  * 6.渐变
  * 		渐变先调用createLinerGradient()--四个参数：起点的x坐标，y左边和终点的x，y坐标
  * 		创建了渐变对象后，用addColorStop()来指定色标
+ * 	7.模式
+ * 	    模式其实就是重复的对象，可以用来填充或者描边图形
+ * 	    用createPattern创建模式(两个参数，1.HTML<img>元素和一个表示可以重复图像的字符串repeat，repeat-x，repeat-y，no-repeat)
  */
 init();
 
@@ -144,6 +150,7 @@ function init(){
         var context4 = drawing4.getContext("2d");
         // 渐变效果
         var gradient = context4.createLinearGradient(30,30,70,70);
+        // 创建渐变对象后，指定色标
         gradient.addColorStop(0,"white");
         gradient.addColorStop(1,"black");
         context4.fillStyle = gradient;
@@ -154,5 +161,12 @@ function init(){
 
         // context4.strokeStyle = gradient;
         // context4.strokeRect(30,30,50,50);
+        var image = document.image[0],
+            pattern = context.createPattern(image,"repeat");
+
+        // 绘制矩形
+        context4.fillStyle = pattern;
+        context4.fillRect(10,10,150,150);
     }
+
 }
