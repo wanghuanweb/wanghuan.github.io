@@ -1,8 +1,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
+        <meta charset="utf-8">
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+        <meta name="viewport">
         <title>
 			海斯
 		</title>
@@ -18,19 +19,12 @@
             <div class="header-content">
                 <img  id="logo" src="image/logo.jpg"/>
 
-                <!-- <ul class="header-ul" id="myMenu">
+                <ul class="header-ul" id="myMenu">
                     <li data-menuanchor = "page-1"><a href="#page-1">首页</a></li>
                     <li data-menuanchor = "page-2"><a href="#page-2">产品功能</a></li>
                     <li data-menuanchor = "page-3"><a href="#page-3">标准内容</a></li>
                     <li data-menuanchor = "page-4"><a href="#page-4">服务介绍</a></li>
                     <li data-menuanchor = "page-5"><a href="#page-5">联系我们</a></li>
-                </ul> -->
-                <ul class="header-ul" id="MyMenu">
-                    <li v-repeat="items" data-menuanchor = "page-{{$index+1}}">
-                    <a href="#page-{{index+1}}">
-                        {{childMsg}}
-                    </a>
-                    </li>
                 </ul>
 
                 <div class="buttons">

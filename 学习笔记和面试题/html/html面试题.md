@@ -9,13 +9,19 @@
 
 1.3 不声明DOCTYPE的话，浏览器会使用内建的默认DTD(文档类型定义)
 
-##### 2.严格模式与混杂模式如何区分？它们有何意义?如何判断模式？
+##### 2.标准模式与怪异模式如何区分？它们有何意义?如何判断模式？
 
-1.严格模式是浏览器按照规范渲染页面
+标准模式：浏览器遵循w3c标准的页面解析模式
+怪异模式：使用浏览器自己的方式解析执行代码，因为不同浏览器解析执行的方式不一样，
 
-2.混杂模式是以宽松的一种向后兼容的方式显示。混杂模式的浏览器兼容老版本浏览器，使用一个比较怪异的方式渲染网页，确保老网页可以显示。
+通过DTD申明指定页面解析模式。
+HTML5都通过!doctype html采用标准模式解析
+没有使用DTD声明或者使用HTML4以下(不包括HTML4)的DTD声明的适合，基本都是怪异模式呈现
 
-3.DOCTYPE不存在或格式不正确会导致文档以混杂模式呈现。
+**区别**
+
+标准模式中: IE6不认识!important声明，IE7、IE8、Firefox、Chrome等浏览器认识；
+怪异模式中: IE6/7/8都不认识!important声明，这只是区别的一种，还有很多其它区别。
 
 **如何判定现在是标准模式还是怪异模式**
 
@@ -28,11 +34,15 @@ alert(window.top.document.compatMode) ;
 
 方法二：jquery为我们提供的方法，如下：
 ```
-alert($.boxModel)
-alert($.support.boxModel)
-```
+// 必须是 1.8 之前(不含1.8)的 jQuery 版本
+document.writeln( $.boxModel );
 
-##### 3.<head>头标签
+// 1.3 ~ 1.7.x 请使用 $.support.boxModel 替代
+document.writeln( $.support.boxModel );
+```
+如果浏览器使用标准盒模型渲染当前页面，则返回true，否则返回false。
+
+##### 3.<head>头标签和<meta>标签
 
 head头标签的格式
 
@@ -48,13 +58,132 @@ head头标签的格式
 
 **meta**
 
-meta标签是head头中的辅助性标签，位于html文档的head和title中间，它提供用户不可见的信息。合适的meta标签可以大大提升网站页面的可用性。
+meta是html语言head区的一个辅助性标签，它提供用户不可见的信息。合适的meta标签可以大大提升网站页面的可用性。
 
-3个meta标签必须放在 head 的最前面；其他任何的 head 内容必须在这些标签的后面
+meta标签的作用有：
+1.定义页面使用语言(charset)
+2.控制页面缓存(http-equiv--Pragma,cookie,cache-control)
+3.自动刷新并指向新的页面(http-equiv--refresh)
+4.控制网页显示的窗口(http-equiv--Window-target)
+5.搜索引擎优化(name)
+
+**meta标签的属性**--charset，http-equiv，name
 
 charset:声明文档使用的字符编码
-http-equiv：相当于http的文件头作用，它可以向浏览器传回一些有用的信息，以帮助浏览器正确地显示网页内容。
-name属性：主要用于描述网页，与之对应的属性值为content，content中的内容主要是便于浏览器，搜索引擎等机器人识别，等等。
+
+http-equiv：相当于http的文件头作用，它可以向浏览器传回一些有用的信息，以帮助浏览器正确地显示网页内容。与之对应的属性值为content，content中的内容其实就是各个参数的变量值。
+
+name属性：主要用于描述网页，与之对应的属性值为content，content中的内容主要是便于搜索引擎机器人查找信息和分类信息用的。
+
+**meta之http-equiv**
+
+http-equiv属性值：expires/pragma/refresh/Set-Cookie/Window-target
+
+1.expires--可以用于设定网页的到期时间。一旦网页过期，必须到服务器上重新传输。
+
+```
+<meta http-equiv="expires"content="Fri,12Jan200118:18:18GMT">
+```
+
+2.Pragma(cache模式)--禁止浏览器从本地计算机的缓存中访问页面内容。这样设定，访问者将无法脱机浏览。
+
+```
+<meta http-equiv="Pragma"content="no-cache">
+```
+
+3.Refresh(刷新)--自动刷新并指向新页面。
+
+```
+<meta http-equiv="Refresh"content="2;URL=http://www.haorooms.com"> //(注意后面的引号，分别在秒数的前面和网址的后面)
+```
+
+4.Set-Cookie--如果网页过期，那么存盘的cookie将被删除。
+
+```
+<meta http-equiv="Set-Cookie"content="cookie value=xxx;expires=Friday,12-Jan-200118:18:18GMT；path=/">
+```
+
+5.Window-target(显示窗口的设定) --强制页面在当前窗口以独立页面显示。
+
+```
+<meta http-equiv="Window-target" content="_top">
+```
+
+6.Cache-Control指定请求和响应遵循的缓存机制。
+
+请求时的缓存指令包括no-cache、no-store、max-age、max-stale、min-fresh、on
+ly-if-cached，响应消息中的指令包括public、private、no-cache、no-store、no-transform、must-revalidate、proxy-revalidate、max-age。(可以参考浏览器缓存)
+
+```
+//比如
+<meta http-equiv="cache-control" content="no-cache">  
+```
+
+7.页面跳转，只用于IE
+
+http://www.haorooms.com/post/liulanq_think_ie
+
+**meta之name**
+
+name属性值：--keywords/description/robots/author/generator/copyright/revisit-after
+
+```
+<meta name="参数"content="具体的参数值">。
+```
+
+1.Keywords--告诉搜索引擎网页的关键字是什么
+
+```
+<meta name="keywords" content="meta总结,html,meta属性">
+```
+
+2.description--告诉搜索引擎网站主要内容
+
+```
+<meta name="description" content="meta总结,html,meta属性">
+```
+
+3.robots--用来告诉搜索机器人哪些页面需要索引，哪些页面不需要索引。
+
+```
+<meta name="robots"content="none">
+```
+信息参数为all：文件将被检索，且页面上的链接可以被查询；
+
+信息参数为none：文件将不被检索，且页面上的链接不可以被查询；
+
+信息参数为index：文件将被检索；
+
+信息参数为follow：页面上的链接可以被查询；
+
+信息参数为noindex：文件将不被检索，但页面上的链接可以被查询；
+
+信息参数为nofollow：文件将被检索，但页面上的链接不可以被查询；
+
+4.author--标注网页的作者
+
+```
+<meta name="author"content="root,root@xxxx.com">
+```
+
+5.generator--编辑器,说明网站的采用的什么软件制作。
+
+```
+<meta name="generator"content="信息参数"/>
+```
+
+6.Copyright--版权
+
+```
+<meta name="copyright" content="xxx">
+```
+
+7.revisit-after(重访)--通知搜索引擎多少天访问一次
+
+```
+<meta name="revisit-after" content="7days">
+```
+
 
 为移动设备添加viewport：
 content 参数：

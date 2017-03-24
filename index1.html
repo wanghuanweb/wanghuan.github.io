@@ -1,58 +1,40 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-<style>
-    body{
-        margin:0;
-        padding:0;
-    }
-    .parent{
-        width:300px;
-        height:200px;
-        border:1px solid red;
-    }
-    /*浮动居中的方法需要有这么一个包裹的元素，需要浮动的就是这个元素*/
-    .wraper{
-        float:left;
-        position:relative;
-        left:50%;
-        clear:both;
-    }
-    .child{
-        border:1px solid blue;
-        position:relative;
-        left:-50%;
-        white-space:nowrap;
-    }
-    #triangle-topleft {
-        width: 0;
-        height: 0;
-        border-top: 100px solid lightblue;
-        border-right: 100px solid transparent;
-        /*border-bottom: 100px solid lightblue;*/
-        /*border-left: 100px solid red;*/
-    }
-</style>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>rem适配方案</title>
+        <script type="text/javascript">
+            /*通过JS动态设置viewport,将视口等比放大到设备独立像素大小，使css中的1px代表设备独立像素中的1px
+                window.devicePixelRatio 是设备上物理像素/设备独立像素（dips）的比例
+              公式：window.devicePixelRatio = 物理像素 / dips
+                正常initial值为1显示物理像素,pixelRatio为要动态设置的比例显示设备独立像素
+                1/pixelRatio=物理像素 / dips=window.devicePixelRatio*/
+            var pixelRatio=1/window.devicePixelRatio;
+            document.write('<meta name="viewport" content="initial-scale='+pixelRatio+',minimum-scale='+pixelRatio+',maximum-scale='+pixelRatio+',user-scalable=no"/>');
 
-</head>
-<body>
-    <div id="triangle-topleft">
+            var html=document.querySelector('html');
+            //获取可视窗口的宽度，是否含竖向滚动条宽度不一定，测试时设置子级元素border值时返回的width时有时含滚动条有时不含，不明原因
+            //因为用在移动端，所以也相当于屏幕宽度，是否含滚动条的宽度的问题也就不存在了。
+            //html默认width是与浏览器窗口同宽，document.documentElement.tagName==html
+            var width=html.getBoundingClientRect().width;
+            //设置根节点的字体大小，rem根据其设置大小，1rem=html.style.fontSize
+            //16为一基准值，可自己设置不同的基准值，注意设置页面中元素字体大小是不要设置过小的rem,避免出现小于12px的字体
+            html.style.fontSize=width/16+'px';
+            //html的字体大小=屏幕宽度的16分之一=1rem
 
-    </div>
-    <div class="parent">
-        <p>我是</p>
-        <p style="position:relative;top:10px;">王欢</p>
-        <p>哈哈哈</p>
-    </div>
-
-    <script type="text/javascript">
-
-    for (var i = 0; i < 5; i++) {
-  setTimeout((function(i) {
-    console.log(i);
-  })(i), i * 1000);
-}
-
-    </script>
-</body>
+        </script>
+        <style>
+            body{
+                margin: 0;
+            }
+            #box{
+                width: 10rem;/* box宽度为屏幕宽度的16分之10 */
+                height: 10rem;/* box高度为屏幕宽度的16分之10 */
+                background: pink;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="box"></div>
+    </body>
 </html>

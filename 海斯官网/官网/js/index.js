@@ -1,5 +1,12 @@
 $(document).ready(function() {
+    var scale = 1 / window.devicePixelRatio;
+    document.querySelector('meta[name="viewport"]').setAttribute('content','initial-scale=' + scale + ',maximum-scale=' + scale + ', minimum-scale=' + scale + ', user-scalable=no');
 
+    var html=document.querySelector('html');
+    var width=html.getBoundingClientRect().width;
+    //16为一基准值，可自己设置不同的基准值，注意设置页面中元素字体大小是不要设置过小的rem,避免出现小于12px的字体
+    html.style.fontSize=width/16+'px';
+    
     var count = 1;
     var time = null;
 
