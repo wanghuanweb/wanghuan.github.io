@@ -1,0 +1,256 @@
+.enterpriseContent{
+    width: 100%;
+
+    /*border: 1px solid black;*/
+}
+.enterprise-social{
+    /*width: 1124px;
+    margin: 0 auto 0 auto;*/
+    /*border: 1px solid black;*/
+    width: 1124px;
+    margin: 0 auto 0 auto;
+    height: 820px;
+}
+.h1{
+    font-size: 48px;
+    font-family: '微软雅黑';
+
+    color:#333333;
+
+    margin-top: 20px;
+    text-align: center;
+}
+.h2{
+    font-size: 30px;
+    font-family: '微软雅黑';
+    font-weight: lighter;
+
+    color:#333333;
+
+    margin-top: 40px;
+    margin-bottom: 50px;
+    text-align: center;
+}
+.values{
+    margin-bottom: 40px;
+}
+.values,
+.peoples{
+    display: -webkit-flex; /* Safari */
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+.peoples{
+    justify-content: space-between;
+    /*border: 1px solid black;*/
+}
+.peoples img{
+    float: left;
+}
+.content{
+    /*border: 1px solid black;*/
+    float: right;
+}
+.content-detail{
+    display: inline-block;
+}
+.dot{
+    width: 6px;
+    height: 6px;
+    border-radius: 3px;
+    float: left;
+    margin-left: 6px;
+    margin-right: 3px;
+    margin-top:5px;
+}
+.bossDot{
+    background-color: #17aafd;
+}
+.staffDot{
+    background-color: #59eaa4;
+}
+.ITDot{
+    background-color: #fef25d;
+}
+.explan{
+    font-size: 14px;
+    font-family: '微软雅黑';
+
+    float: right;
+}
+.h3{
+    font-size: 24px;
+    font-family: '微软雅黑';
+    font-weight: lighter;
+
+    color:#333333;
+
+    margin-top: 12px;
+    text-align: center;
+}
+
+.system-function{
+    /*border: 1px solid black;*/
+    width: 1124px;
+    margin: 0 auto 0 auto;
+    background: url('../image/enterprise-social/systemFunction/background2.jpg');
+}
+.system-function-father{
+    /*margin-top: 20px;*/
+    margin-left:auto;
+    margin-right: auto;
+    /*border: 1px solid black;*/
+    width: 700px;
+    background: white;
+}
+.system-function-father2{
+    width: 100%;
+    display: flex;
+    flex-flow: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+.system-function-child{
+    height: 155px;
+    width: 168px;
+    /*border: 1px solid black;*/
+
+    position: relative;
+}
+.system-function-child-active{
+    background: url("../image/enterprise-social/systemFunction/backgroundAnima.png");
+}
+.system-function-child img{
+    position: absolute;
+    top: 55px;
+    left: 50%;
+    margin-left: -13px;
+}
+.system-function-child p{
+    font-size: 16px;
+    font-family: '微软雅黑';
+
+    position: absolute;
+    top: 100px;
+    left: 55px;
+}
+.p-active{
+    color: #ffffff;
+}
+.system-function-child .except{
+    left: 50px;
+}
+
+.application-scene{
+    width: 100%;
+    height: 900px;
+    color:#ffffff;
+    /*solve collapse margin--#h1 andsystem function*/
+    padding: 1px;
+
+    background: url('../image/enterprise-social/applicationScene/background.jpg');
+}
+.application-scene p{
+    opacity: 0.8;
+}
+.application-scene .h1{
+    color:#ffffff;
+}
+#h1{
+    margin-top: 200px;
+}
+.application-scene .h4{
+    font-size: 14px;
+    font-family: '微软雅黑';
+
+    margin-top: 10px;
+    margin-bottom: 10px;
+    text-align: center;
+}
+.application-scene .application-scene-content{
+    width: 1124px;
+    margin: 0 auto 0 auto;
+}
+.application-scene .application-scene-content .application-scene-line{
+    width: 100%;
+    height: 2px;
+    margin-bottom: 36px;
+
+    background-color: white;
+}
+.application-scene .application-scene-content .explain{
+    text-align: center;
+    margin-bottom: 16px;
+}
+.application-scene .application-scene-content .contentRect{
+    overflow: hidden;
+    margin-bottom: 20px;
+
+    width: 850px;
+    margin-left:auto;
+    margin-right: auto;
+}
+.application-scene .application-scene-content .smallestRect{
+    width: 32px;
+    float: left;
+    display: table;
+
+    background-color: rgb(0, 144, 255);
+}
+.application-scene .application-scene-content .smallestRect1,
+.application-scene .application-scene-content .smallestRect2{
+    border-radius: 4px;
+}
+.application-scene .application-scene-content .smallestRect1{
+    height: 118px;
+}
+.application-scene .application-scene-content .smallestRect2{
+    height: 152px;
+}
+.application-scene .application-scene-content .smallestRect1 p,
+.application-scene .application-scene-content .smallestRect2 p{
+    font-size: 20px;
+    font-family: "Microsoft YaHei";
+    color: #fff;
+    font-weight: bold;
+
+    text-align: center;
+    display: table-cell;
+    vertical-align: middle;
+    line-height: 24px;
+}
+.application-scene .application-scene-content .smallRect{
+    width: 391px;
+    height: 118px;
+    float: left;
+
+    background: url('../image/enterprise-social/applicationScene/smallRect.png');
+}
+.application-scene .application-scene-content .smallRect p,
+.application-scene .application-scene-content .bigRect p{
+    font-weight: normal;
+    line-height: 18px;
+    font-size: 12px;
+    font-family: "Microsoft YaHei";
+    margin: 16px;
+
+
+    color: #fff;
+    line-height: 1.5;
+}
+.application-scene .application-scene-content .smallRect1,
+.application-scene .application-scene-content .bigRect1{
+    margin-left: 15px;
+}
+.application-scene .application-scene-content .smallRect2,
+.application-scene .application-scene-content .bigRect2{
+    margin-left: 20px;
+}
+.application-scene .application-scene-content .bigRect{
+    width: 391px;
+    height: 152px;
+    float: left;
+
+    background: url('../image/enterprise-social/applicationScene/bigRect.png');
+}

@@ -159,30 +159,6 @@ eval其实就是让字符串当成js代码执行(把一段字符串传递给JS�
 <script>
 ```
 
-##### 27."attribute" 和 "property" 的区别是什么？
-
-Property：属性，property是DOM中的属性，是JavaScript里的对象  比如：element.id;
-
-Attribute：特性，attribute是HTML标签上的特性，它的值只能够是字符串，通过类数组attributes可以罗列所有的attribute。 比如：element.getAttribute("id");或者element.attributes.
-
-property能够从attribute中得到同步；attribute不会同步property上的值；attribute和property之间的数据绑定是单向的，attribute->property；更改property和attribute上的任意值，都会将更新反映到HTML页面中；
-
-```
-html代码
-<input id="in_1" value="1" sth="whatever">
-js代码
-var in1 = document.getElementById('in_1');
-in1.value = 'new value of prop';
-console.log(in1.value);				// 'new value of prop'
-console.log(in1.attributes.value);	// 'value="1"'-----attribute不会同步property上的值
-
-in1.attributes.value.value = 'new value of attr';
-console.log(in1.value);				// 'new value of attr'
-console.log(in1.attributes.value);	// 'new value of attr'-----property能够从attribute中得到同步
-```
-
-http://www.codeceo.com/article/javascript-property-attribute.html
-
 
 
 ##### 40.知道什么是webkit么? 知道怎么用浏览器的各种工具来调试和debug代码么?你使用哪些工具和技术来调试 JavaScript 代码？

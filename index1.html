@@ -1,40 +1,90 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title>rem适配方案</title>
-        <script type="text/javascript">
-            /*通过JS动态设置viewport,将视口等比放大到设备独立像素大小，使css中的1px代表设备独立像素中的1px
-                window.devicePixelRatio 是设备上物理像素/设备独立像素（dips）的比例
-              公式：window.devicePixelRatio = 物理像素 / dips
-                正常initial值为1显示物理像素,pixelRatio为要动态设置的比例显示设备独立像素
-                1/pixelRatio=物理像素 / dips=window.devicePixelRatio*/
-            var pixelRatio=1/window.devicePixelRatio;
-            document.write('<meta name="viewport" content="initial-scale='+pixelRatio+',minimum-scale='+pixelRatio+',maximum-scale='+pixelRatio+',user-scalable=no"/>');
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
 
-            var html=document.querySelector('html');
-            //获取可视窗口的宽度，是否含竖向滚动条宽度不一定，测试时设置子级元素border值时返回的width时有时含滚动条有时不含，不明原因
-            //因为用在移动端，所以也相当于屏幕宽度，是否含滚动条的宽度的问题也就不存在了。
-            //html默认width是与浏览器窗口同宽，document.documentElement.tagName==html
-            var width=html.getBoundingClientRect().width;
-            //设置根节点的字体大小，rem根据其设置大小，1rem=html.style.fontSize
-            //16为一基准值，可自己设置不同的基准值，注意设置页面中元素字体大小是不要设置过小的rem,避免出现小于12px的字体
-            html.style.fontSize=width/16+'px';
-            //html的字体大小=屏幕宽度的16分之一=1rem
+    <script type="text/javascript">
+    function Node(data) {
+        this.data = data;
+        this.parent = null;
+        this.children = [];
+    }
 
-        </script>
-        <style>
-            body{
-                margin: 0;
+    function Tree(data) {
+        var node = new Node(data);
+        this._root = node;
+    }
+
+    //深度搜索
+    Tree.prototype.deepTraversal =  function(callback,node){
+        var nodes = [];
+        if (node != null) {
+            var stack = [];
+            stack.push(node);
+            while (stack.length != 0) {
+                var item = stack.pop();
+                callback(item);
+                nodes.push(item);
+                var children = item.children;
+                for (var i = children.length - 1; i >= 0; i--)
+                    stack.push(children[i]);
             }
-            #box{
-                width: 10rem;/* box宽度为屏幕宽度的16分之10 */
-                height: 10rem;/* box高度为屏幕宽度的16分之10 */
-                background: pink;
+        }
+        return nodes;
+    };
+    //广度搜索
+    Tree.prototype.wideTraversal = function(callback,node) {
+        var nodes = [];
+        if (node != null) {
+            var queue = [];
+            queue.unshift(node);
+            while (queue.length != 0) {
+                var item = queue.shift();
+                callback(item);
+                nodes.push(item);
+                var children = item.children;
+                for (var i = 0; i < children.length; i++)
+                    queue.push(children[i]);
             }
-        </style>
-    </head>
-    <body>
-        <div id="box"></div>
-    </body>
+        }
+        return nodes;
+    }
+
+
+    var tree = new Tree('one');
+
+    tree._root.children.push(new Node('two'));
+    tree._root.children[0].parent = tree;
+
+    tree._root.children.push(new Node('three'));
+    tree._root.children[1].parent = tree;
+
+    tree._root.children.push(new Node('four'));
+    tree._root.children[2].parent = tree;
+
+    tree._root.children[0].children.push(new Node('five'));
+    tree._root.children[0].children[0].parent = tree._root.children[0];
+
+    tree._root.children[0].children.push(new Node('six'));
+    tree._root.children[0].children[1].parent = tree._root.children[0];
+
+    tree._root.children[2].children.push(new Node('seven'));
+    tree._root.children[2].children[0].parent = tree._root.chil
+
+    var arr = tree.deepTraversal(function(node) {
+        console.log(node.data)
+    },tree._root);
+    console.log(arr);
+
+    var arr2 = tree.wideTraversal(function(node) {
+        console.log(node.data)
+    },tree._root);
+    console.log(arr2);
+    </script>
+</body>
 </html>

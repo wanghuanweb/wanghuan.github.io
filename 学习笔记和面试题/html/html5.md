@@ -2,20 +2,25 @@
 
 HTML5 不基于 SGML，因此不需要对DTD进行引用，但是需要doctype来规范浏览器的行为（让浏览器按照它们应该的方式来运行）；
 而HTML4.01基于SGML,所以需要对DTD进行引用，才能告知浏览器文档所使用的文档类型。
- SGML (Standard Generalized Markup Language) 标准通用标记语言
+SGML (Standard Generalized Markup Language) 标准通用标记语言
 
- **html5语义化**
+**html5语义化**
 
- HTML语义化其实就是根据内容的结构化选择合适的标签，便于开发者阅读维护和写出优雅的代码。
+语义化的好处：
 
- 比如文章结构标签 (HTML5新的特殊内容元素，比如 article、header、nav、footer、section)
+1.用户体验：例如title、alt用于解释名词或解释图片信息、label标签的活用；
+2.有利于SEO(搜索引擎优化)：和搜索引擎建立良好沟通，有助于爬虫抓取更多的有效信息：爬虫依赖于标签来确定上下文和各个关键字的权重
+3.方便其他设备解析（如屏幕阅读器、盲人阅读器、移动设备）以意义的方式来渲染网页；
+4.便于团队开发和维护，语义化更具可读性，是下一步吧网页的重要动向，遵循W3C标准的团队都遵循这个标准，可以减少差异化。
 
- <article> :定义外部的内容，外部内容可以是来自外部的新闻提供者的一篇新的文章或者是来自blog的文本
- <header>:定义文档的页眉；对应<footer>定义文章的页脚
- <nav>:导航栏
- <article> 标签定义 article 以外的内容。aside 的内容应该与 article 的内容相关。
- <aside> 的内容可用作文章的侧栏。
- <footer>
+比如文章结构标签 (HTML5新的特殊内容元素，比如 article、header、nav、footer、section)
+
+<article> :定义外部的内容，外部内容可以是来自外部的新闻提供者的一篇新的文章或者是来自blog的文本
+<header>:定义文档的页眉；对应<footer>定义文章的页脚
+<nav>:导航栏
+<article> 标签定义 article 以外的内容。aside 的内容应该与 article 的内容相关。
+<aside> 的内容可用作文章的侧栏。
+<footer>
 
  ```
  <header>
@@ -44,8 +49,18 @@ HTML5 不基于 SGML，因此不需要对DTD进行引用，但是需要doctype�
  <footer>
  </footer>
  ```
+**如果把 HTML5 看作做一个开放平台，那它的构建模块有哪些**
 
- **html5新增标签**
+1.新增结构化元素，表单的新元素和表单自动完成功能，input的type增多，视频和音频
+2.canvas画布绘图
+3.拖放(drag和drop)
+4.web存储特性(localStorage,sessionStorage)
+5.离线检测(navigator.onLine属性,online,offline事件)
+6.应用程序缓存（Application Cache）
+7.获取地理位置(navigator.geolocation)
+8.HTML5规范里增加了一个自定义data属性.
+
+**html5新增标签**
 
  1.新增的结构标签header,nav,section,article，aside,footer和figure，figcaption
 
@@ -102,7 +117,7 @@ HTML5 不基于 SGML，因此不需要对DTD进行引用，但是需要doctype�
 
 ```
 var e = "abbr, article, aside, audio, canvas, datalist, details, dialog, eventsource, figure, footer, header, hgroup, mark, menu, meter, nav, output, progress, section, time, video".split(', ');
-var i= e.length;
+var i = e.length;
 while (i--){
     document.createElement(e[i])
 }
@@ -133,7 +148,6 @@ while (i--){
 7.获取地理位置(navigator.geolocation)
 
 8.HTML5规范里增加了一个自定义data属性.
-
 
 **HTML5的form自动完成功能**
 
@@ -205,7 +219,6 @@ window.onload = function(){
 
 };
 ```
-
 
 **html5的web存储新方法**
 
@@ -428,10 +441,10 @@ options = {
 
 **使用 data- 属性的好处**
 
-赋予我们在所有 HTML 元素上嵌入自定义 data 属性的能力。
-存储的（自定义）数据能够被页面的 JavaScript 中利用，以创建更好的用户体验（不进行 Ajax 调用或服务器端数据库查询）。
+自定义存储的数据能够被页面的JavaScript中利用，以创建更好的用户体验（不进行 Ajax 调用或服务器端数据库查询）。
 
 为前端开发者提供自定义的属性，这些属性集可以通过对象的dataset属性获取，不支持该属性的浏览器可以通过 getAttribute方法获取
+
 ```
 <div data-author="david" data-time="2011-06-20" data-comment-num="10" id="content">...</div>
 var content = document.getElementById('content');      

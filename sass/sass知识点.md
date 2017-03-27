@@ -6,7 +6,7 @@ LESS和Sass之间的主要区别是他们的实现方式不同，LESS是基于Ja
 
 LESS、Sass、Stylus，用来预编译Sass或less，增强了css代码的复用性，
  还有层级、mixin、变量、循环、函数等，具有很方便的UI组件模块化开发能力，极大的提高工作效率。
- 
+
 **sass优点**
 
 1.结构清晰干净
@@ -425,3 +425,28 @@ type-of($value)：返回一个值的类型
 unit($number)：返回一个值的单位
 unitless($number)：判断一个值是否带有单位
 comparable($number-1, $number-2)：判断两个值是否可以做加、减和合并
+
+**自动浏览器加前缀**
+
+```
+@mixin prefix($property,$value){
+    -webkit-#{$property}:$value;
+    -moz-#{$property}:$value;
+    #{$property}:$value;
+}
+@mixin radius($value){
+    @include prefix(border-radius,$value)
+}
+div{
+    @include radius(50px);
+}
+```
+
+则为
+```
+div{
+    -webkit-border-radius:50px;
+    -moz-border-radius:50px;
+    border-raduis:50px;
+}
+```
