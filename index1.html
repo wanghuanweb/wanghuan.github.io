@@ -9,82 +9,16 @@
 <body>
 
     <script type="text/javascript">
-    function Node(data) {
-        this.data = data;
-        this.parent = null;
-        this.children = [];
-    }
+    var script = document.createElement ("script")
+script.type = "text/javascript";
 
-    function Tree(data) {
-        var node = new Node(data);
-        this._root = node;
-    }
+//Firefox, Opera, Chrome, Safari 3+
+script.onload = function(){
+    console.log(2);
+};
 
-    //深度搜索
-    Tree.prototype.deepTraversal =  function(callback,node){
-        var nodes = [];
-        if (node != null) {
-            var stack = [];
-            stack.push(node);
-            while (stack.length != 0) {
-                var item = stack.pop();
-                callback(item);
-                nodes.push(item);
-                var children = item.children;
-                for (var i = children.length - 1; i >= 0; i--)
-                    stack.push(children[i]);
-            }
-        }
-        return nodes;
-    };
-    //广度搜索
-    Tree.prototype.wideTraversal = function(callback,node) {
-        var nodes = [];
-        if (node != null) {
-            var queue = [];
-            queue.unshift(node);
-            while (queue.length != 0) {
-                var item = queue.shift();
-                callback(item);
-                nodes.push(item);
-                var children = item.children;
-                for (var i = 0; i < children.length; i++)
-                    queue.push(children[i]);
-            }
-        }
-        return nodes;
-    }
-
-
-    var tree = new Tree('one');
-
-    tree._root.children.push(new Node('two'));
-    tree._root.children[0].parent = tree;
-
-    tree._root.children.push(new Node('three'));
-    tree._root.children[1].parent = tree;
-
-    tree._root.children.push(new Node('four'));
-    tree._root.children[2].parent = tree;
-
-    tree._root.children[0].children.push(new Node('five'));
-    tree._root.children[0].children[0].parent = tree._root.children[0];
-
-    tree._root.children[0].children.push(new Node('six'));
-    tree._root.children[0].children[1].parent = tree._root.children[0];
-
-    tree._root.children[2].children.push(new Node('seven'));
-    tree._root.children[2].children[0].parent = tree._root.chil
-
-    var arr = tree.deepTraversal(function(node) {
-        console.log(node.data)
-    },tree._root);
-    console.log(arr);
-
-    var arr2 = tree.wideTraversal(function(node) {
-        console.log(node.data)
-    },tree._root);
-    console.log(arr2);
+script.src = "index.js";
+document.getElementsByTagName("head")[0].appendChild(script);
     </script>
 </body>
 </html>
