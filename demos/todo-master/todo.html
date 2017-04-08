@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>TodoList</title>
+    <style>
+        html,body{
+            padding: 0;
+            margin: 0;
+        }
+        @media(max-width: 375px) {
+            .container {
+                padding:10px 10px;
+                background: #eee;
+            }
+        }
+        @media(min-width: 376px) {
+            .container {
+                width: 50%;
+                padding:10px;
+                background: #eee;
+                margin-right: auto;
+                margin-left: auto;
+            }
+        }
+        .title{
+            text-align: center;
+            color: #808080;
+        }
+        #list{
+            background: #ffffff;
+            margin-top: 20px;
+            padding: 1px 2px ;
+        }
+        .todo{
+            border-bottom: 1px solid #eee;
+            padding: 2px 1px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2 class="title">
+        TodoList
+    </h2>
+    <input placeholder="Your Todos"
+           id = "input"
+           onkeyup="javascript:changeColor()"/>
+    <div id="list">
+        <p>
+            Your Todos Here
+        </p>
+    </div>
+</div>
+
+
+<script src="http://code.jquery.com/jquery-latest.js"></script>
+<script>
+    function removeList(event){
+        event.target.parentNode.parentNode.removeChild(event.target.parentNode);
+    }
+
+    function replaceText(str,input){
+        return str.replace(eval('/'+input+'/g'),"<span style='color:red'>"+input+"</span>");
+    }
+
+    document.onkeydown=function(){
+        var val = $('#input').val().trim();
+        if (event.keyCode == 13){
+            if(val){
+                $('#list').append('' +
+                        "<div class='todo'><span>"+val+"</span>" +
+                        "<button onclick='javascript:removeList(event)' style='float:right'>X</button>"+
+                        "</div>"+
+                        '');
+                $('#input').val("");
+            }else{
+                alert("input value");
+            }
+        }
+    };
+
+    function changeColor(){
+        var list = $('.todo');
+        var str = document.getElementById('input').value;
+        //pay attention to the difference between innerText and innerHTML
+        for(var i = 0;i<list.length;i++){
+            if(list[i].firstChild.innerText.indexOf(str)>=0){
+                list[i].firstChild.innerHTML = replaceText(list[i].firstChild.innerText,str);
+            }else{
+                list[i].firstChild.innerHTML = list[i].firstChild.innerText;
+            }
+        }
+    }
+</script>
+</body>
+</html>

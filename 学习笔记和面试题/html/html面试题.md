@@ -83,7 +83,7 @@ name属性：主要用于描述网页，与之对应的属性值为content，con
 
 **meta之http-equiv**
 
-http-equiv属性值：expires/pragma/refresh/Set-Cookie/Window-target
+http-equiv属性值：expires/cache-control/pragma/refresh/Set-Cookie/Window-target
 
 1.expires--可以用于设定网页的到期时间。一旦网页过期，必须到服务器上重新传输。
 
