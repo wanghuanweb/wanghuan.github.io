@@ -6,23 +6,24 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
     <style>
-        .container{
+        html,body{
+            height: 100%;
+        }
+        .parent{
+            height: 200px;
             width: 100%;
-            display: table;
-            height: 100px;
         }
         .child{
-            display: table-cell;
+            width: 33%;
+            height: 100%;
             border: 1px solid black;
+            display: inline-block;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="child"></div>
-        <div class="child"></div>
-        <div class="child"></div>
-        <div class="child"></div>
+    <div class="parent">
+        <div class="child"></div><div class="child"></div><div class="child"></div>
     </div>
 </body>
 </html>

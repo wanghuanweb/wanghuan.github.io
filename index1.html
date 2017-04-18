@@ -5,37 +5,57 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
+    <style>
+        #showDiv{
+            width: 500px;
+            height:350px;
+            background-color: red;
+            margin: 1000px auto 0 auto;
+        }
+        keyframes fadeInLeft{
+            0%{
+                opacity:0;
+                transform:translate3d(-100%,0,0);
+            }
+            100%{
+                opacity:1;
+                transform:none;
+            }
+        }
+        @-webkit-keyframes fadeInLeft{
+            0%{
+                opacity:0;
+                -webkit-transform:translate3d(-100%,0,0);
+            }
+            100%{
+                opacity:1;
+                -webkit-transform:none;
+            }
+        }
+        .fadeInLeft{
+            animation-name:fadeInLeft;
+            -webkit-animation-name:fadeInLeft;
+            animation-duration:2s;
+            -webkit-animation-duration:2s;
+        }
+    </style>
 </head>
 <body>
-    <ul>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-    </ul>
-    <script>
-        //var li = document.getElementsByTagName("li");
-        // ul.addEventListener("click",function(event){
-        //     var event = event || window.event,
-        //         target = event.target || event.srcElement;
-        //     if(target && target.nodeName.toUpperCase() === "LI") {
-        //         console.log();
-        //     }
-        // },false);
-        /*for(var i = 0,len =li.length;i < len;i++){
-            (function(i){
-                li[i].addEventListener("click",function(){
-                    console.log(i);
-                },false);
-            })(i);
-        }*/
-        'use strict';
-        (function() {
-            var a = b = 5;
-        })();
-        alert(b);
-        alert(a);
+    <div id="showDiv" class="fadeInLeft"></div>
+    <script type="text/javascript">
+    setTimeout(function() {
+      console.log(1)
+    }, 0);
+    new Promise(function executor(resolve) {
+      console.log(2);
+      for( var i=0 ; i<10000 ; i++ ) {
+        i == 9999 && resolve();
+      }
+      console.log(3);
+    }).then(function() {
+      console.log(4);
+    });
+    console.log(5);
     </script>
 </body>
 </html>

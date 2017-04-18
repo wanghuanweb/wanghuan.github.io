@@ -1,7 +1,8 @@
 <!-- 思路：多列均匀布局
-1.flex布局
-2.display:table和table-cell
-3. -->
+1.flex布局,父元素display设置为flex，子元素设置flex-grow:1
+2.display:table和table-cell,但是需要内容宽度一样，主要还是取决于内容
+3.width百分比，但设置inline-block
+ -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,9 +14,9 @@
         .container{
             display:flex;
             flex-direction: row;
+            height: 200px;
         }
         .child{
-            height: 200px;
             flex-grow: 1;
             border: 1px solid black;
         }

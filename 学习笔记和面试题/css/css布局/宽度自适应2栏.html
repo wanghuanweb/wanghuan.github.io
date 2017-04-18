@@ -1,14 +1,17 @@
 <!-- 两列宽度自适应布局
      思路一：绝对定位
-     1.left和right都用绝对定位，top为0，height为100%
+     1.left和right都用绝对定位，top为0，height为100%并且html和body高度是100%
      2.left设置width，left为0
      3.right的left为width，right为0
+
      思路二：浮动(在宽度自适应2栏2)
      1.left设置float：left
      2.right元素设置overflow(触发新的BFC)
+
      思路三：浮动(在宽度自适应2栏2)
      1.left设置float：left
      2.right元素设置margin-left
+     
      思路四：flex布局
      1.父元素设置display:flex;和flex-direction
      2.子元素左边的设置flex-basis：/-webkit-flex-basis:100px;
