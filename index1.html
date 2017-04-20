@@ -6,56 +6,65 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
     <style>
-        #showDiv{
-            width: 500px;
-            height:350px;
-            background-color: red;
-            margin: 1000px auto 0 auto;
-        }
-        keyframes fadeInLeft{
-            0%{
-                opacity:0;
-                transform:translate3d(-100%,0,0);
-            }
-            100%{
-                opacity:1;
-                transform:none;
-            }
-        }
-        @-webkit-keyframes fadeInLeft{
-            0%{
-                opacity:0;
-                -webkit-transform:translate3d(-100%,0,0);
-            }
-            100%{
-                opacity:1;
-                -webkit-transform:none;
-            }
-        }
-        .fadeInLeft{
-            animation-name:fadeInLeft;
-            -webkit-animation-name:fadeInLeft;
-            animation-duration:2s;
-            -webkit-animation-duration:2s;
-        }
+
     </style>
 </head>
 <body>
     <div id="showDiv" class="fadeInLeft"></div>
     <script type="text/javascript">
-    setTimeout(function() {
-      console.log(1)
-    }, 0);
-    new Promise(function executor(resolve) {
-      console.log(2);
-      for( var i=0 ; i<10000 ; i++ ) {
-        i == 9999 && resolve();
+    function findNthNum(arr,nth){
+
+      var obj = {},
+          len = arr.length;
+      for(var i = 0;i < len;i++){
+        if(!obj[arr[i]]){
+          obj[arr[i]] = 1;
+        }else{
+          obj[arr[i]] += 1;
+        }
       }
-      console.log(3);
-    }).then(function() {
-      console.log(4);
-    });
-    console.log(5);
+      console.log(obj);
+
+      var arr = [],
+          num = 0;
+      //obj转换为数组
+      for(var j in obj){
+        arr[num] = {};
+        arr[num].key = j;
+        arr[num].value = obj[j];
+        num++;
+      }
+      //arr根据value排序
+      arr.sort(function compare(a,b){
+          return a.value - b.value;
+      });
+
+      console.log(arr);
+
+      //寻找数组中第n大的数
+      var num1 =1,
+          result = [],
+          flag = false;
+
+      for(var k = 1,len = arr.length - 1;k < len;k++){
+        if(arr[k].value != arr[k-1].value){
+          num1++;
+        }
+
+        if(num1 == nth && arr[k].value == arr[k-1].value){
+          if(!flag){
+            flag = true;
+            result.push(arr[k-1].key);
+          }
+          result.push(arr[k].key);
+
+        }
+      }
+      return result;
+    }
+    console.log(findNthNum([2,7,4,10,15,7,2,10,3,7,4],1));
+    console.log(findNthNum([2,7,4,10,15,7,2,10,3,7,4],2));
+    console.log(findNthNum([2,7,4,10,15,7,2,10,3,7,4],3));
     </script>
 </body>
 </html>
