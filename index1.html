@@ -12,59 +12,29 @@
 <body>
     <div id="showDiv" class="fadeInLeft"></div>
     <script type="text/javascript">
-    function findNthNum(arr,nth){
+    function nthMax(arr,nth){
 
-      var obj = {},
-          len = arr.length;
-      for(var i = 0;i < len;i++){
-        if(!obj[arr[i]]){
-          obj[arr[i]] = 1;
-        }else{
-          obj[arr[i]] += 1;
-        }
-      }
-      console.log(obj);
-
-      var arr = [],
-          num = 0;
-      //obj转换为数组
-      for(var j in obj){
-        arr[num] = {};
-        arr[num].key = j;
-        arr[num].value = obj[j];
-        num++;
-      }
-      //arr根据value排序
-      arr.sort(function compare(a,b){
-          return a.value - b.value;
+      arr.sort(function(a,b){
+        return a-b;
       });
 
-      console.log(arr);
+      var i = 0,
+          len = arr.length,
+          num = 1,
+          result;
 
-      //寻找数组中第n大的数
-      var num1 =1,
-          result = [],
-          flag = false;
-
-      for(var k = 1,len = arr.length - 1;k < len;k++){
-        if(arr[k].value != arr[k-1].value){
-          num1++;
+      for(;i < len;i++){
+        if(i > 0 && arr[i] != arr[i-1]){
+          num++;
         }
-
-        if(num1 == nth && arr[k].value == arr[k-1].value){
-          if(!flag){
-            flag = true;
-            result.push(arr[k-1].key);
-          }
-          result.push(arr[k].key);
-
+        if(num == nth){
+          result = arr[i];
         }
       }
       return result;
     }
-    console.log(findNthNum([2,7,4,10,15,7,2,10,3,7,4],1));
-    console.log(findNthNum([2,7,4,10,15,7,2,10,3,7,4],2));
-    console.log(findNthNum([2,7,4,10,15,7,2,10,3,7,4],3));
+    console.log(nthMax([1,2,3,2,4,8,5,6,7],3));
+    console.log(nthMax([1,2,3,2,4,8,5,6,7],8));
     </script>
 </body>
 </html>

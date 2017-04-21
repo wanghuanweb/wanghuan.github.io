@@ -11,7 +11,7 @@ function sum(arr,target){
     arr.sort();
 
     while(i < j){
-        sum = arr[i] +arr[j];
+        sum = arr[i] + arr[j];
         if(sum === target){
             obj[arr[i]] = arr[j];
             i++;
