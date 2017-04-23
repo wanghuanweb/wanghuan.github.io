@@ -12,29 +12,42 @@
 <body>
     <div id="showDiv" class="fadeInLeft"></div>
     <script type="text/javascript">
-    function nthMax(arr,nth){
-
-      arr.sort(function(a,b){
-        return a-b;
-      });
-
-      var i = 0,
-          len = arr.length,
-          num = 1,
-          result;
-
-      for(;i < len;i++){
-        if(i > 0 && arr[i] != arr[i-1]){
-          num++;
+    function sumStrings(a,b){
+        //先让两个数字补零，让两个数对齐
+        while(a.length < b.length){
+            a = "0" + a;
         }
-        if(num == nth){
-          result = arr[i];
+        while(a.length > b.length){
+            b = "0" + b;
         }
-      }
-      return result;
+
+        //是否有进位
+        var addOne = 0,
+            result = [];
+        for(var i = a.length - 1;i >= 0;i--){
+            //char转换成num
+            var c1 = a.charAt(i) - 0,
+                c2 = b.charAt(i) - 0,
+                sum = c1 + c2 + addOne;
+            if(sum > 9){
+                result.unshift(sum-10);
+                addOne=1;
+            }else{
+                result.unshift(sum);
+                addOne=0;
+            }
+        }
+        //最后仍然要进位
+        if(addOne){
+            result.unshift(addOne);
+        }
+        //应付如下的情况,"01" + "01" => "2",而不是"02"，所以移除第一位的"0"
+        if(!result[0]){
+            result.splice(0,1);
+        }
+        return result.join("");
     }
-    console.log(nthMax([1,2,3,2,4,8,5,6,7],3));
-    console.log(nthMax([1,2,3,2,4,8,5,6,7],8));
+    console.log(sumStrings("21748312750134","357138747865165623156"));
     </script>
 </body>
 </html>
