@@ -12,6 +12,7 @@
 <body>
     <div id="showDiv" class="fadeInLeft"></div>
     <script type="text/javascript">
+<<<<<<< HEAD
     function sumStrings(a,b){
         //先让两个数字补零，让两个数对齐
         while(a.length < b.length){
@@ -48,6 +49,23 @@
         return result.join("");
     }
     console.log(sumStrings("21748312750134","357138747865165623156"));
+=======
+
+define(function(require, exports, module) {
+    console.log('require module: main');
+
+    var mod1 = require('./mod1');
+    mod1.hello();
+    var mod2 = require('./mod2');
+    mod2.hello();
+
+    return {
+        hello: function() {
+            console.log('hello main');
+        }
+    };
+});
+>>>>>>> efeea0188ca63520dcc78748965d09bfe4eeba66
     </script>
 </body>
 </html>
