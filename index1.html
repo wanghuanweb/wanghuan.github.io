@@ -12,40 +12,6 @@
 <body>
     <div id="showDiv" class="fadeInLeft"></div>
     <script type="text/javascript">
-
-    function throttle(fn, delay) {
-      var ctx;
-      var args;
-      // 记录上次触发事件
-      var previous = Date.now();
-
-      var later = function () {
-        fn.apply(ctx, args);
-      };
-
-      return function () {
-          ctx = this;
-          args = arguments;
-          var now = Date.now();
-          // 本次事件触发与上一次的时间比较
-          var diff = now - previous;
-
-          // 如果隔间时间超过设定时间，即再次设置事件触发的定时器
-          if (diff >= delay) {
-              // 更新最近事件触发的时间
-              previous = now;
-              setTimeout(later, delay);
-          }
-      };
-    }
-
-
-    // 实际想绑定在 scroll 事件上的 handler
-    function realFunc(){
-    	console.log("Success");
-    }
-    // 采用了节流函数
-    window.addEventListener('resize',throttle(realFunc,1000));
     </script>
 </body>
 </html>
