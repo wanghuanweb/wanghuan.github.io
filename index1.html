@@ -12,6 +12,14 @@
 <body>
     <div id="showDiv" class="fadeInLeft"></div>
     <script type="text/javascript">
+    for (var i = 0; i < 5; i++) {
+        setTimeout(function() {
+            console.log('2: ',i);
+        }, 1000);
+        console.log('1: ', i); //新加一行代码
+    }
+
+    console.log(i);
     </script>
 </body>
 </html>

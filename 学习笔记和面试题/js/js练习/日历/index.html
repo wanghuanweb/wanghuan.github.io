@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+    <style>
+        body,html{padding: 0;margin: 0;font-size: 14px;color:#000;}
+        table {border-collapse: collapse;width: 100%;table-layout: fixed;}
+        td,th {border: 1px solid #e1e1e1;padding: 0;height: 20px;line-height: 20px;text-align: center;}
+        .current{color:red;}
+    </style>
+</head>
+<body>
+    <table>
+    <thead>
+        <tr><th>一</th><th>二</th><th>三</th><th>四</th><th>五</th><th>六</th><th>日</th></tr>
+    </thead>
+    <tbody>
+        <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+    </tbody>
+
+    <script type="text/javascript">
+        function calendar(year, month) {
+            //根据year和month生成date
+            var newDate = new Date(year,month - 1),
+                date_year = newDate.getFullYear(),
+                date_month = newDate.getMonth() + 1,
+                date_today = newDate.getDate(),
+                date_day = newDate.getDay();
+
+            //计算一个月内的天数,注意闰月
+            var dayNum_in_month = [31,28,31,30,31,30,31,31,30,31,30,31];
+            var isleapyear = date_year % 4;
+            if(isleapyear == 0)
+            {
+                dayNum_in_month[1] = 29;
+            }
+            var month_alldays = dayNum_in_month[date_month - 1];
+
+            console.log(month_alldays);
+
+            //计算行数，line_top表示当前日期上面的行数，包括当前行；line_bot表示当前日期下面的行数，不包括当前行
+            var line_top;
+            var line_bot;
+            if((date_today - date_day + 1) % 7 != 0){
+                line_top = Math.floor((date_today - date_day + 1) / 7) + 1;
+            }else{
+                line_top = Math.floor((date_today - date_day + 1) / 7);
+            }
+
+            if((30 - date_today + date_day + 1) % 7 != 0){
+                line_bot = Math.floor((30 - date_today + date_day + 1) / 7) + 1;
+            }else{
+                line_bot = Math.floor((30 - date_today + date_day + 1) / 7);
+            }
+
+            //定义一个二维数组，预备一个6*7的数组，数组中每个元素对应一个单元格(日期)
+            var dateList = new Array([""],[""],[""],[""],[""],[""],[""]);
+            var dateCell;
+
+            for(var i = 1; i < 7; i++){
+                //i是行数
+                for(var j = 0; j < 7; j++){
+                    //j是列数
+                    dateList[i][j] = date_today - 7 * (line_top - i + 1) + j - date_day;
+                    //如果武器<=0，置空
+                    if((date_today - 7 * (line_top - i + 1) + j - date_day) <= 0){
+                        dateList[i][j] = " ";
+                    }
+                    //如果日期大于月总天数，则不显示
+                    if((date_today - 7 * (line_top - i + 1) + j - date_day) > month_alldays){
+                        dateList[i][j] = " ";
+                    }
+                }
+            }
+            console.log(dateList);
+
+            //将日期写入table
+            var calendar = document.getElementsByTagName("tbody")[0],
+                trs = calendar.getElementsByTagName("tr");
+
+            for(let i = 0, len = trs.length; i < len;i++){
+                console.log(trs.length);
+                var tds = trs[i].getElementsByTagName("td");
+                for(let j = 0,len2 = tds.length;j < len2;j++){
+                    tds[j].innerHTML = dateList[i+1][j];
+
+                    if(date_day == dateList[i+1][j]){
+                        console.log(date_day);
+                        tds[j].classList.add('current');
+                    }
+
+                }
+            }
+
+        }
+        calendar(2017,4);
+    </script>
+</table>
+</body>
+</html>
