@@ -1,0 +1,51 @@
+<!--  要求：是个正方形，边长是屏幕宽度的一般
+方法一--使用vm
+  1.body，html设置成高宽都是100%，margin和padding设置成0；
+  2.body设置成relative
+  3.div设置成绝对定位，水平垂直居中。width和height设置成50vw
+
+方法二--利用padding和margin是相对于父元素的宽进行百分比设置的
+  1.body，html设置成高宽都是100%，margin和padding设置成0；
+  2.body设置成relative
+  3.div设置成绝对定位，水平垂直居中。width设置成50%，padding-bottom设置成50%,height设置为0为了避免被内容撑开多余的高度
+  -->
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta http-equiv="X-UA-Compatible" content="ie=edge">
+      <title>Document</title>
+
+      <style>
+          html,body{
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+          }
+          body{
+            position: relative;
+          }
+          .square{
+            width: 50vw;
+            height: 50vw;
+            background: red;
+
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            margin-left: -25vw;
+            margin-top: -25vw;
+          }
+      </style>
+  </head>
+  <body>
+      <div class="square">
+
+      </div>
+      <script type="text/javascript">
+
+      </script>
+  </body>
+  </html>

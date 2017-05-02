@@ -6,6 +6,9 @@ window.screen.height,window.screen.width,window.screen.availWidth,window.screen.
 2.document对象的宽高
 
 client(四种)，offset(四种)，scroll(四种)
+clientWidth,clientHeight,clientTop,clientLeft
+offsetWidth,offsetHeight,offsetTop,offsetLeft
+scrollWidth,scrollHeight,scrollTop,scrollLeft
 
 3.event事件的坐标
 (clientX,clientY,screenX,scrennY,offsetX,offextY,pageX,pageY,layerX,layerY)：
@@ -225,7 +228,7 @@ function getPosition(e){
 ```
 function scrollBottomOrTop(){
     //可视区域
-    var client = window.innerHeight || document.documentElement.clientHeight ||     document.body.clientHeight;
+    var client = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
     //滚动的部分
     var scroll = document.body.scrollTop;
     //总页面高度
