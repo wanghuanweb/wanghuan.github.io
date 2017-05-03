@@ -1,0 +1,23 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+#main{
+    position: relative;
+}
+.box{
+    /*图片之间的距离用padding，因为想用offsetHeight获取高度，这个属性可以获取padding但是无法得到margin*/
+    padding:2px;
+    float: left;
+}
+.pic{
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 0 5px #ccc;
+}
+/*设置图片宽度一致*/
+.pic img{
+    width: 165px;
+    height: auto;
+}

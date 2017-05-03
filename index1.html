@@ -14,155 +14,18 @@
     <div class="square">
     </div>
     <script type="text/javascript">
-    function Node(data,left,right){
-        this.data = data;
-        this.left = left;
-        this.right = right;
-        this.show = show;
-    }
-    function show(){
-        return this.data;
-    }
-
-    function BST(){
-        this.root = null;
-    }
-    BST.prototype = {
-        constructor:BST,
-        insert:function(data){
-            var newNode = new Node(data,null,null);
-
-            if(this.root == null){
-                this.root = newNode;
-            } else {
-                var current = this.root,
-                    parent;
-
-                while(current){
-                    parent = current;
-
-                    if(data < current.data) {
-                        current = current.left;
-                        if(current == null){
-                            parent.left = newNode;
-                            break;
-                        }
-                    } else {
-                        current = current.right;
-                        if(current == null){
-                            parent.right = newNode;
-                            break;
-                        }
-                    }
-                }
-            }
-        },
-        preOrder:function(node){
-            if(node){
-                console.log(node.show());
-                this.preOrder(node.left);
-                this.preOrder(node.right);
-            }
-        },
-        inOrder:function(node){
-            if(node){
-                this.inOrder(node.left);
-                console.log(node.show());
-                this.inOrder(node.right);
-            }
-        },
-        postOrder:function(node){
-            if(node){
-                this.postOrder(node.left);
-                this.postOrder(node.right);
-                console.log(node.show());
-            }
-        },
-        getMin:function(){
-            var current = this.root;
-            while(current.left != null){
-                current = current.left;
-            }
-            return current.data;
-        },
-        getMax:function(){
-            var current = this.root;
-            while(current.right != null){
-                current = current.right;
-            }
-            return current.data;
-        },
-        find:function(data){
-            var current = this.root;
-            while(current != null){
-                if(current.data == data){
-                    return current;
-                } else if(data < current.data){
-                    current = current.left;
-                } else {
-                    current = current.right;
-                }
-            }
-            return null;
-        },
-        getSmallest:function(node){
-            if(node.left == null){
-                return node;
-            }
-            else{
-                return this.getSmallest(node.left);
-            }
-        },
-        remove:function(data){
-            this.root = this.removeData(this.root,data);
-        },
-        removeData:function(node,data){
-            if(node == null){
-                return null;
-            }
-            if(data == node.data){
-
-                if(node.left == null && node.right == null) {
-                    return null;
-                }
-
-                if(node.left == null){
-                    return node.right;
-                }
-
-                if(node.right == null){
-                    return node.left;
-                }
-
-                var tempNode = this.getSmallest(node.right);
-                node.data = tempNode.data;
-                node.right = this.removeData(node.right,tempNode.data);
-                return node;
-            } else if(data < node.data){
-                node.left = this.removeData(node.left,data);
-                return node;
-            } else {
-                node.right = this.removeData(node.right,data);
-                return node;
-            }
+      function A(){
+        function B(){
+          var a,b;
+          function C(){
+            a = 1;
+            b = 2;
+            return B();
+          }
         }
+      }
 
-    }
-
-
-    //例子
-    var nums = new BST();
-    nums.insert(23);
-    nums.insert(45);
-    nums.insert(16);
-    nums.insert(37);
-    nums.insert(3);
-    nums.insert(99);
-    nums.insert(22);
-    nums.inOrder(nums.root);
-    nums.remove(23);
-    console.log("delete");
-    nums.inOrder(nums.root);
+      console.log(A());
     </script>
 </body>
 </html>
