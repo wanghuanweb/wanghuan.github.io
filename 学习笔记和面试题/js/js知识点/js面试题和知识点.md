@@ -1,3 +1,8 @@
+1.算法，一个数组找出n个数和是m
+2.前端性能优化：一百个div要放大，怎么写(把div取出来操作完再加回去)
+3.requirejs死锁问题的解决，以及懒加载是如何实现的。
+4，rem，em，vm
+5.前端路由是如何实现的
 ##### 40.知道什么是webkit么? 知道怎么用浏览器的各种工具来调试和debug代码么?你使用哪些工具和技术来调试 JavaScript 代码？
 
 浏览器引擎和浏览器：opera--webkit(chrome和safari)--khtml--gecko(firefox)--ie
