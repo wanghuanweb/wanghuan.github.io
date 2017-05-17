@@ -10,20 +10,6 @@
 ```
 html{-webkit-text-size-adjust: none;}
 ```
-##### 37.让页面里的字体变清晰，变细用CSS怎么做？（-webkit-font-smoothing: antialiased;）
-font-smoothing是非标准的CSS定义。
-
-Webkit在自己的引擎中支持了这一效果。
-
--webkit-font-smoothing
-
-它有三个属性值：
-
-none ------ 对低像素的文本比较好
-
-subpixel-antialiased------默认值
-
-antialiased ------抗锯齿很好
 ##### 39.position:fixed;在android下无效怎么处理？
 ##### 42.overflow: scroll时不能平滑滚动的问题怎么处理？
 ##### 45.什么是Cookie 隔离？（或者说：请求资源的时候不要让它带cookie怎么做）
