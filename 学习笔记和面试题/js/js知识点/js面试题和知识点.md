@@ -102,15 +102,12 @@ CSS设置父元素透明子元素怎么取消这个透明...
 阿里面试
 （1）    Object.crease(obj,{params})的具体用处？
 http://www.cnblogs.com/yupeng/p/3478069.html
+https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/create
 继承性地创建一个对象。
 
-（2）javascript的几种作用域：
-http://www.cnblogs.com/silentjesse/p/4024536.html
-1、    函数作用域 2、变量作用域 3、作用域链 4、with语句
 
 （3）声明某个变量类型的变量
 
-腾讯汽车面试题
 2、    html4、xhtml、html5的区别
 3、    css hack的用法，如何区别浏览器
 7、    如何区别浏览器和版本
@@ -118,8 +115,6 @@ http://www.cnblogs.com/silentjesse/p/4024536.html
 9、    你所知道的js框架，以及选择原因
 10、    你所知道的字符串化为数值以及求整的方法
 14、    扩展Date方法，求出当前日期内月份的天数
-17、    javascript语法优化
-蘑菇街
 一个字符串取出 2 到 7 的字串
 
 曾经总结的一些前端技术要点：https://bbs.byr.cn/#!article/WWWTechnology/38004
