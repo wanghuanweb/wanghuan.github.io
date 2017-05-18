@@ -1,3 +1,5 @@
+2sum的算法复杂度是O(N log N) 因为排序用了N log N以及头尾指针的搜索是线性的，所以总体是O(N log N)
+
 数组排序，两个指针i，j前后遍历
 arr[i]+arr[j]=sum则指针前后移动
 arr[i]+arr[j]<sum则i后移动，否则j前移动
