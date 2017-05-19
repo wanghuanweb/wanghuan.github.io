@@ -15,8 +15,22 @@
     <div class="square">
     </div>
     <script type="text/javascript">
-      console.log("" == "");
-      console.log([] == []);
+    function P(){}
+    P.prototype.home = [1,2,3,4]
+    P.prototype.type = 5;
+    var p1 = new P();
+    var p2 = new P();
+    p1.home[0]=0;
+    p1.type = 6;
+    console.log(p2.home)
+    console.log(p2.type)
+
+    function P1(){}
+    P1.prototype.home = [1,2,3,4]
+    var p11 = new P1();
+    var p21 = new P1();
+    p11.home=[5,6,7,8]
+    console.log(p21.home)
 
     </script>
 </body>

@@ -1,16 +1,12 @@
 1.算法，一个数组找出n个数和是m
 2.前端性能优化：一百个div要放大，怎么写(把div取出来操作完再加回去)
 3.requirejs懒加载是如何实现的。
-
 ##### 40.知道什么是webkit么? 知道怎么用浏览器的各种工具来调试和debug代码么?你使用哪些工具和技术来调试 JavaScript 代码？
-
 浏览器引擎和浏览器：opera--webkit(chrome和safari)--khtml--gecko(firefox)--ie
-
 webkit是一个引擎，此引擎的主要的使用者有Safari，Chrome。
 ##### 28.页面编码和被请求的资源编码如果不一致如何处理？
 ##### 23. [].forEach.call($$("*"),function(a){ a.style.outline="1px solid #"+(~~(Math.random()*(1<<24))).toString(16) })  能解释一下这段代码的意思吗？
 ##### 62.如何判断当前脚本运行在浏览器还是node环境中？（阿里）
-
 十三、iframe有那些缺点？
 iframe会阻塞主页面的Onload事件；
 搜索引擎的检索程序无法解读这种页面，不利于SEO;
@@ -36,7 +32,6 @@ What is the extent of your experience with Promises and/or their polyfills?
 不变性 (immutability) 有哪些优缺点？
 如何用你自己的代码来实现不变性 (immutability)？
 请问调用栈 (call stack) 和任务队列 (task queue) 的区别是什么？
-
 你在昨天/本周学到了什么？
 编写代码的哪些方面能够使你兴奋或感兴趣？
 你最近遇到过什么技术挑战？你是如何解决的？
@@ -53,13 +48,11 @@ What is the extent of your experience with Promises and/or their polyfills?
     其他
 浏览器同一时间可以从一个域名下载多少资源？
 请说出三种减少页面加载时间的方法。(加载时间指感知的时间或者实际加载时间)
-
 为什么利用多个域名来提供网站资源会更有效？
     浏览器同一时间可以从一个域名下载多少资源？
     有什么例外吗？
     加分项： 指出在手机端可能有负面影响 (http://www.mobify.com/blog/domain-sharding-bad-news-mobile-performance/)
     加分项： HTTP2 / SPDY
-
 请写一个简单的幻灯效果页面。
     如果不使用JS来完成，可以加分。
 你都使用哪些工具来测试代码的性能？
@@ -67,7 +60,6 @@ What is the extent of your experience with Promises and/or their polyfills?
 如果今年你打算熟练掌握一项新技术，那会是什么？
 请谈谈你对网页标准和标准制定机构重要性的理解。
 请解释什么是 ARIA 和屏幕阅读器 (screenreaders)，以及如何使网站实现无障碍访问 (accessible)。
-
 ===================================================================
 搜狗面试题
 js框架有哪些，有什么有特点
@@ -104,8 +96,6 @@ CSS设置父元素透明子元素怎么取消这个透明...
 http://www.cnblogs.com/yupeng/p/3478069.html
 https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/create
 继承性地创建一个对象。
-
-
 （3）声明某个变量类型的变量
 
 2、    html4、xhtml、html5的区别
@@ -124,37 +114,21 @@ https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects
 Github: https://github.com/shangfeiSF，每个repo的Readme会逐步完善
 
 目前最完善的readme应该是https://github.com/shangfeiSF/redux-grope，喜欢或者正在使用React/Redux/React-router的童鞋可以看一看，和官网上的examples有不少优化
-
 Promise实现bluebird主要API示例：https://github.com/shangfeiSF/bluebird-grope
-
 React学习教程:https://github.com/shangfeiSF/react-grope
-
 React-router学习教程：https://github.com/shangfeiSF/react-router-grope
-
 Redux & Facebook/Flow & Facebook/Jest学习教程：https://github.com/shangfeiSF/redux-grope
-
 chrome插件框架(ali全球眼项目演化而来)：https://github.com/shangfeiSF/chross2
-
 Grunt经典插件教程：https://github.com/shangfeiSF/grunt-grope
-
 图片上传前后端实现：https://github.com/shangfeiSF/upload-image-grope
-
 socket.io应用：https://github.com/shangfeiSF/socketio-grope
-
 老虎机jQuery & Zepto实现：https://github.com/shangfeiSF/slotmachine-grope
-
 z-index点点滴滴：https://github.com/shangfeiSF/z-index-grope
-
 less语法实例：https://github.com/shangfeiSF/less-grope
-
 图片处理：https://github.com/shangfeiSF/graphics-magick-grope
-
 nodejs核心模块 & nopt & mocha：https://github.com/shangfeiSF/nodejs-grope
-
 写这些repo的初衷大部分源于对这些技术的好奇心，也算是为自己积累经验
-
 前端算法：最起码用js写数据结构没问题，stack  queue  map  set  hashmap  tree(先中后序)  gragh  （bfs  dfs）等能实现了就好，排序查找也得会些，还有个链表
-
 为什么传统上利用多个域名来提供网站资源会更有效？
 请尽可能完整得描述从输入 URL 到整个网页加载完毕及显示在屏幕上的整个流程。
 Long-Polling、Websockets 和 Server-Sent Event 之间有什么区别？
@@ -163,7 +137,6 @@ Diff. between Expires, Date, Age and If-Modified-...
 Do Not Track
 Transfer-Encoding
 X-Frame-Options
-
 如果你去面试你最怕被问到什么？﻿
 下面这些？﻿﻿
 链式调用﻿
