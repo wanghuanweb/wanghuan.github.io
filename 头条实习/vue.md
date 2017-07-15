@@ -1,3 +1,13 @@
+#### 0.指令--特殊的html特性
+
+Vue.js的指令是以v-开头的，它们作用于HTML元素，指令提供了一些特殊的特性，将指令绑定在元素上时，指令会为绑定的目标元素添加一些特殊的行为，我们可以将指令看作特殊的HTML特性（attribute）。
+v-if指令
+v-show指令
+v-else指令
+v-for指令
+v-bind指令：中间放一个冒号隔开，这个参数通常是HTML元素的特性（attribute），例如：v-bind:class。v-bind指令可以缩写为一个冒号
+v-on指令：v-on指令用于给监听DOM事件，它的用语法和v-bind是类似的，例如监听<a>元素的点击事件。v-on指令可以缩写为@符号。
+
 #### 1.生命周期
 
 Vue 实例有一个完整的生命周期，也就是实例从创建到销毁就是生命周期。
@@ -800,5 +810,110 @@ new Vue({
     })
 ```
 #### 5.vue--基于$.ajax实现数据的跨域增删查改
+
+http://www.cnblogs.com/keepfool/p/5648674.html
+
+组件们：
+1.simple-grid组件--用于绑定和显示数据
+2.modal-dialog组件--数据的新建和编辑将使用模态对话框
+
+Ajax帮助方法
+1.基于$.ajax声明一个简单的AjaxHelper构造器，AjaxHelper构造器的原型对象包含5个方法
+
+```
+<template id="grid-template">
+    <table>
+        <thead>
+            <tr>
+                <th v-for="col in columns">
+                    {{ col | capitalize}}
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr v-for="(index,entry) in dataList">
+                <td v-for="col in columns">
+                    {{entry[col]}}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</template>
+
+<script src="js/vue.js"></script>
+<script>
+    Vue.component('simple-grid', {
+        template: '#grid-template',
+        props: ['dataList', 'columns']
+    })
+</script>
+```
+
+```
+<template id="dialog-template">
+    <div class="dialogs">
+        <div class="dialog" v-bind:class="{ 'dialog-active': show }">
+            <div class="dialog-content">
+                <div class="close rotate">
+                    <span class="iconfont icon-close" @click="close"></span>
+                </div>
+                <slot name="header"></slot>
+                <slot name="body"></slot>
+                <slot name="footer"></slot>
+            </div>
+        </div>
+        <div class="dialog-overlay"></div>
+    </div>
+</template>
+
+<script>
+    Vue.component('modal-dialog', {
+        template: '#dialog-template',
+        props: ['show'],
+        methods: {
+            close: function() {
+                this.show = false
+            }
+        }
+    })
+</script>
+```
+
+```
+function AjaxHelper() {
+    this.ajax = function(url, type, dataType, data, callback) {
+        $.ajax({
+            url: url,
+            type: type,
+            dataType: dataType,
+            data: data,
+            success: callback,
+            error: function(xhr, errorType, error) {
+                alert('Ajax request error, errorType: ' + errorType +  ', error: ' + error)
+            }
+        })
+    }
+}
+AjaxHelper.prototype.get = function(url, data, callback) {
+    this.ajax(url, 'GET', 'json', data, callback)
+}
+AjaxHelper.prototype.post = function(url, data, callback) {
+    this.ajax(url, 'POST', 'json', data, callback)
+}
+
+AjaxHelper.prototype.put = function(url, data, callback) {
+    this.ajax(url, 'PUT', 'json', data, callback)
+}
+
+AjaxHelper.prototype.delete = function(url, data, callback) {
+    this.ajax(url, 'DELETE', 'json', data, callback)
+}
+
+AjaxHelper.prototype.jsonp = function(url, data, callback) {
+    this.ajax(url, 'GET', 'jsonp', data, callback)
+}
+
+AjaxHelper.prototype.constructor = AjaxHelper
+```
 
 #### 6.vue-router
