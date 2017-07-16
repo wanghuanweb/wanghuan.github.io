@@ -8,6 +8,13 @@ v-for指令
 v-bind指令：中间放一个冒号隔开，这个参数通常是HTML元素的特性（attribute），例如：v-bind:class。v-bind指令可以缩写为一个冒号
 v-on指令：v-on指令用于给监听DOM事件，它的用语法和v-bind是类似的，例如监听<a>元素的点击事件。v-on指令可以缩写为@符号。
 
+model-view-viewmodel
+1.是以数据为驱动的，Vue自身将DOM和数据进行绑定，一旦创建绑定，DOM和数据将保持同步，每当数据发生变化，DOM会跟着变化。  
+2.ViewModel是Vue的核心，它是Vue的一个实例。Vue实例时作用域某个HTML元素上的，这个HTML元素可以是body，也可以是某个id所指代的元素。
+3.DOM Listeners和Data Bindings是实现双向绑定的关键。
+DOM Listeners监听页面所有View层DOM元素的变化，当发生变化，Model层的数据随之变化
+Data Bindings监听Model层的数据，当数据发生变化，View层的DOM元素随之变化。
+
 #### 1.生命周期
 
 Vue 实例有一个完整的生命周期，也就是实例从创建到销毁就是生命周期。
@@ -917,3 +924,67 @@ AjaxHelper.prototype.constructor = AjaxHelper
 ```
 
 #### 6.vue-router
+
+http://www.cnblogs.com/keepfool/p/5690366.html
+
+传统的页面应用，是用一些超链接来实现页面切换和跳转的。
+vue的路由则是路径的改变，也就是组件的改变。
+
+写单页面的步骤：--basic_01.html
+js是1，2，3，6步。html是4，5步骤
+1.创建组件：创建组件构造器--vue.extend
+2.创建路由：创建路由器实例--new VueRouter()
+3.映射路由：创建路由映射 --router.map
+4.使用v-link指令       --该指令接受一个 JavaScript 表达式，并会在用户点击元素时用该表达式的值去调用 router.go。
+5.使用<router-view>标签渲染组件
+6.启动路由
+--路由器的运行需要一个根组件
+--var App = Vue.extend({})
+  router.start(App, '#app')
+  注意：使用vue-router的应用，不需要显式地创建Vue实例，而是调用start方法将根组件挂载到某个元素。
+
+
+实现嵌套路由有两个要点：--basic_02.html
+1.在组件内部使用<router-view>标签
+2.在路由器对象中给组件定义子路由
+
+**v-link**
+
+v-link 是一个用来让用户在 vue-router 应用的不同路径间跳转的指令。该指令接受一个 JavaScript 表达式，并会在用户点击元素时用该表达式的值去调用 router.go。
+```
+<!-- 字面量路径 -->
+<a v-link="'home'">Home</a>
+
+<!-- 效果同上 -->
+<a v-link="{ path: 'home' }">Home</a>
+
+<!-- 具名路径 -->
+<a v-link="{ name: 'detail', params: {id: '01'} }">Home</a>
+```
+
+**路由的钩子函数**
+
+全局钩子函数有2个：
+beforeEach：在路由切换开始时调用
+afterEach：在每次路由切换成功进入激活阶段时被调用
+
+组件的钩子函数一共6个：
+data：可以设置组件的data
+activate：激活组件
+deactivate：禁用组件
+canActivate：组件是否可以被激活
+canDeactivate：组件是否可以被禁用
+canReuse：组件是否可以被重用
+
+切换对象：
+每个切换钩子函数都会接受一个 transition 对象作为参数。这个切换对象包含以下函数和方法：
+transition.to
+表示将要切换到的路径的路由对象。
+transition.from
+代表当前路径的路由对象。
+transition.next()
+调用此函数处理切换过程的下一步。
+transition.abort([reason])
+调用此函数来终止或者拒绝此次切换。
+transition.redirect(path)
+取消当前切换并重定向到另一个路由。
