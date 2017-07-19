@@ -935,7 +935,7 @@ js是1，2，3，6步。html是4，5步骤
 1.创建组件：创建组件构造器--vue.extend
 2.创建路由：创建路由器实例--new VueRouter()
 3.映射路由：创建路由映射 --router.map
-4.使用v-link指令       --该指令接受一个 JavaScript 表达式，并会在用户点击元素时用该表达式的值去调用 router.go。
+4.使用router-link指令       --该指令接受一个 JavaScript 表达式，并会在用户点击元素时用该表达式的值去调用 router.go。
 5.使用<router-view>标签渲染组件
 6.启动路由
 --路由器的运行需要一个根组件
@@ -975,6 +975,24 @@ deactivate：禁用组件
 canActivate：组件是否可以被激活
 canDeactivate：组件是否可以被禁用
 canReuse：组件是否可以被重用
+
+上述钩子的执行顺序如何呢？
+其实路由切换就是控制流水线的切换。
+我们可以把路由的切换分为三个阶段：可重用阶段，验证阶段和激活阶段。
+可重用阶段：canReuse
+验证阶段：canActivate，canDeactivate
+激活阶段：activate，deactivate
+
+例子：跳转路径[from = /home/news], [to = /home/message]
+执行router的全局函数:beforeEach
+执行组件Home的钩子函数:canReuse
+执行组件News的钩子函数:canDeactivate
+执行组件Message的钩子函数:canActivate
+执行组件News的钩子函数:deactivate
+执行router的全局函数:afterEach
+执行组件Home的钩子函数:data
+执行组件Message的钩子函数:activate
+执行组件Message的钩子函数:data
 
 切换对象：
 每个切换钩子函数都会接受一个 transition 对象作为参数。这个切换对象包含以下函数和方法：
