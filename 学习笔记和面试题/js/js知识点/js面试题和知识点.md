@@ -149,9 +149,5 @@ X-Frame-Options
 代码编译： Less Sass CoffeeScript﻿
 模块加载： SeaJS RequireJS Browserify﻿
 项目构建： grunt gulp webpack﻿
-框架类：﻿
-React   AngularJs  Knockout  Vue  (MVVM)﻿
-BackBone (MVC)﻿
-BootStrap (UI)﻿
 其它：﻿
 Node.js﻿
