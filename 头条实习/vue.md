@@ -7,6 +7,9 @@ v-else指令
 v-for指令
 v-bind指令：中间放一个冒号隔开，这个参数通常是HTML元素的特性（attribute），例如：v-bind:class。v-bind指令可以缩写为一个冒号
 v-on指令：v-on指令用于给监听DOM事件，它的用语法和v-bind是类似的，例如监听<a>元素的点击事件。v-on指令可以缩写为@符号。
+v-model指令：表单控件元素双向绑定数据，在view和model之间同步数据。同步用户的输入的数据到vue实例data属性中。
+v-ref：父组件上注册一个子组件的索引，便于直接访问。可以通过父组件的$refs访问子组件
+v-el：为DOM元素注册一个索引，可以听过所属实例的$els访问这个元素
 
 model-view-viewmodel
 1.是以数据为驱动的，Vue自身将DOM和数据进行绑定，一旦创建绑定，DOM和数据将保持同步，每当数据发生变化，DOM会跟着变化。  
@@ -15,12 +18,41 @@ model-view-viewmodel
 DOM Listeners监听页面所有View层DOM元素的变化，当发生变化，Model层的数据随之变化
 Data Bindings监听Model层的数据，当数据发生变化，View层的DOM元素随之变化。
 
-#### 1.生命周期
+v-model中select对应option的value值
+v-model修饰指令总共有三种：
+lazy：在change事件中去同步
+debounce：设置延时同步
+number：传给后端类型必须是number时，会在用户输入到同步到model中被转换为数值类型
+
+```
+<select v-model="bizline">
+    <option v-for="option in options" :value="option.value">
+        {{option.text}}
+    </option>
+</select>
+<span>bizline:{{bizline}}</span>
+
+new Vue({
+    el:'',
+    data:{
+        bizline:'flash',
+        options:{
+            {text:'快车',value:'flash'},
+            {text:'专车',value:'premium'},
+            {text:'巴士',value:'bus'},
+        }
+    }
+    })
+```
+
+#### 1.生命周期和生命周期钩子
+
+**生命周期**
 
 Vue 实例有一个完整的生命周期，也就是实例从创建到销毁就是生命周期。
 也就是从开始创建、初始化数据(data)、编译模板(template)、挂载Dom(el)→渲染、更新→渲染、卸载等一系列过程，我们称这是 Vue 的生命周期。
 
-#### 2.生命周期钩子
+**生命周期钩子**
 
 在Vue的整个生命周期中，它提供了一些生命周期钩子，给了我们执行自定义逻辑的机会。
 所谓“生命周期”，就是在类实例化的过程中，构造函数执行的不同阶段。
@@ -47,7 +79,7 @@ Vue 实例有一个完整的生命周期，也就是实例从创建到销毁就�
               message : "xuxiao is boy"
           },
            beforeCreate: function () {
-                    console.group('beforeCreate 创建前状态===============》');
+                   console.group('beforeCreate 创建前状态===============》');
                    console.log("%c%s", "color:red" , "el     : " + this.$el); //undefined
                    console.log("%c%s", "color:red","data   : " + this.$data); //undefined
                    console.log("%c%s", "color:red","message: " + this.message)  
@@ -113,16 +145,109 @@ Vue 实例有一个完整的生命周期，也就是实例从创建到销毁就�
 
 我们再试着去更改 input 输入框中的内容，可以看到输入框上方的数据同步发生改变，这就是数据绑定的效果，在更新数据时触发 beforeUpdate 和 updated 钩子，且在 beforeUpdate 触发时，数据已更新完毕。
 
-#### 3.生命周期钩子的一些使用方法：
+**生命周期钩子的使用方法**
 
-beforecreate : 可以在这加个loading事件，在加载实例时触发
-created : 初始化完成时的事件写在这里，如在这结束loading事件，异步请求也适宜在这里调用
-mounted : 挂载元素，获取到DOM节点
-updated : 如果对数据统一处理，在这里写上相应函数
-beforeDestroy : 可以做一个确认停止事件的确认框
+beforeCreate:
+在实例初始化new Vue()之后，数据观测observe data和事件配置init events之前被调用。
+这样用：可以在这加个loading事件，在加载实例时触发
+
+created:
+实例已完成以下的配置：数据观测(data observer)，属性和方法的运算， watch/event 事件回调。挂载阶段还没开始，$el 属性目前不可见。
+这样用：初始化完成时的事件写在这里，如在这结束loading事件，异步请求也适宜在这里调用（之前文件上传那个例子vue+iview）
+
+beforeMount:
+在挂载开始之前被调用：相关的 render 函数首次被调用。
+
+mounted :
+el被新创建的vm.$el替换，并挂载到实例上去之后调用该钩子。
+这样用：挂载元素，获取到DOM节点
+
+beforeUpdated :
+数据更新时调用，发生在虚拟 DOM 重新渲染和打补丁之前。
+你可以在这个钩子中进一步地更改状态，这不会触发附加的重渲染过程。
+
+updated :
+由于数据更改导致的虚拟 DOM 重新渲染和打补丁，在这之后会调用该钩子。
+当这个钩子被调用时，组件 DOM 已经更新，所以你现在可以执行依赖于 DOM 的操作。然而在大多数情况下，你应该避免在此期间更改状态。如果要相应状态改变，通常最好使用计算属性或 watcher 取而代之。
+这样用：如果对数据统一处理，在这里写上相应函数
+
+beforeDestroy :
+可以做一个确认停止事件的确认框
+
+destroyed：
+Vue 实例销毁后调用。调用后，Vue 实例指示的所有东西都会解绑定，所有的事件监听器会被移除，所有的子实例也会被销毁。
+
 nextTick : 更新数据后立即操作dom
 
-#### 4.vue的组件
+#### 2.vue实例方法
+
+讲解实例属性和实例方法（实例dom方法和实例event方法）
+
+**实例属性**
+
+组件树访问：$parent $root $children $refs
+DOM访问：$el,$els
+数据访问：$data,$options,$props
+
+组件实例子
+```
+//组件树访问
+$parent 访问当前组件实例的父实例
+$root   访问当前组件实例的根实例，如果没有父实例，则表示当前组件实例本身
+$children 访问当前组件实例的直接子组件实例
+$refs   访问使用了v-ref指令的子组件
+```
+
+```
+//DOM访问，$el挂载当前组件实例中的DOM元素，$els访问元素中使用了v-el指令的DOM元素。
+var data = { a: 1 }
+var vm = new Vue({
+  el: '#example',
+  data: data
+})
+vm.$el === document.getElementById('example') // -> true
+```
+
+```
+//数据访问,$data就是组件实例中的数据对象，$options是组件实例中的初始化选项对象，$props访问到这个props对象的属性们
+new Vue({
+  data:{
+      a:1
+  }
+  customOption: 'foo',
+  created: function () {
+    console.log(this.$data)//{a:1}
+    console.log(this.$options.customOption) // -> 'foo'
+  }
+})
+```
+
+**实例方法**
+
+实例DOM方法
+
+内部插入$appendTo
+同级插入$before和$after
+删除$remove
+延迟$nextTick--下次DOM更新循环后执行指定的回调函数，这个方法可以保证内容已经和最新数据保持同步
+
+实例Event方法
+$on(event,callback)：监听当前实例上的自定义事件。事件可以由vm.$emit触发。
+$once(event,callback)：监听一个自定义事件，但是只触发一次，在第一次触发之后移除监听器。
+$emit(event,[...args]):触发当前实例上的事件。
+$dispatch(event,[...args]):派发事件，即在当前实例触发，并且沿着父链一层一层向上，如果对应的监听函数返回false就停止。
+$broadcast(event,[...args]):广播事件，遍历$children，如果对应的监听函数返回false就停止。
+$off([event,callback]):移除自定义事件监听器。如果没有提供参数，则移除所有的事件监听器；如果只提供了事件，则移除该事件所有的监听器；如果同时提供了事件与回调，则只移除这个回调的监听器。
+
+```
+vm.$on('test', function (msg) {
+  console.log(msg)
+})
+vm.$emit('test', 'hi')
+// -> "hi"
+```
+
+#### 3.vue的组件
 
 Vue.js的组件的使用有3个步骤：创建／注册／使用组件
 1.创建组件构造器Vue.extend、创建的是一个组件构造器，不是一个具体的组件实例。
@@ -171,7 +296,6 @@ Vue.component('my-component', MyComponent)
 Vue.component('my-component', {
     template: '<div>A custom component!</div>'
 })
-
 
 // 创建根实例
 new Vue({
@@ -226,18 +350,20 @@ ps:子组件只能在父组件的template中使用。
 
 var childComponent = Vue.extend({
     template:'<div>this is child</div>'
-    });
+});
 var parentComponent = Vue.extend({
     // 在Parent组件内使用<child-component>标签
     template:'<div>this is parent</div><child-component></child-component>'
     components:{
         'child-component':childComponent
     }
-    });
-Vue.component('parent-component',parentComponent);
+});
 new Vue({
-    el:'#app'
-    });
+    el:'#app',
+    components:{
+        'parent-component':parentComponent
+    }
+});
 ```
 
 错误用法：
@@ -333,43 +459,18 @@ new Vue({
 })
 ```
 
-**构成组件（父组件和子组件）**
+#### 4.vue的组件之间数据的传输——prop，slot，实例属性和事件。
 
-编译作用域：
-这段代码定义了一个my-component组件，<my-component><my-component>不是标准的HTML元素，浏览器是不理解这个元素的。
-那么Vue是如何让浏览器理解<my-component><my-component>标签的呢？
-在创建一个Vue实例时，除了将它挂载到某个HTML元素下，还要编译组件，将组件转换为HTML片段。
-除此之外，Vue实例还会识别其所挂载的元素下的<my-component>标签，然后将<my-component>标签替换为HTML片段。
+数据传递主要通过三方面——prop，slot，实例属性和事件。
 
-Vue.js组件的API来源于三部分——prop，slot和事件。
+**props**
 
-prop 允许外部环境传递数据给组件；
-事件 允许组件触发外部环境的 action；
-slot 允许外部环境插入内容到组件的视图结构内。
-
-**父子组件**
-
---props父组件传输到子组件
-父组件通过props向下传递数据--当父组件的属性变化时，将传导给子组件，但是不会反过来。这是为了防止子组件无意修改了父组件的状态
+props(父组件传输到子组件)
+--组件实例的作用域是孤立的,子组件不能用父组件的数据。所以子组件使用props选项获取父组件的数据。
+--父组件通过props向下传递数据--当父组件的属性变化时，将传导给子组件，但是不会反过来。这是为了防止子组件无意修改了父组件的状态
 1.html中父组件调用子组件，使用v-bind绑定两个相关特性（-那种方式）
 2.html中子组件定义props用驼峰式。
 ps：可以使用.sync显式地指定双向绑定，这使得子组件的数据修改会回传给父组件。可以使用.once显式地指定单次绑定，单次绑定
-
---slot父子组件模版混合
-slot混合父组件和子组件的模版
-
---父子组件之间的访问
-父组件访问子组件：使用$children或$refs
-子组件访问父组件：使用$parent
-子组件访问根组件：使用$root
-
---通过事件通信
-使用 $on() 监听事件；
-使用 $emit() 在它上面触发事件；
-使用 $dispatch() 派发事件，事件沿着父链冒泡；
-使用 $broadcast() 广播事件，事件向下传导给所有的后代。
-
-**父组件通过props将数据传递给子组件**
 
 ```
 <div id="app">
@@ -430,7 +531,9 @@ var vm = new Vue({
 可以使用.once显式地指定单次绑定，单次绑定在建立之后不会同步之后的变化，这意味着即使父组件修改了数据，也不会传导给子组件。
 <my-component v-bind:my-name.once="name" v-bind:my-age.once="age"></my-component>
 
-**slot分发内容（组合组件）**--混合父组件和子组件的模版
+**slot**
+
+slot(slot父子组件模版混合)
 
 1.单个Slot
 
@@ -560,125 +663,7 @@ new Vue({
 })
 ```
 
-**父子组件之间的访问**
-
-有时候我们需要父组件访问子组件，子组件访问父组件，或者是子组件访问根组件。
-针对这几种情况，Vue.js都提供了相应的API：
-
-父组件访问子组件：使用$children或$refs
-子组件访问父组件：使用$parent
-子组件访问根组件：使用$root
-
-$children:
-```
-<div id="app">
-    <parent-component></parent-component>
-</div>
-
-<template id="parent-component">
-    <child-component1></child-component1>
-    <child-component2></child-component2>
-    <button v-on:click="showChildComponentData">显示子组件的数据</button>
-</template>
-
-<template id="child-component1">
-    <h2>This is child component 1</h2>
-</template>
-
-<template id="child-component2">
-    <h2>This is child component 2</h2>
-</template>
-
-Vue.component('parent-component', {
-    template: '#parent-component',
-    components: {
-        'child-component1': {
-            template: '#child-component1',
-            data: function() {
-                return {
-                    msg: 'child component 111111'
-                }
-            }
-        },
-        'child-component2': {
-            template: '#child-component2',
-            data: function() {
-                return {
-                    msg: 'child component 222222'
-                }
-            }
-        }
-    },
-    methods: {
-        showChildComponentData: function() {
-            for (var i = 0; i < this.$children.length; i++) {
-                alert(this.$children[i].msg)
-            }
-        }
-    }
-})
-
-new Vue({
-    el: '#app'
-})
-```
-
-$refs:
-组件个数较多时，我们难以记住各个组件的顺序和位置，通过序号访问子组件不是很方便。
-在子组件上使用v-ref指令，可以给子组件指定一个索引ID：
-```
-<template id="parent-component">
-    <child-component1 v-ref:cc1></child-component1>
-    <child-component2 v-ref:cc2></child-component2>
-    <button v-on:click="showChildComponentData">显示子组件的数据</button>
-</template>
-//在父组件中，则通过$refs.索引ID访问子组件的实例：
-showChildComponentData: function() {
-    alert(this.$refs.cc1.msg);
-    alert(this.$refs.cc2.msg);
-}
-```
-
-$parent:
-下面这段代码定义了两个组件：child-component和它的父组件parent-component。
-在子组件中，通过this.$parent可以访问到父组件的实例。
-```
-<div id="app">
-    <parent-component></parent-component>
-</div>
-<template id="parent-component">
-    <child-component></child-component>
-</template>
-<template id="child-component">
-    <h2>this is a child component</h2>
-    <button v-on:click="showParentComponentData"></button>
-</template>
-
-Vue.component('parent-component', {
-    template: '#parent-component',
-    components: {
-        'child-component': {
-            template: '#child-component',
-            methods:{
-                showParentComponentData:function(){
-                    alert(this.$parent.msg)
-                }
-            }
-        }
-    },
-    data:function(){
-        return{
-            msg:'parent component message'
-        }
-    }
-})
-
-new Vue({
-    el: '#app'
-})
-```
-
-**自定义事件在父子组件传输数据**
+**自定义属性和事件**
 
 使用 $on() 监听事件；
 使用 $emit() 在它上面触发事件；
@@ -816,6 +801,152 @@ new Vue({
     }
     })
 ```
+
+--父子组件之间的访问（实例属性之组件树属性）
+父组件访问子组件：使用$children或$refs
+子组件访问父组件：使用$parent
+子组件访问根组件：使用$root
+
+
+$children:
+```
+<div id="app">
+    <parent-component></parent-component>
+</div>
+
+<template id="parent-component">
+    <child-component1></child-component1>
+    <child-component2></child-component2>
+    <button v-on:click="showChildComponentData">显示子组件的数据</button>
+</template>
+
+<template id="child-component1">
+    <h2>This is child component 1</h2>
+</template>
+
+<template id="child-component2">
+    <h2>This is child component 2</h2>
+</template>
+
+Vue.component('parent-component', {
+    template: '#parent-component',
+    components: {
+        'child-component1': {
+            template: '#child-component1',
+            data: function() {
+                return {
+                    msg: 'child component 111111'
+                }
+            }
+        },
+        'child-component2': {
+            template: '#child-component2',
+            data: function() {
+                return {
+                    msg: 'child component 222222'
+                }
+            }
+        }
+    },
+    methods: {
+        showChildComponentData: function() {
+            for (var i = 0; i < this.$children.length; i++) {
+                alert(this.$children[i].msg)
+            }
+        }
+    }
+})
+
+new Vue({
+    el: '#app'
+})
+```
+
+$refs:
+组件个数较多时，我们难以记住各个组件的顺序和位置，通过序号访问子组件不是很方便。
+在子组件上使用v-ref指令，可以给子组件指定一个索引ID：
+```
+<template id="parent-component">
+    <child-component1 v-ref:cc1></child-component1>
+    <child-component2 v-ref:cc2></child-component2>
+    <button v-on:click="showChildComponentData">显示子组件的数据</button>
+</template>
+//在父组件中，则通过$refs.索引ID访问子组件的实例：
+showChildComponentData: function() {
+    alert(this.$refs.cc1.msg);
+    alert(this.$refs.cc2.msg);
+}
+```
+
+$parent:
+下面这段代码定义了两个组件：child-component和它的父组件parent-component。
+在子组件中，通过this.$parent可以访问到父组件的实例。
+```
+<div id="app">
+    <parent-component></parent-component>
+</div>
+<template id="parent-component">
+    <child-component></child-component>
+</template>
+<template id="child-component">
+    <h2>this is a child component</h2>
+    <button v-on:click="showParentComponentData"></button>
+</template>
+
+Vue.component('parent-component', {
+    template: '#parent-component',
+    components: {
+        'child-component': {
+            template: '#child-component',
+            methods:{
+                showParentComponentData:function(){
+                    alert(this.$parent.msg)
+                }
+            }
+        }
+    },
+    data:function(){
+        return{
+            msg:'parent component message'
+        }
+    }
+})
+
+new Vue({
+    el: '#app'
+})
+```
+#### 5.动态组件--多个组件使用同一个挂载点
+
+通过使用保留的 <component> 元素，动态地绑定到它的 is 特性，我们让多个组件可以使用同一个挂载点，并动态切换：
+
+```
+<component v-bind:is="currentView">
+  <!-- 组件在 vm.currentview 变化时改变！ -->
+</component>
+
+var vm = new Vue({
+  el: '#example',
+  data: {
+    currentView: 'home'
+  },
+  components: {
+    home: { /* ... */ },
+    posts: { /* ... */ },
+    archive: { /* ... */ }
+  }
+})
+```
+
+如果把切换出去的组件保留在内存中，可以保留它的状态或避免重新渲染。为此可以添加一个 keep-alive 指令参数：
+```
+<keep-alive>
+  <component :is="currentView">
+    <!-- 非活动组件将被缓存！ -->
+  </component>
+</keep-alive>
+```
+
 #### 5.vue--基于$.ajax实现数据的跨域增删查改
 
 http://www.cnblogs.com/keepfool/p/5648674.html

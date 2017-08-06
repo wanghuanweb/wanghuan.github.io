@@ -867,3 +867,13 @@ getName = function () { alert (4);};//最终的赋值再次覆盖function getNam
 
 getName();//最终输出4
 ```
+
+#### 38
+```
+(function(){
+    var a = b = 3;
+})();
+
+console.log(a);//a未被定义，报错
+console.log(b);//b就是3
+```
