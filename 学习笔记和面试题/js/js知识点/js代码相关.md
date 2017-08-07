@@ -877,3 +877,21 @@ getName();//最终输出4
 console.log(a);//a未被定义，报错
 console.log(b);//b就是3
 ```
+
+#### 39.找出出错的地方
+
+```
+var arr = [1, null, 3], findIndex;
+arr.forEach(function(item, index) {
+    if (null === item) {
+       findIndex = index;
+       break;//回调函数，不能用break，应该用return false
+    }
+});
+//或者直接for循环可以break
+for(var key in citys) {
+   if (key == 'sh') {
+       break;  	
+    }
+}
+```

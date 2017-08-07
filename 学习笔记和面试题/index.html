@@ -7,9 +7,13 @@
 
 <script>
 
-function reg(str) {
-    var patt = /^[a-zA-Z]\w{4,19}$/;
-    console.log(patt.test(str));
+for (var i = 0; i < 10; i++) {
+    var div = document.createElement('div');
+    div.innerHTML = i;
+    div.onclick = function(){
+        alert(i);
+    };
+    document.body.appendChild(div);
 }
 </script>
 </body>
