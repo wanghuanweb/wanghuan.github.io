@@ -1,0 +1,45 @@
+<!--
+实现导航栏，上题每个文字前边加一个图标，与文字居中对齐：
+1.注意li中一般有a标签和img标签
+2.ul的list-style为none，a的text-decoration:none
+3.为了和文字居中对齐，img设置vertical-align:middle
+(vertical-align还有text-bottom or text-top等)
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style type="text/css">
+        ul{
+            list-style: none;
+        }
+        ul li img {
+            width:30px;
+            height:30px;
+            vertical-align: middle;
+        }
+        ul li a{
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <ul>
+        <li>
+            <img src="../2.png" alt="">
+            <a href="#">yi</a>
+        </li>
+        <li>
+            <img src="../3.png" alt="">
+            <a href="#">er</a>
+        </li>
+        <li>
+            <img src="../4.png" alt="">
+            <a href="#">san</a>
+        </li>
+    </ul>
+</body>
+</html>
