@@ -2,6 +2,7 @@
 
 1.兼容性差异。PC端在开发过程中考虑的是浏览器兼容性，移动端开发中考虑的是手机兼容性问题，做移动端开发，更多考虑的是手机分辨率的自适应和不同手机操作系统的略微差异化；
 2.布局差异。移动端布局一般是rem或者百分比布局，但是pc布局一般都是固定px布局。
+移动端布局：百分比布局+rem和媒体查询
 3.事件处理差异。
 4.动画处理的差异。PC端要考虑IE的兼容性，通常用JS做动画的通用性会好一些，但相比CSS3却牺牲了较大的性能，而在手机端，如果要做一些动画、特效等，第一选择肯定是CSS3，既简单，效率又高。
 5.移动端更加需要性能的优化。
@@ -187,6 +188,164 @@ docEl.firstElementChild.appendChild(fontEl);
 fontEl.innerHTML = 'html{font-size:' + rem + 'px!important;}';
 ```
 
+```
+!function(win, lib) {
+    var timer,
+        doc     = win.document,
+        docElem = doc.documentElement,
+
+        vpMeta   = doc.querySelector('meta[name="viewport"]'),
+        flexMeta = doc.querySelector('meta[name="flexible"]'),
+
+        dpr   = 0,
+        scale = 0,
+
+        flexible = lib.flexible || (lib.flexible = {});
+
+    // 设置了 viewport meta
+    if (vpMeta) {
+
+        console.warn("将根据已有的meta标签来设置缩放比例");
+        var initial = vpMeta.getAttribute("content").match(/initial\-scale=([\d\.]+)/);
+
+        if (initial) {
+            scale = parseFloat(initial[1]); // 已设置的 initialScale
+            dpr = parseInt(1 / scale);      // 设备像素比 devicePixelRatio
+        }
+
+    }
+    // 设置了 flexible Meta
+    else if (flexMeta) {
+        var flexMetaContent = flexMeta.getAttribute("content");
+        if (flexMetaContent) {
+
+            var initial = flexMetaContent.match(/initial\-dpr=([\d\.]+)/),
+                maximum = flexMetaContent.match(/maximum\-dpr=([\d\.]+)/);
+
+            if (initial) {
+                dpr = parseFloat(initial[1]);
+                scale = parseFloat((1 / dpr).toFixed(2));
+            }
+
+            if (maximum) {
+                dpr = parseFloat(maximum[1]);
+                scale = parseFloat((1 / dpr).toFixed(2));
+            }
+        }
+    }
+
+    // viewport 或 flexible
+    // meta 均未设置
+    if (!dpr && !scale) {
+        // QST
+        // 这里的 第一句有什么用 ?
+        // 和 Android 有毛关系 ?
+        var u = (win.navigator.appVersion.match(/android/gi), win.navigator.appVersion.match(/iphone/gi)),
+            _dpr = win.devicePixelRatio;
+
+        // 所以这里似乎是将所有 Android 设备都设置为 1 了
+        dpr = u ? ( (_dpr >= 3 && (!dpr || dpr >= 3))
+                        ? 3
+                        : (_dpr >= 2 && (!dpr || dpr >= 2))
+                            ? 2
+                            : 1
+                  )
+                : 1;
+
+        scale = 1 / dpr;
+    }
+
+    docElem.setAttribute("data-dpr", dpr);
+
+    // 插入 viewport meta
+    if (!vpMeta) {
+        vpMeta = doc.createElement("meta");
+
+        vpMeta.setAttribute("name", "viewport");
+        vpMeta.setAttribute("content",
+            "initial-scale=" + scale + ", maximum-scale=" + scale + ", minimum-scale=" + scale + ", user-scalable=no");
+
+        if (docElem.firstElementChild) {
+            docElem.firstElementChild.appendChild(vpMeta)
+        } else {
+            var div = doc.createElement("div");
+            div.appendChild(vpMeta);
+            doc.write(div.innerHTML);
+        }
+    }
+
+    function setFontSize() {
+        var winWidth = docElem.getBoundingClientRect().width;
+
+        if (winWidth / dpr > 540) {
+            (winWidth = 540 * dpr);
+        }
+
+        // 根节点 fontSize 根据宽度决定
+        var baseSize = winWidth / 10;
+
+        docElem.style.fontSize = baseSize + "px";
+        flexible.rem = win.rem = baseSize;
+    }
+
+    // 调整窗口时重置
+    win.addEventListener("resize", function() {
+        clearTimeout(timer);
+        timer = setTimeout(setFontSize, 300);
+    }, false);
+
+
+    // 这一段是我自己加的
+    // orientationchange 时也需要重算下吧
+    win.addEventListener("orientationchange", function() {
+        clearTimeout(timer);
+        timer = setTimeout(setFontSize, 300);
+    }, false);
+
+
+    // pageshow
+    // keyword: 倒退 缓存相关
+    win.addEventListener("pageshow", function(e) {
+        if (e.persisted) {
+            clearTimeout(timer);
+            timer = setTimeout(setFontSize, 300);
+        }
+    }, false);
+
+    // 设置基准字体
+    if ("complete" === doc.readyState) {
+        doc.body.style.fontSize = 12 * dpr + "px";
+    } else {
+        doc.addEventListener("DOMContentLoaded", function() {
+            doc.body.style.fontSize = 12 * dpr + "px";
+        }, false);
+    }
+
+    setFontSize();
+
+    flexible.dpr = win.dpr = dpr;
+
+    flexible.refreshRem = setFontSize;
+
+    flexible.rem2px = function(d) {
+        var c = parseFloat(d) * this.rem;
+        if ("string" == typeof d && d.match(/rem$/)) {
+            c += "px";
+        }
+        return c;
+    };
+
+    flexible.px2rem = function(d) {
+        var c = parseFloat(d) / this.rem;
+
+        if ("string" == typeof d && d.match(/px$/)) {
+            c += "rem";
+        }
+        return c;
+    }
+}(window, window.lib || (window.lib = {}));
+```
+
 5.touchstart和click冲突
 
 问题常见发生场景： 假如页面上有两个元素A和B。B元素在A元素之上。我们在B元素的touchstart事件上注册了一个回调函数，该回调函数的作用是隐藏B元素。我们发现，当我们点击B元素，B元素被隐藏了，随后，A元素触发了click事件。
@@ -203,7 +362,7 @@ touchstart > touchmove >touchend > click。
 滑动距离与‘容器’  大小进行比较，若超过‘容器’大小的1/3，则到下一页
 
 
-5.两列布局，但是有padding或者border。
+6.两列布局，但是有padding或者border。
 
 ```
 .box{
@@ -214,7 +373,7 @@ touchstart > touchmove >touchend > click。
 }
 ```
 
-6.图片加载比较慢
+7.图片加载比较慢
 
 预加载图片
 ```
@@ -230,6 +389,13 @@ function preloadImg(srcArr){
 
 ???/canvas加载
 
+8.移动端的媒体查询
+
+width device-width max-width min-width max-device-width min-device-width orientation
+```
+@media screen and (min-width:1024px) {}
+@media screen and (max-device-width: 480px) and (orientation:landscape)
+```
 #### 2.移动端性能的提升
 
 如何优化HTML5在移动设置上的性能表现，首先需要明确以下几个原则：
