@@ -1,0 +1,57 @@
+<!--
+全选复选框联动：
+1.全选按钮和复选框全是checkbox格式，
+2.监听全选按钮的click事件，全选的时候，遍历所有的复选框，让checked属性置为ture
+3.监听下边复选框的wrap元素的click事件，点击时，遍历所有复选框，设置flag标签，有一个不为checked直接置flag为false且break。即可
+直接break是重点哦！！
+ -->
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1.0">
+        <meta http-euiv="X-UA-Compatible" content="IE-edge">
+        <title>test</title>
+    </head>
+
+    <body>
+        <input type="checkbox" id="checkAll">全选
+        <div class="checkBoxs">
+            <input type="checkbox" class="checkbox">
+            <input type="checkbox" class="checkbox">
+            <input type="checkbox" class="checkbox">
+            <input type="checkbox" class="checkbox">
+            <input type="checkbox" class="checkbox">
+        </div>
+        <script>
+
+            var selectAll = document.getElementById("checkAll"),
+                checkboxWrap = document.getElementsByClassName("checkBoxs")[0],
+                checkboxs = document.getElementsByClassName("checkbox");
+
+            selectAll.addEventListener("click",function(){
+                if(selectAll.checked) {
+                    for(var i = 0,len = checkboxs.length;i < len;i++) {
+                        checkboxs[i].checked = true;
+                    }
+                }
+            },false);
+            checkboxWrap.addEventListener("click",function(event){
+                var flag = false;
+                for(var i = 0, len= checkboxs.length;i < len;i++) {
+                    if(checkboxs[i].checked) {
+                        flag = true;
+                    } else {
+                        flag = false;
+                        break;
+                    }
+                }
+                if(flag) {
+                    selectAll.checked = true;
+                } else {
+                    selectAll.checked = false;
+                }
+            },false);
+        </script>
+    </body>
+</html>

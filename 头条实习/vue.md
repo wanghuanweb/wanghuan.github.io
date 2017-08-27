@@ -45,7 +45,36 @@ new Vue({
     })
 ```
 
-#### 1.生命周期和生命周期钩子
+#### 1.vue双向绑定的原理
+
+DOM Listeners和Data Bindings是实现双向绑定的关键。
+
+DOM Listeners监听页面所有View层DOM元素的变化，当发生变化，Model层的数据随之变化
+Data Bindings监听Model层的数据，当数据发生变化，View层的DOM元素随之变化。
+
+vue.js 则是采用数据劫持结合发布者-订阅者模式的方式来实现数据的双向绑定
+1.数据监听其实就是通过Object.defineProperty()来劫持各个属性的setter和getter
+2.在数据变动时会调用object.defineProperty()的set方法，监听到数据变动的时候，发布消息给订阅者，触发相应的监听回调。
+3.对于dom节点，添加相应的监听数据的订阅者，一旦数据发生变化，收到通知，则更新视图。
+4.视图交互变化(input) ，监听change事件， 数据model变更的双向绑定效果。
+
+```
+//一个特别简单的双向绑定问题
+var obj = {};
+Object.defineProperty(obj,'hello',{
+    set:function(newVal){
+        document.getElementById('a').value = newVal;
+        document.getElementById('b').innerHTML = newVal;
+    }
+});
+document.addEventListener("keyup",function(a){
+    obj.hello = e.target.value;
+});
+```
+https://segmentfault.com/a/1190000006599500
+http://www.cnblogs.com/kidney/p/6052935.html?utm_source=gold_browser_extension
+
+#### 2.生命周期和生命周期钩子
 
 **生命周期**
 
@@ -147,12 +176,10 @@ Vue 实例有一个完整的生命周期，也就是实例从创建到销毁就�
 
 **生命周期钩子的使用方法**
 
-beforeCreate:
-在实例初始化new Vue()之后，数据观测observe data和事件配置init events之前被调用。
+beforeCreate:--实例new Vue()初始化，但是data和事件未初始化。
 这样用：可以在这加个loading事件，在加载实例时触发
 
-created:
-实例已完成以下的配置：数据观测(data observer)，属性和方法的运算， watch/event 事件回调。挂载阶段还没开始，$el 属性目前不可见。
+created:--数据data，计算属性compute，watch，methods被初始化，但挂载阶段没开始，$el 属性目前不可见
 这样用：初始化完成时的事件写在这里，如在这结束loading事件，异步请求也适宜在这里调用（之前文件上传那个例子vue+iview）
 
 beforeMount:
@@ -166,7 +193,7 @@ beforeUpdated :
 数据更新时调用，发生在虚拟 DOM 重新渲染和打补丁之前。
 你可以在这个钩子中进一步地更改状态，这不会触发附加的重渲染过程。
 
-updated :
+updated :（一般应该使用计算属性或者watcher取而代之）
 由于数据更改导致的虚拟 DOM 重新渲染和打补丁，在这之后会调用该钩子。
 当这个钩子被调用时，组件 DOM 已经更新，所以你现在可以执行依赖于 DOM 的操作。然而在大多数情况下，你应该避免在此期间更改状态。如果要相应状态改变，通常最好使用计算属性或 watcher 取而代之。
 这样用：如果对数据统一处理，在这里写上相应函数
@@ -179,7 +206,15 @@ Vue 实例销毁后调用。调用后，Vue 实例指示的所有东西都会解
 
 nextTick : 更新数据后立即操作dom
 
-#### 2.vue实例方法
+#### 3.计算属性和watch
+
+选项：data／props／propsData／computed／methods／watch
+
+computed：计算属性的结果会被缓存，除非依赖的响应式属性变化才会重新计算
+
+watch：一个对象，键是需要观察的表达式，值是对应回调函数。值也可以是方法名，或者包含选项的对象。Vue 实例将会在实例化时调用 $watch()，遍历 watch 对象的每一个属性。
+
+#### 4.vue实例方法
 
 讲解实例属性和实例方法（实例dom方法和实例event方法）
 
@@ -247,7 +282,7 @@ vm.$emit('test', 'hi')
 // -> "hi"
 ```
 
-#### 3.vue的组件
+#### 5.vue的组件
 
 Vue.js的组件的使用有3个步骤：创建／注册／使用组件
 1.创建组件构造器Vue.extend、创建的是一个组件构造器，不是一个具体的组件实例。
@@ -459,7 +494,7 @@ new Vue({
 })
 ```
 
-#### 4.vue的组件之间数据的传输——prop，slot，实例属性和事件。
+#### 6.vue的组件之间数据的传输——prop，slot，实例属性和事件。
 
 数据传递主要通过三方面——prop，slot，实例属性和事件。
 
@@ -471,6 +506,24 @@ props(父组件传输到子组件)
 1.html中父组件调用子组件，使用v-bind绑定两个相关特性（-那种方式）
 2.html中子组件定义props用驼峰式。
 ps：可以使用.sync显式地指定双向绑定，这使得子组件的数据修改会回传给父组件。可以使用.once显式地指定单次绑定，单次绑定
+
+另外：
+props 可以是数组或对象，用于接收来自父组件的数据。props 可以是简单的数组，或者使用对象作为替代，对象允许配置高级选项，如类型检测、自定义校验和设置默认值。
+```
+props: {
+    // 只检测类型
+    height: Number,
+    // 检测类型 + 其他验证
+    age: {
+      type: Number,
+      default: 0,
+      required: true,//代表必填
+      validator: function (value) {
+        return value >= 0
+      }
+    }
+  }
+```
 
 ```
 <div id="app">
@@ -693,7 +746,7 @@ $emit触发当前实例上的事件。--子组件通过$emit触发父组件的�
           methods: {
             increment: function () {
               this.counter += 1
-              //出发父元素的事件
+              //触发父元素的事件
               this.$emit('ee', 'cc' )
             }
           },
@@ -916,7 +969,15 @@ new Vue({
     el: '#app'
 })
 ```
-#### 5.动态组件--多个组件使用同一个挂载点
+
+#### 7.vue组件的调用方式
+
+请教一下，比如说Vue定义了Message组件，我想让他像Vue的实例选项一样调用，this.$message，不需要<message> </message> ,该怎么写呢
+回答：
+我针对这个写过一篇笔记，可以参考一下
+https://molunerfinn.com/vue-components/
+
+#### 8.动态组件--多个组件使用同一个挂载点
 
 通过使用保留的 <component> 元素，动态地绑定到它的 is 特性，我们让多个组件可以使用同一个挂载点，并动态切换：
 
@@ -947,7 +1008,7 @@ var vm = new Vue({
 </keep-alive>
 ```
 
-#### 5.vue--基于$.ajax实现数据的跨域增删查改
+#### 9.vue--基于$.ajax实现数据的跨域增删查改
 
 http://www.cnblogs.com/keepfool/p/5648674.html
 
@@ -1053,87 +1114,3 @@ AjaxHelper.prototype.jsonp = function(url, data, callback) {
 
 AjaxHelper.prototype.constructor = AjaxHelper
 ```
-
-#### 6.vue-router
-
-http://www.cnblogs.com/keepfool/p/5690366.html
-
-传统的页面应用，是用一些超链接来实现页面切换和跳转的。
-vue的路由则是路径的改变，也就是组件的改变。
-
-写单页面的步骤：--basic_01.html
-js是1，2，3，6步。html是4，5步骤
-1.创建组件：创建组件构造器--vue.extend
-2.创建路由：创建路由器实例--new VueRouter()
-3.映射路由：创建路由映射 --router.map
-4.使用router-link指令       --该指令接受一个 JavaScript 表达式，并会在用户点击元素时用该表达式的值去调用 router.go。
-5.使用<router-view>标签渲染组件
-6.启动路由
---路由器的运行需要一个根组件
---var App = Vue.extend({})
-  router.start(App, '#app')
-  注意：使用vue-router的应用，不需要显式地创建Vue实例，而是调用start方法将根组件挂载到某个元素。
-
-
-实现嵌套路由有两个要点：--basic_02.html
-1.在组件内部使用<router-view>标签
-2.在路由器对象中给组件定义子路由
-
-**v-link**
-
-v-link 是一个用来让用户在 vue-router 应用的不同路径间跳转的指令。该指令接受一个 JavaScript 表达式，并会在用户点击元素时用该表达式的值去调用 router.go。
-```
-<!-- 字面量路径 -->
-<a v-link="'home'">Home</a>
-
-<!-- 效果同上 -->
-<a v-link="{ path: 'home' }">Home</a>
-
-<!-- 具名路径 -->
-<a v-link="{ name: 'detail', params: {id: '01'} }">Home</a>
-```
-
-**路由的钩子函数**
-
-全局钩子函数有2个：
-beforeEach：在路由切换开始时调用
-afterEach：在每次路由切换成功进入激活阶段时被调用
-
-组件的钩子函数一共6个：
-data：可以设置组件的data
-activate：激活组件
-deactivate：禁用组件
-canActivate：组件是否可以被激活
-canDeactivate：组件是否可以被禁用
-canReuse：组件是否可以被重用
-
-上述钩子的执行顺序如何呢？
-其实路由切换就是控制流水线的切换。
-我们可以把路由的切换分为三个阶段：可重用阶段，验证阶段和激活阶段。
-可重用阶段：canReuse
-验证阶段：canActivate，canDeactivate
-激活阶段：activate，deactivate
-
-例子：跳转路径[from = /home/news], [to = /home/message]
-执行router的全局函数:beforeEach
-执行组件Home的钩子函数:canReuse
-执行组件News的钩子函数:canDeactivate
-执行组件Message的钩子函数:canActivate
-执行组件News的钩子函数:deactivate
-执行router的全局函数:afterEach
-执行组件Home的钩子函数:data
-执行组件Message的钩子函数:activate
-执行组件Message的钩子函数:data
-
-切换对象：
-每个切换钩子函数都会接受一个 transition 对象作为参数。这个切换对象包含以下函数和方法：
-transition.to
-表示将要切换到的路径的路由对象。
-transition.from
-代表当前路径的路由对象。
-transition.next()
-调用此函数处理切换过程的下一步。
-transition.abort([reason])
-调用此函数来终止或者拒绝此次切换。
-transition.redirect(path)
-取消当前切换并重定向到另一个路由。

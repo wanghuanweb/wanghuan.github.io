@@ -17,6 +17,15 @@
 要随时掌握工作区的状态，使用git status命令。
 如果git status告诉你有文件被修改过，用git diff可以查看修改内容。
 
+同时：
+git pull 是git fetch（更加安全）和git merge FETCH_HEAD的缩写。
+git pull --rebase则是运行git rebase而不是git merge
+
+注意：
+git merge和git rebase的区别
+git merge是合并，将分支中的共同祖先和两个分支的最新提交三方合并，生成一个新的commit
+git rebase是不生成新的commit，相当于在master分支上的修改在分支上复制了一边一样。
+
 ##### 2.版本回退
 
 首先git log 查看日志
@@ -68,3 +77,18 @@ git  reset  --hard
 add和commit之后
 合并分支：git merge <name>
 删除分支：git branch -d <name>
+
+##### 5.发生冲突
+
+add,commit和git pull --rebase合并之后发生冲突
+则手动解决冲突之后
+git add .---会更新这些内容的索引，然后，无需执行git commit就可以执行
+git rebase --continue
+
+在任何时候，你可以用--abort参数来终止rebase的行动，并且"mywork" 分支会回到rebase开始前的状态。
+git rebase --abort
+
+#### 6.中间没有change-id
+
+git reset 先回到没有change-id的版本
+git commit --amend将后边的提交amend到此版本上

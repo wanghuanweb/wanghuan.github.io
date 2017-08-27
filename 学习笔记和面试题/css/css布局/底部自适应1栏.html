@@ -1,9 +1,10 @@
 <!--  底部自适应
       主文本区或侧边栏不满一页时，footer位于屏幕下端
       如果主文本区和侧边栏高度超过一页时，footer将在两者之中height最大元素的下方
-两栏----底部自适应
-   1.main(其实也可以直接在body上设置，不需要标签了)中min-height为100%，相对定位(main包含footer)
-   2.footer绝对定位在页面最下边
+一栏----底部自适应
+   1.首先html和body都要为100%。布局：body中有一个main标签，main中有两个div，content和footer
+   2.main的min-height为100%，且为相对定位，且padding-bottom为footer的高度
+   3.content就可以随便设置高度。footer为绝对定位，bottom为0，设置高度宽度即可。
 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -14,7 +15,7 @@
     <title>Document</title>
     <style>
         *{
-            margin:0;
+            margin: 0;
             padding: 0;
         }
         html,body{
@@ -23,18 +24,19 @@
         .main{
             min-height: 100%;
             position: relative;
+            padding-bottom: 100px;
         }
         .content{
-            height: 2000px;
-            /*height: 200px;*/
-            background: yellow;
+            height: 200px;
+            /*height: 2000px;*/
+            background: red;
         }
         footer{
             position: absolute;
             bottom: 0;
-            height: 100px;
             width: 100%;
-            background: red;
+            height: 100px;
+            background: yellow;
         }
     </style>
 </head>

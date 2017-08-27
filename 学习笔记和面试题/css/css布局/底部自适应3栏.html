@@ -2,9 +2,11 @@
       主文本区或侧边栏不满一页时，footer位于屏幕下端
       如果主文本区和侧边栏高度超过一页时，footer将在两者之中height最大元素的下方
 三栏----底部自适应
-   1.main中min-height为100%，相对定位
-   2.header和footer绝对定位在页面最上边和下边
-   3.中间是三栏自适应布局(看两栏自适应布局方法)
+  1.首先html和body的height都要为100%。布局：body中有一个main标签，main中有两个div，content和footer
+     content中有三个divleft，middle，right
+  2.main的min-height为100%，且为相对定位，且padding-bottom为footer的高度，padding-top为header的高度
+  3.content则为三栏自适应布局了。
+  4.header，footer为绝对定位，top或者bottom为0，设置高度宽度即可。
 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -24,6 +26,8 @@
         .main{
             min-height: 100%;
             position: relative;
+            padding-bottom: 100px;
+            padding-top: 100px;
         }
         header,
         footer{

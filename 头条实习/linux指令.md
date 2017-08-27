@@ -1,50 +1,58 @@
-#### 2.linux命令
+#### 1.linux常用命令
 
 cd ~          // 进入用户主目录
 cd ../repos   // 从当前目录退到上层目录，然后再进入repos目录
 pwd           //查看当前目录
 pwd -P        //显示出实际路径
+
 mkdir dirname // 新建目录
 touch a.js    // 创建文件
+
 rm a.js       // 删除文件
 rm -r dir     // 删除目录
 rm -rf dir    // 强制删除该目录
+rmdir         // 新建空目录
+
+
 cp a.js b.js  // 拷贝文件
 cp -r a b     // 拷贝目录
+
 mv d1/a.js d2/a.js // 移动（剪切）文件
 mv a.js b.js  // 重命名文件
+
 ls            // 列出目录下的文件
 ll -l         // 列出目录下的文件，列表模式
 ls -a         // 列出目录下的所有文件（包括隐藏文件）
+
+find是在**目录中寻找文件 ，grep是在文件中查找文本
+find ** -name file.name  //在**目录下查找名字为file.name的文件
+find ** -empty        //可以按照文件的特征进行查找（是否是null，大小是多大，尺寸是多大）
+grep 'test' aa bb cc  //在aa bb cc中查找test文本
+grep 'test' d*　　//显示所有以d开头的文件中包含 test的行
+
+**系统管理命令**
+
+ps：显示当前状态处于running的进程
+ps aux：是显示所有进程和其状态。
+ps aux|grep 9428：是查找有9428的进程
+kill -9 ** 强制杀死某进程
+top：实时更新所有进程的状态
+
 cat指令
 主要有三大功能：
 1.一次显示整个文件:cat filename
 2.从键盘创建一个文件:cat > filename 只能创建新文件,不能编辑已有文件.
 3.将几个文件合并为一个文件:cat file1 file2 > file
 
-Linux常用命令
-                   (1)              查看Linux每个命令的具体用法：man ~
-                   (2)              进入目录：cd A
-                   (3)              查看目录中的文件： ls
-                   (4)              回到使用者的首目录： cd +enter,回上一目录用cd .. ,回根目录用cd /
-                   (5)              显示当前路径：pwd
-                   (6)              拷贝文件：cp A B
-                   (7)              移动文件： mv A B
-                   (8)              删除文件： rm A
-                   (9)              新建目录： mkdir A； mkdir -p 一次可以建立多个目录。
-                  (10)              修改目录或文件权限：chmod
-                  (11)              查看进程：ps au|grep 'username'如 ps au|grep 'liuzheng'
-                  (12)              终止进程：kill 进程号
-                  (13)              显示linux任务： top
-                  (14)              当需要跑一些很费时间的程序时，推荐使用screen命令,使程序进程在服务器端运行，即便是本地关机也不会影响程序的运行：
-                                     l  新建一个窗口：screen -S A
-                                     l  进入窗口：screen -r A
-                                     l  退出窗口：ctrl+A->d
-                                     l  销毁窗口：进入窗口，输入exit
-                                     l  查看当前有几个窗口：screen -ls
-                  (15)               本地和服务器间的文件传输需要连接sftp标签：
-                                     启动SecureCRT,文件>>连接sftp标签， 命令前加l表示本地（如lpwd表示本地当前目录路径）文件从本地到服务器端用put.从服务器端到本地用get.
-                  (16)              git命令
+**需要跑长时间的程序时，使用screen命令**
+
+查看所有窗口：screnn -ls
+新建窗口：screen -S name
+进入窗口：screen -x name
+退出窗口：ctrl+a+d
+销毁窗口：exit
+
+
 #### 3.Vim常用命令
 
 Vim有三种工作模式：命令行模式，输入模式，末行模式：
@@ -59,10 +67,10 @@ Vim有三种工作模式：命令行模式，输入模式，末行模式：
   8)        查找：/； 查找替换：%s/a/b/g (将文本中所有的a替换成b)
 2.输入模式：a/i/o进入，esc退出
 3.末行模式：:进入，esc退出
-                   :q 退出vi程序。
-                   :w  保存vi程序
-                   :q! 强制退出vi程序。
-                   :wq 保存修改并退出
+   :q 退出vi程序。
+   :w  保存vi程序
+   :q! 强制退出vi程序。
+   :wq 保存修改并退出
  另外：当打开文件时，显示文件已经处于打开状态，并出现信息：swap file ".xx.py.swp" already exists!时，则:退出vim; ls -a 删除相对应的.swp文件(用rm xx命令)
 
 操作一个文件的简单步骤

@@ -7,14 +7,22 @@
 
 <script>
 
-for (var i = 0; i < 10; i++) {
-    var div = document.createElement('div');
-    div.innerHTML = i;
-    div.onclick = function(){
-        alert(i);
-    };
-    document.body.appendChild(div);
-}
+(function(){
+    console.log("1");
+   if (true == {}) {
+      alert('true');
+   } else if (false == {}) {
+      alert('false');
+   }
+}());
+
+// foo();
+// function foo(element, width, height) {
+//   element.onclick = function() {
+//     alert('width:' + width + ';height:' + height);
+//   };
+// }
+
 </script>
 </body>
 </html>

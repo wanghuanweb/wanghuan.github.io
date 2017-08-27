@@ -1,0 +1,37 @@
+<!--
+思路：
+（1）布局select和input，让input覆盖select所以让input绝对定位即可，除了select的下拉图标，以方便select选择.
+（2）编写js，为select添加onchange事件，onchange时将input的value置成select选中的指
+-->
+<HTML>
+<HEAD>
+<META http-equiv='Content-Type' content='text/html; charset=utf-8'>
+<TITLE>可输入的下拉框</TITLE>
+<style type="text/css">
+    .comboBox {position:relative;margin:10px;}
+    .comboBox select {width:120px; height:20px;}
+    .comboBox input {width:102px;height:20px; position:absolute;}
+</style>
+</HEAD>
+<BODY>
+<div class="comboBox">
+    <input type="text"></input>
+    <select onChange="comboBoxSelect(this)">
+        <option value="选项1">选项1</option>
+        <option value="选项2">选项2</option>
+        <option value="选项3">选项3</option>
+        <option value="选项4">选项4</option>
+    </select>
+</div>
+<script type="text/javascript">
+comboBoxSelect = function(obj){
+    var box = obj.parentNode,
+        ipt = box.getElementsByTagName("input");
+
+    if(ipt.length) {
+        ipt[0].value = obj.value;
+    }
+}
+</script>
+</BODY>
+</HTML>
