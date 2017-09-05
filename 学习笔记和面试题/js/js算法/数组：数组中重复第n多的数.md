@@ -51,4 +51,5 @@ function findNthNum(arr,nth){
   }
   return result;
 }
+
 ```

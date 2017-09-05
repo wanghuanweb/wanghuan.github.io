@@ -11,6 +11,7 @@
 故考虑使用迭代法，可以使用数组记录每一项。
 但此题只需要用到前面两项，从节约空间的角度讲不需要开辟数组。
 
+
 ```
 function getNthFibonacci(count) {
     if(count<0) return 0;

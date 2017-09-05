@@ -49,6 +49,7 @@ SGML (Standard Generalized Markup Language) 标准通用标记语言
  <footer>
  </footer>
  ```
+ 
 **如果把 HTML5 看作做一个开放平台，那它的构建模块有哪些**
 
 1.新增结构化元素，表单的新元素和表单自动完成功能，input的type增多，视频和音频

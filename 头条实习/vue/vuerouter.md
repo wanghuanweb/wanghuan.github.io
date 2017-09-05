@@ -10,6 +10,7 @@
 在单页面应用，大部分页面结构不变，只改变部分内容的使用。
 
 单页面应用：
+
 1.页面只加载一个，之后的操作和数据交互都通过路由，ajax进行，页面没有刷新。界面切换非常流畅，响应很迅速
 2.优点：加载次数少，经典MVC开发模式，前后端各负其责。
   缺点：不利于seo。所以一般不用锚点开发单页面，而是用h5的pushState
@@ -346,6 +347,20 @@ const router = new VueRouter({
 
 #### 5.导航钩子
 
+全局路由钩子：beforeEach，afterEach（加载的进度条）
+
+组件路由钩子：
+beforeRouteEnter--------不可以访问this
+beforeRouteUpdate (2.2 新增)----------可以访问this
+beforeRouteLeave-----------可以访问this，这个经常是在路由跳转时撤销轮询事件是因为轮询事件会在其它页面中使用到
+```
+beforeRouteLeave(to, from, next){
+    clearInterval(this.loopClock);
+    delete this.loopClock
+    next()
+}
+```
+
 正如其名，vue-router 提供的导航钩子主要用来拦截导航，让它完成跳转或取消。有多种方式可以在路由导航发生时执行钩子：全局的, 单个路由独享的, 或者组件级的。
 
 **所有路由的全局钩子**
@@ -387,9 +402,9 @@ const router = new VueRouter({
 
 **组件内的钩子**
 
-beforeRouteEnter
-beforeRouteUpdate (2.2 新增)
-beforeRouteLeave
+beforeRouteEnter--------不可以访问this
+beforeRouteUpdate (2.2 新增)----------可以访问this
+beforeRouteLeave-----------可以访问this，
 
 ```
 const Foo = {
@@ -412,9 +427,6 @@ const Foo = {
 }
 ```
 
-全局钩子函数有2个：
-beforeEach：在路由切换开始时调用
-afterEach：在每次路由切换成功进入激活阶段时被调用
 
 组件的钩子函数一共6个：
 data：可以设置组件的data

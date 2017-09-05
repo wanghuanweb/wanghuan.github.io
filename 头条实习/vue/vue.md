@@ -975,7 +975,9 @@ new Vue({
 请教一下，比如说Vue定义了Message组件，我想让他像Vue的实例选项一样调用，this.$message，不需要<message> </message> ,该怎么写呢
 回答：
 我针对这个写过一篇笔记，可以参考一下
+
 https://molunerfinn.com/vue-components/
+
 
 #### 8.动态组件--多个组件使用同一个挂载点
 
