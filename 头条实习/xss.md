@@ -1,6 +1,6 @@
 #### 1.什么是xss
 
-xss就是跨站脚本工具cross site scripting。为了不和层叠样式表css名称一样。缩写叫做xss。
+xss就是跨站脚本攻击cross site scripting。为了不和层叠样式表css名称一样。缩写叫做xss。
 恶意攻击者往Web页面里插入恶意Script代码，当用户浏览该页之时，嵌入其中Web里面的Script代码会被执行，从而达到恶意攻击用户的目的
 
 #### 2.xss攻击的场景
@@ -21,7 +21,7 @@ https://www.toutiao.com/search?item=热点新闻
 
 反射型和存储型xss的工作原理：
 1.构造攻击代码
-2.服务端提取并写入HTML
+2.服务端提取js代码，当成文本处理，这些文本在服务器被整合到HTML文档中
 3.浏览器解析，XSS执行
 
 例子：
@@ -53,3 +53,17 @@ ejs模板
 对于反射型的代码，服务端代码要对查询进行编码，主要目的就是将查询文本化，避免在浏览器解析阶段转换成DOM和CSS规则及JavaScript解析。
 从XSS工作的原理可知，在服务端进行编码，在模板解码这个过程对于富文本的内容来说，完全可以被浏览器解析到并执行，进而给了XSS执行的可乘之机。
 为了杜绝悲剧发生，我们需要在浏览器解析之后进行解码，得到的文本进行DOM parse拿到DOM Tree，对所有的不安全因素进行过滤，最后将内容交给浏览器，达到避免XSS感染的效果。
+
+2.规范的方法，比如加入doctype html等
+
+3.使用csp(Content Security Policy )
+
+内容安全策略 (CSP, Content Security Policy) 是一个附加的安全层，通过配置HTTP返回包header头Content-Security-Policy来实现。用于帮助检测和缓解某些类型的攻击，包括跨站脚本 (XSS) 和数据注入等攻击。
+
+<meta http-equiv="Content-Security-Policy" content="script-src 'self'; object-src 'none'; style-src cdn.example.org third-party.org; child-src https:">
+
+示例：
+Content-Security-Policy: default-src * data: blob: 'unsafe-inline' 'unsafe-eval'; script-src 'self' blob: data: 'unsafe-inline' 'unsafe-eval' cdn.bootcss.com g.alicdn.com code.highcharts.com *.pstatp.com unpkg.com cdnjs.cloudflare.com ajax.googleapis.com *.snssdk.com; report-uri https://allsec.byted.org/csp/report
+
+如果攻击者插入<script src='http://xxxx.com/x.js'></script>（或者以其他形式，插入了javascript文件）
+导入了非白名单的远端javascript文件，浏览器就会给就会https://allsec.byted.org/csp/report发送一个http请求用作告警。
